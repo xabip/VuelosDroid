@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/llayout_general"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout style="@style/TitleBar" >
+
+        <ImageView style="@style/TitleBarSeparator" />
+
+        <TextView
+            style="@style/TitleBarText"
+            android:text="@string/inicio" />
+
+        <ImageView style="@style/TitleBarSeparator" />
+
+        <ImageButton
+            style="@style/TitleBarAction"
+            android:contentDescription="@string/descripcion_search"
+            android:onClick="onClickBusqueda"
+            android:src="@drawable/title_search" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="6dip" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/busqueda_btn"
+                style="@style/HomeButton"
+                android:drawableTop="@drawable/home_button1"
+                android:onClick="onClickFeature"
+                android:text="@string/titulo1" />
+
+            <Button
+                android:id="@+id/preferencias_btn"
+                style="@style/HomeButton"
+                android:drawableTop="@drawable/home_button2"
+                android:onClick="onClickFeature"
+                android:text="@string/titulo2" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/seguimiento_btn"
+                style="@style/HomeButton"
+                android:drawableTop="@drawable/home_button3"
+                android:onClick="onClickFeature"
+                android:text="@string/titulo3" />
+
+            <Button
+                android:id="@+id/ayuda_btn"
+                style="@style/HomeButton"
+                android:drawableTop="@drawable/home_button5"
+                android:onClick="onClickFeature"
+                android:text="@string/titulo5" />
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/Theme.LayoutInteriorDos"
+            android:layout_weight="0.25" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/about_principal"
+                android:textColor="#cccccc" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/resumen_principal"
+                android:textColor="#cccccc" />
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/Theme.LayoutInteriorDos"
+            android:layout_weight="0.75" >
+
+            <!--
+              <TextView 
+		       	android:layout_width="wrap_content"
+	       		android:layout_height="wrap_content"
+		        android:textColor="#cccccc"
+		        android:text="Publicidad"
+		        android:layout_gravity="center"/>
+            -->
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Vuelos Droid</string>
+    <string name="descripcion_logo">Vuelos Droid</string>
+    <string name="descripcion_about">About</string>
+    <string name="descripcion_home">Home</string>
+    <string name="descripcion_search">Search</string>
+    <string name="descripcion_feature1">Búsqueda por código</string>
+    <string name="descripcion_feature2">Búsqueda por Aeropuerto de origen</string>
+    <string name="descripcion_feature3">Búsqueda por Aeropuerto de destino</string>
+    <string name="descripcion_feature4">Seguimiento</string>
+    <string name="descripcion_feature5">Configuración</string>
+    <string name="descripcion_feature6">Feature 6</string>
+    <string name="titulo_about">About</string>
+    <string name="titulo_home">Home</string>
+    <string name="titulo_resultado">Resultados</string>
+    <string name="titulo_resultado_vuelo">Resultado Vuelo</string>
+    <string name="titulo1">Búsqueda</string>
+    <string name="titulo2">Alarmas</string>
+    <string name="titulo3">Preferencias</string>
+    <string name="titulo4">About</string>
+    <string name="titulo5">Ayuda</string>
+    <string name="titulo6"></string>
+    <string name="about_principal">VuelosDroid - 2012.           Xabier Pena y Urko Guinea</string>
+    <string name="resumen_principal">VuelosDroid es una aplicación libre. Puedes encontrar el codigo en: www.github.com</string>
+    <string name="texto_intro">Bienvenido a la aplicacion de seguimiento de vuelos Vuelos Android".
+Selecciona Búsqueda para buscar por código, aeropuerto de origen o de destino. 
+Una vez seleccionado el vuelo puedes seguirlo y ponerle una alarma para que te avise cuando aterrice.</string>
+    <string name="about_intro">Realizado por Xabier Pena y Urko Ginea</string>
+    <string name="search_intro">Content for the Search page goes here.</string>
+    <string name="desc">Descripcion</string>
+    <string name="inicio">Vuelos Android</string>
+    <string name="aeropuerto_origen">Aeropuerto origen</string>
+    <string name="aeropuerto_destino">Aeropuerto destino</string>
+    <string name="hint_aeropuerto_destino_llegadas">Introduce el destino</string>
+    <string name="hint_aeropuerto_origen_llegadas">Indroduce un destino primero</string>
+    <string name="hint_aeropuerto_destino_salidas">Introduce el origen primero</string>
+    <string name="hint_aeropuerto_origen_salidas">Indroduce un origen</string>
+    <string name="dia">Selecciona el dia</string>
+    <string name="hoy">Hoy</string>
+    <string name="manana">Mañana</string>
+    <string name="horario">Horario</string>
+    <string name="boton">Buscar Vuelo</string>
+    <string name="boton1">Buscar Vuelos</string>
+    <string name="codigo">Introduce el codigo del vuelo</string>
+    <string name="codigo_ejemplo">EJ: IBE0449</string>
+    <string name="lista_resultados">Resultados Obtenidos</string>
+    <string name="sub_info">Resumen</string>
+    <string name="sub_hoy"><u>Hoy</u></string>
+    <string name="sub_mnn"><u>Mñn</u></string>
+
+    <string-array name="titulos">
+        <item>Código</item>
+        <item>Salidas</item>
+        <item>Llegadas</item>
+    </string-array>
+    <string-array name="aeropuertos_array">
+        <item>A CORUÑA (LCG)</item>
+        <item>ALGECIRAS / HELIPUERTO (AEI)</item>
+        <item>ALICANTE (ALC)</item>
+        <item>ALMERIA (LEI)</item>
+        <item>ASTURIAS (OVD)</item>
+        <item>BARCELONA-EL PRAT (BCN)</item>
+        <item>BILBAO (BIO)</item>
+        <item>CEUTA (JCU)</item>
+        <item>EL HIERRO (VDE)</item>
+        <item>FEDERICO GARCÍA LORCA GRANADA-JAÉN (GRX)</item>
+        <item>FUERTEVENTURA (FUE)</item>
+        <item>GIRONA - COSTA BRAVA (GRO)</item>
+        <item>GRAN CANARIA (LPA)</item>
+        <item>IBIZA (IBZ)</item>
+        <item>JEREZ DE LA FRONTERA (XRY)</item>
+        <item>LA GOMERA (GMZ)</item>
+        <item>LA PALMA (SPC)</item>
+        <item>LANZAROTE (ACE)</item>
+        <item>LEON (LEN)</item>
+        <item>LOGROÑO - AGONCILLO (RJL)</item>
+        <item>MADRID-BARAJAS (MAD)</item>
+        <item>MALAGA-COSTA DEL SOL (AGP)</item>
+        <item>MELILLA (MLN)</item>
+        <item>MENORCA (MAH)</item>
+        <item>MURCIA-SAN JAVIER (MJV)</item>
+        <item>PALMA DE MALLORCA (PMI)</item>
+        <item>PAMPLONA (PNA)</item>
+        <item>SALAMANCA (SLM)</item>
+        <item>SAN SEBASTIAN (EAS)</item>
+        <item>SANTANDER (SDR)</item>
+        <item>SANTIAGO (SCQ)</item>
+        <item>SEVILLA (SVQ)</item>
+        <item>TENERIFE NORTE (TFN)</item>
+        <item>TENERIFE SUR (TFS)</item>
+        <item>VALENCIA (VLC)</item>
+        <item>VALLADOLID (VLL)</item>
+    </string-array>
+    <string-array name="horario_array">
+        <item>Cualquiera</item>
+        <item>6:00 – 8:00</item>
+        <item>8:00 – 10:00</item>
+        <item>10:00 – 12:00</item>
+        <item>12:00 – 14:00</item>
+        <item>14:00 – 16:00</item>
+        <item>16:00 – 18:00</item>
+        <item>18:00 – 20:00</item>
+        <item>20:00 – 22:00</item>
+        <item>22:00 – 00:00</item>
+        <item>00:00 – 2:00</item>
+        <item>2:00 – 4:00</item>
+        <item>4:00 – 6:00</item>
+    </string-array>
+
+</resources>

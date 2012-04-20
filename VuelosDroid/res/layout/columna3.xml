@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/aeropuerto_destino"
+        style="@style/TextViewt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/aeropuerto_destino" />
+
+    <AutoCompleteTextView
+        android:id="@+id/autocomplete_destino_llegadas"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:hint="@string/hint_aeropuerto_destino_llegadas"
+        android:textColor="#000000" />
+
+    <TextView
+        style="@style/TextViewt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/aeropuerto_origen" />
+
+    <AutoCompleteTextView
+        android:id="@+id/autocomplete_origen_llegadas"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:hint="@string/hint_aeropuerto_origen_llegadas"
+        android:textColor="#000000" />
+
+    <TextView
+        style="@style/TextViewt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/horario" />
+
+    <!--
+         <Spinner android:id="@+id/spinner_horario_llegadas"
+    	android:layout_width="fill_parent"
+   		android:layout_height="wrap_content" />
+    -->
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/layout_wheel_llegadas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp" >
+
+        <kankan.wheel.widget.WheelView
+            android:id="@+id/wheel_horario_llegadas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <!--
+       <TextView 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dia"/>
+    -->
+
+    <RadioGroup
+        android:id="@+id/grupo_dia"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/radio1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/hoy" />
+
+        <RadioButton
+            android:id="@+id/radio2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/manana" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/btn_llegadas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:enabled="false"
+        android:text="@string/boton" >
+    </Button>
+
+</LinearLayout>

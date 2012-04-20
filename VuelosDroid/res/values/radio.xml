@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="CustomSpinnerRadioTheme" parent="@android:style/Theme">
+        <item name="android:spinnerDropDownItemStyle">@style/EditedRadio</item>
+    </style>
+
+    <style name="EditedRadio" parent="@android:style/Widget.DropDownItem.Spinner">
+        <item name="android:checkMark">@drawable/edited_radio</item>
+    </style>
+
+</resources>

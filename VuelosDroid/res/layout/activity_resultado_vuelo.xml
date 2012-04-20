@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:isScrollContainer="true"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/header_resultado"
+        style="@style/TitleBar" >
+
+        <ImageButton
+            style="@style/TitleBarAction"
+            android:contentDescription="@string/descripcion_home"
+            android:onClick="onClickHome"
+            android:src="@drawable/title_home" />
+
+        <ImageView style="@style/TitleBarSeparator" />
+
+        <TextView
+            style="@style/TitleBarText"
+            android:text="@string/titulo_resultado" />
+
+        <ImageButton
+            android:id="@+id/boton_actualizar"
+            style="@style/TitleBarAction"
+            android:contentDescription="@string/descripcion_about"
+            android:onClick="onClickActualizar"
+            android:src="@drawable/title_refresh" />
+
+        <ImageView style="@style/TitleBarSeparator" />
+
+        <ImageButton
+            style="@style/TitleBarAction"
+            android:contentDescription="@string/descripcion_search"
+            android:onClick="onClickSearch"
+            android:src="@drawable/title_search" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_progress_vuelo_resultado"
+        style="@style/Theme.LayoutResultado"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <ProgressBar
+            android:id="@+id/progressBar1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/text_resultado_vuelo_progrees"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Obteniendo datos..." />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_vuelo_resultado_sup"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/header_resultado"
+        android:isScrollContainer="true"
+        android:orientation="vertical"
+        android:scrollbarSize="0dp" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_negro"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/text_resultado_company"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="3dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:lines="1"
+                android:textColor="#FFFFFFFF"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_vuelo_origen"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_indicadores"
+            android:orientation="horizontal" >
+
+            <!-- android:background="#5687D2" -->
+
+            <TextView
+                android:id="@+id/text_resultado_vuelo_origen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:gravity="left"
+                android:paddingBottom="4dp"
+                android:paddingLeft="8dp"
+                android:paddingTop="4dp"
+                android:text="Origen"
+                android:textColor="#FFFFFF"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/text_resultado_vuelo_origen_dia"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:gravity="right"
+                android:paddingRight="10dp"
+                android:textColor="#FFFFFF"
+                android:textSize="20dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_vuelo_resultado"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center" >
+
+            <TextView
+                android:id="@+id/text_resultado1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <!--
+                <TextView
+                android:id="@+id/text_resultado_codigo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:text="(VLC1423)"
+                android:textStyle="bold" />
+            -->
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/text_resultado2"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="El vuelo ha salido a ..."
+            android:textSize="17dp" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:orientation="horizontal"
+            android:paddingBottom="10dp"
+            android:paddingTop="5dp	" >
+
+            <TextView
+                android:id="@+id/text_resultado3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="El vuelo ha llegado a ..." />
+
+            <TextView
+                android:id="@+id/text_resultado4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:text="Mas" />
+        </LinearLayout>
+
+        <!--
+             <LinearLayout style="@style/Theme.LayoutResultado" >
+
+            <Button
+                android:id="@+id/btn_actualizar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:onClick="onClickActualizar"
+                android:text="Actualizar" 
+                />
+        </LinearLayout>
+        -->
+
+        <LinearLayout
+            android:id="@+id/layout_vuelo_destino"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_indicadores"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/text_resultado_vuelo_destino"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:gravity="left"
+                android:paddingBottom="2dp"
+                android:paddingLeft="8dp"
+                android:paddingTop="2dp"
+                android:text="Destino"
+                android:textColor="#FFFFFF"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/text_resultado_vuelo_destino_dia"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:gravity="right"
+                android:paddingRight="10dp"
+                android:textColor="#FFFFFF"
+                android:textSize="20dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_resultado_destino"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center" >
+
+            <TextView
+                android:id="@+id/text_resultado_destino_nombre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <!--
+                <TextView
+                android:id="@+id/text_resultado_codigo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:text="(VLC1423)"
+                android:textStyle="bold" />
+            -->
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/text_resultado_destino_hora"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="El vuelo ha salido a ..."
+            android:textSize="17dp" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:orientation="horizontal"
+            android:paddingBottom="10dp"
+            android:paddingTop="5dp	" >
+
+            <TextView
+                android:id="@+id/text_resultado_destino_terminal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="El vuelo ha llegado a ..." />
+
+            <TextView
+                android:id="@+id/text_resultado_destino_sala"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:text="Mas" />
+
+            <TextView
+                android:id="@+id/text_resultado_destino_cinta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:text="Mas" />
+        </LinearLayout>
+
+        <!--
+             <LinearLayout style="@style/Theme.LayoutResultado" >
+
+            <Button
+                android:id="@+id/btn_actualizar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:onClick="onClickActualizar"
+                android:text="Actualizar" 
+                />
+        </LinearLayout>
+        -->
+
+        <LinearLayout
+            android:id="@+id/layout_marcador"
+            style="@style/Theme.LayoutResultado"
+            android:layout_weight="0.21"
+            android:background="#ADD8E6"
+            android:onClick="onClickMarcador"
+            android:visibility="gone" >
+
+            <TextView
+                android:id="@+id/text_set_favorito"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Favorito"
+                android:textSize="16dp" />
+
+            <ImageView style="@style/TitleBarSeparator" />
+
+            <RadioGroup
+                android:id="@+id/grupo_marcador"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal" >
+
+                <RadioButton
+                    android:id="@+id/radio_marcador"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <RadioButton
+                    android:id="@+id/radio_marcador2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+            </RadioGroup>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/Theme.LayoutResultado"
+            android:layout_alignParentBottom="true"
+            android:layout_weight="0.21"
+            android:background="#B0C4DE"
+            android:onClick="onClickAlarma"
+            android:visibility="gone" >
+
+            <TextView
+                android:id="@+id/text_set_alarma"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Alarma"
+                android:textSize="16dp" />
+
+            <ImageView style="@style/TitleBarSeparator" />
+
+            <RadioGroup
+                android:id="@+id/grupo_alarma"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal" >
+
+                <RadioButton
+                    android:id="@+id/radio_alarma"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <RadioButton
+                    android:id="@+id/radio_alarma2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+            </RadioGroup>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_resultado_vuelo_boton_manana"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layout_vuelo_resultado_sup"
+        android:layout_gravity="right"
+        android:layout_marginTop="10dp"
+        android:gravity="right"
+        android:orientation="horizontal"
+        android:visibility="gone" >
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:onClick="onClickBtnManana"
+            android:text="Mañana" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_resultado_alarmas"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center"
+        android:background="@drawable/background_gris"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onClickMarcador"
+            android:orientation="vertical" >
+
+            <ImageButton
+                android:id="@+id/boton_resultado_favorito"
+                style="@style/FooterButton"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="7dp"
+                android:src="@drawable/footer_favorito" />
+
+            <TextView
+                android:id="@+id/boton_resultado_favorito"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Favorito"
+                android:textColor="#FFFFFF"
+                android:textSize="17dp" />
+        </LinearLayout>
+
+        <ImageView style="@style/TitleBarSeparator" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:onClick="onClickAlarma"
+            android:orientation="vertical" >
+
+            <ImageButton
+                android:id="@+id/boton_resultado_alarma"
+                style="@style/FooterButton"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="7dp"
+                android:src="@drawable/footer_alarma" />
+
+            <TextView
+                android:id="@+id/boton_resultado_alarma"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Alarma"
+                android:textColor="#FFFFFF"
+                android:textSize="17dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>
