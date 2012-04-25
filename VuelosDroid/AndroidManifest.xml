@@ -43,6 +43,12 @@
                 <action android:name=".backEnd.behind.AlarmaService"/>
             </intent-filter>
         </receiver>  
+        
+        <receiver android:name=".backEnd.behind.MiReceiverAntelacion"  android:process=":remote" >  
+            <intent-filter>
+                <action android:name=".backEnd.behind.AlarmaService"/>
+            </intent-filter>
+        </receiver>  
 
  
     	<activity android:name=".frontEnd.BusquedaActivity"

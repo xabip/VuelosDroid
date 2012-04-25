@@ -116,6 +116,12 @@
         <item name="android:layout_height">fill_parent</item>
         <item name="android:background">@color/title_separator</item>
     </style>
+    
+    <style name="PreferencesSeparator">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">1px</item>
+        <item name="android:background">@color/preferences_separator</item>
+    </style>
 
     <style name="TitleBarLogo">
         <item name="android:id">@id/title_logo</item>
@@ -169,5 +175,27 @@
     <style name="autocomplete_style">
         <item name="android:paddingRight">5dp</item>
     </style>
+    
+    <style name="Animations" />
 
+	<style name="Animations.GrowFromBottom">
+		<item name="@android:windowEnterAnimation">@anim/grow_from_bottom</item>
+		<item name="@android:windowExitAnimation">@anim/shrink_from_top</item>
+	</style>
+	
+	<style name="Animations.GrowFromTop">
+		<item name="@android:windowEnterAnimation">@anim/grow_from_top</item>
+		<item name="@android:windowExitAnimation">@anim/shrink_from_bottom</item>
+	</style>
+	
+	<style name="Animations.PopDownMenu">
+		<item name="@android:windowEnterAnimation">@anim/grow_from_topleft_to_bottomright</item>
+		<item name="@android:windowExitAnimation">@anim/shrink_from_bottomright_to_topleft</item>
+	</style>
+    <style name="Button_popup">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">fill_parent</item>
+        <!-- - <item name="android:background">@null</item> -->
+        <item name="android:background">@drawable/background_trasparente</item>
+    </style>
 </resources>

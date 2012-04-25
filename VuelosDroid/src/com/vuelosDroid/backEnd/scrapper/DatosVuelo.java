@@ -66,54 +66,109 @@ public class DatosVuelo {
 		try {
 			if (!company.equals("")) {
 				this.setNombreCompany(company);
+
 			}
+		} catch (IndexOutOfBoundsException ex) {
+			System.out.println("ERROR, Celda sin datos");
+		}try {
 			if (!origenDestino.get(0).text().equals("")) {
 				this.setAeropuertoOrigen(origenDestino.get(0).text());
 			}
+		} catch (IndexOutOfBoundsException ex1) {
+			System.out.println("ERROR, Celda sin datos"); }
+			try {
 			if (!origenDestino.get(1).text().equals("")) {
 				this.setAeropuertoDestino(origenDestino.get(1).text());
 			}
+		} catch (IndexOutOfBoundsException ex2) {
+			System.out.println("ERROR, Celda sin datos");
+		}
+		try {
 			if (!nombreVuelo.equals("")) {
 				this.setNombreVuelo(nombreVuelo);
 			}
+		} catch (IndexOutOfBoundsException ex3) {
+			System.out.println("ERROR, Celda sin datos");
+		}
+		try {
 			if (!tablaDatosVuelo.get(0).text().equals("")) {
 				this.setFechaOrigen(tablaDatosVuelo.get(0).text());
 			}
+		} catch (IndexOutOfBoundsException ex4) {
+			System.out.println("ERROR, Celda sin datos");
+		}
+		try {
 			if (!tablaDatosVuelo.get(1).text().equals("")) {
 				this.setHoraOrigen(tablaDatosVuelo.get(1).text());
 			}
+		} catch (IndexOutOfBoundsException ex5) {
+			System.out.println("ERROR, Celda sin datos");
+		}
+		try {
 			if (!tablaDatosVuelo.get(2).text().equals("")) {
 				this.setTerminalOrigen(tablaDatosVuelo.get(2).text());
 			}
-			if (!tablaDatosVuelo.get(3).text().equals("")) {
-				this.setPuertaOrigen(tablaDatosVuelo.get(3).text());
+		} catch (IndexOutOfBoundsException ex6) {
+			System.out.println("ERROR, Celda sin datos");
+		}
+		try {
+			if (!tablaDatosVuelo.get(4).text().equals("")) {
+				this.setPuertaOrigen(tablaDatosVuelo.get(4).text());
 			}
+		} catch (IndexOutOfBoundsException ex7) {
+			System.out.println("ERROR, Celda sin datos");
+		}
+		try {
 			if (!tablaDatosVuelo.get(5).text().equals("")) {
 				this.setEstadoVueloOrigen(tablaDatosVuelo.get(5).text());
 			}
+		} catch (IndexOutOfBoundsException ex8) {
+			System.out.println("ERROR, Celda sin datos");
+		}
+		try {
 			if (!tablaDatosVuelo.get(6).text().equals("")) {
 				this.setFechaDestino(tablaDatosVuelo.get(6).text());
 			}
+		} catch (IndexOutOfBoundsException ex9) {
+			System.out.println("ERROR, Celda sin datos");
+		}
+		try {
 			if (!tablaDatosVuelo.get(7).text().equals("")) {
 				this.setHoraDestino(tablaDatosVuelo.get(7).text());
 			}
+		} catch (IndexOutOfBoundsException ex10) {
+			System.out.println("ERROR, Celda sin datos");
+		}
+		try {
 			if (!tablaDatosVuelo.get(8).text().equals("")) {
 				this.setTerminalDestino(tablaDatosVuelo.get(8).text());
 			}
+		} catch (IndexOutOfBoundsException ex11) {
+			System.out.println("ERROR, Celda sin datos");
+		}
+		try {
 			if (!tablaDatosVuelo.get(9).text().equals(" ")) {
 				this.setSalaDestino(tablaDatosVuelo.get(9).text());
 			}
+		} catch (IndexOutOfBoundsException ex12) {
+			System.out.println("ERROR, Celda sin datos");
+		}
+		try {
 			if (!tablaDatosVuelo.get(10).text().equals("")) {
 				this.setCintaDestino(tablaDatosVuelo.get(10).text());
 			}
+		} catch (IndexOutOfBoundsException ex14) {
+			System.out.println("ERROR, Celda sin datos");
+		}
+		try {
 			if (!tablaDatosVuelo.get(11).text().equals("")) {
 				this.setEstadoVueloDestino(tablaDatosVuelo.get(11).text());
 			}
-
-		} catch (IndexOutOfBoundsException ex) {
+		} catch (IndexOutOfBoundsException ex26) {
 			System.out.println("ERROR, Celda sin datos");
 
 		}
+	
 	}
 
 	/**

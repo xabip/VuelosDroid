@@ -181,6 +181,7 @@ public class ResultadosAbstractActivity extends AbstractActivity {
 	
 	public String cambiarFechaToUrl(String pUrl, String pDia){
 		formatearFecha(pDia);
+		Log.e(TAG, "ResultadosAbstractActivity - cambiarFechaToUrl - horaFormat: " + horaFormat);
 		return vuelosJsoup.cambiarFechaToUrl(pUrl, horaFormat);
 	}
 

@@ -91,7 +91,7 @@ public class AenaPage {
 	}
 
 	public Elements getOrigenDestino(Document doc) {
-		return doc.select("caption a");
+		return doc.select("caption");
 	}
 
 	public String getNombreCompany(Document doc) {

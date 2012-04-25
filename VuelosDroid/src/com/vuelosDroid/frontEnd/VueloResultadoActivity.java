@@ -454,7 +454,18 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 		cv.put(AlarmasSqlAux.NOMBRECOMPANY, pDatos.getNombreCompany());
 		cv.put(AlarmasSqlAux.HORADESTINO, pDatos.getHoraDestino());
 		cv.put(AlarmasSqlAux.ATERRIZADOSIN, "no");
+		cv.put(AlarmasSqlAux.DESPEGADOSIN, "no");
+		cv.put(AlarmasSqlAux.SONIDO, 1);
+		cv.put(AlarmasSqlAux.ATERRIZAR, 1);
+		cv.put(AlarmasSqlAux.DESPEGAR, 0);
+		cv.put(AlarmasSqlAux.CAMBIOS, 0);
+		cv.put(AlarmasSqlAux.MINUTOS, 0);
+		cv.put(AlarmasSqlAux.ESTADOORIGEN, pDatos.getEstadoVueloOrigen());
+		cv.put(AlarmasSqlAux.ESTADODESTINO, pDatos.getEstadoVueloDestino());
+		cv.put(AlarmasSqlAux.AEROPUERTOORIGEN, pDatos.getAeropuertoOrigen());
+		cv.put(AlarmasSqlAux.AEROPUERTODESTINO, pDatos.getAeropuertoDestino());
 
+		
 		db.insert("alarmas_aux", AlarmasSqlAux.URL, cv);
 		db.close();
 		radAlarma.setChecked(true);
@@ -676,14 +687,14 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 		Log.d(TAG, "VueloResultadoActivity - getDiferencia(2) - pEstado: " + pEstado);
 		Log.d(TAG, "VueloResultadoActivity - getDiferencia(2) - pHora: " + pHora);
 
-		String[] horaVuelo = pEstado.substring(pEstado.indexOf("a las ")+6).split(":");
+		/*String[] horaVuelo = pEstado.substring(pEstado.indexOf("a las ")+6).split(":");
 		String[] horaPrevista = pHora.split(":");
 		int minutos = 0;
 		minutos += (((Integer.parseInt(horaPrevista[0])) - (Integer.parseInt(horaVuelo[0]))))*60;
 		Log.d(TAG, "VueloResultadoActivity - getDiferencia(2) - mins: " + minutos);
 		minutos += (((Integer.parseInt(horaPrevista[1])) - (Integer.parseInt(horaVuelo[1]))));
-		Log.d(TAG, "VueloResultadoActivity - getDiferencia(2) - minutos de diferencia: "+ minutos);
-		return (minutos);
+		Log.d(TAG, "VueloResultadoActivity - getDiferencia(2) - minutos de diferencia: "+ minutos);*/
+		return (0);
 
 	}
 }
