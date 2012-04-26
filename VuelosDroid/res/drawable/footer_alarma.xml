@@ -3,6 +3,7 @@
 
     <item android:drawable="@drawable/ic_menu_alarm_pressed_a" android:state_focused="true" android:state_pressed="true"/>
     <item android:drawable="@drawable/ic_menu_alarm_pressed_a" android:state_focused="false" android:state_pressed="true"/>
+    <item android:drawable="@drawable/ic_menu_alarm_pressed_a" android:state_focused="false" android:state_pressed="true" android:state_selected="true"/>
     <item android:drawable="@drawable/ic_menu_alarm_pressed_a" android:state_focused="true"/>
     <item android:drawable="@drawable/ic_menu_alarm_a" android:state_focused="false" android:state_pressed="false"/>
 

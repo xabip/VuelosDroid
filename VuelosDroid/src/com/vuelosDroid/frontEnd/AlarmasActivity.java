@@ -98,15 +98,16 @@ public class AlarmasActivity extends AbstractActivity {
 		getSeguimiento();
 
 		if (prefs == 1) {
-			layAlarm.setVisibility(View.GONE);
+			//layAlarm.setVisibility(View.GONE);
 			controlAlarm();
-
 			laySeg.setVisibility(View.GONE);
 			controlSeg();
 		} else {
 			if (RED) {
 				loadData(datosVuelosAlarmas, 0);
-				loadData(datosVuelos, 1);
+				//layAlarm.setVisibility(View.GONE);
+				controlSeg();
+				laySeg.setVisibility(View.GONE);
 
 			} else {
 				layAlarm.setVisibility(View.GONE);
@@ -277,16 +278,16 @@ public class AlarmasActivity extends AbstractActivity {
 		});
 
 		miListaAlarmas
-				.setOnItemLongClickListener(new OnItemLongClickListener() {
+		.setOnItemLongClickListener(new OnItemLongClickListener() {
 
-					public boolean onItemLongClick(AdapterView<?> arg0,
-							View arg1, int arg2, long arg3) {
-						Log.i(TAG,
-								"AlarmasActivity - setListenersAlarma - onItemLongClick - Borrando Alarma");
-						// borrarAlarma(datosVuelosAlarmas.get(arg2).getLinkInfoVuelo());
-						return true;
-					}
-				});
+			public boolean onItemLongClick(AdapterView<?> arg0,
+					View arg1, int arg2, long arg3) {
+				Log.i(TAG,
+						"AlarmasActivity - setListenersAlarma - onItemLongClick - Borrando Alarma");
+				// borrarAlarma(datosVuelosAlarmas.get(arg2).getLinkInfoVuelo());
+				return true;
+			}
+		});
 	}
 
 	public void getSeguimiento() {
@@ -296,9 +297,9 @@ public class AlarmasActivity extends AbstractActivity {
 
 		String[] args = new String[] { AlarmasSql.URL, AlarmasSql.NOMBREVUELO,
 				AlarmasSql.FECHAORIGEN, AlarmasSql.HORAORIGEN,
-				AlarmasSql.NOMBRECOMPANY };
-		// Log.(TAG, "Funciona la llamada");
-
+				AlarmasSql.NOMBRECOMPANY, AlarmasSql.AEROPUERTODESTINO, 
+				AlarmasSql.AEROPUERTOORIGEN, AlarmasSql.HORADESTINO,
+				AlarmasSql.ESTADODESTINO, AlarmasSql.ESTADOORIGEN};
 		Cursor c = db.query("alarmas", args, null, null, null, null, null);
 		// Nos aseguramos de que existe al menos un registro
 		if (c.moveToFirst()) {
@@ -317,8 +318,12 @@ public class AlarmasActivity extends AbstractActivity {
 				dat.setFechaOrigen(c.getString(2));
 				dat.setHoraOrigen(c.getString(3));
 				dat.setNombreCompany(c.getString(4));
+				dat.setAeropuertoDestino(c.getString(5));
+				dat.setAeropuertoOrigen(c.getString(6));
+				dat.setHoraDestino(c.getString(7));
+				dat.setEstadoVueloDestino(c.getString(8));
+				dat.setEstadoVueloOrigen(c.getString(9));
 				datosVuelos.add(dat);
-
 			} while (c.moveToNext());
 		}
 		db.close();
@@ -576,9 +581,9 @@ public class AlarmasActivity extends AbstractActivity {
 					pEstado.indexOf("a las ") + 6).split(":");
 			int minutos = 0;
 			minutos += (((Integer.parseInt(horaVuelo[0])) - (new Date()
-					.getHours()))) * 60;
+			.getHours()))) * 60;
 			minutos += (((Integer.parseInt(horaVuelo[1])) - (new Date()
-					.getMinutes())));
+			.getMinutes())));
 			Log.d(TAG,
 					"AlarmaActivity - getDiferencia - minutos de diferencia: "
 							+ minutos);
@@ -589,21 +594,30 @@ public class AlarmasActivity extends AbstractActivity {
 	}
 
 	public int getDiferencia(String pEstado, String pHora) {
-		Log.d(TAG, "AlarmasActivity - getDiferencia(2) - pEstado: " + pEstado);
-		Log.d(TAG, "AlarmasActivity - getDiferencia(2) - pHora: " + pHora);
+		try{
+			Log.d(TAG, "AlarmasActivity - getDiferencia(2) - pEstado: " + pEstado);
+			Log.d(TAG, "AlarmasActivity - getDiferencia(2) - pHora: " + pHora);
 
-		String[] horaVuelo = pEstado.split(":");
-		String[] horaPrevista = pHora.split(":");
-		int minutos = 0;
-		minutos += (((Integer.parseInt(horaPrevista[0])) - (Integer
-				.parseInt(horaVuelo[0])))) * 60;
-		Log.d(TAG, "AlarmasActivity - getDiferencia(2) - mins: " + minutos);
-		minutos += (((Integer.parseInt(horaPrevista[1])) - (Integer
-				.parseInt(horaVuelo[1]))));
-		Log.d(TAG,
-				"AlarmaActivity - getDiferencia(2) - minutos de diferencia: "
-						+ minutos);
-		return (minutos);
+			String[] horaVuelo = pEstado.split(":");
+			String[] horaPrevista = pHora.split(":");
+			int minutos = 0;
+			if(horaPrevista[0].contains("i") && horaPrevista[0].contains(" ")){
+				return 0;
+			} else {
+				minutos += (((Integer.parseInt(horaPrevista[0])) - (Integer
+						.parseInt(horaVuelo[0])))) * 60;
+				Log.d(TAG, "AlarmasActivity - getDiferencia(2) - mins: " + minutos);
+				minutos += (((Integer.parseInt(horaPrevista[1])) - (Integer
+						.parseInt(horaVuelo[1]))));
+				Log.d(TAG,
+						"AlarmaActivity - getDiferencia(2) - minutos de diferencia: "
+								+ minutos);
+				return (minutos);
+			}
+
+		}catch (Exception e){
+			return 0;
+		}
 
 	}
 
@@ -675,14 +689,14 @@ public class AlarmasActivity extends AbstractActivity {
 					.substring(
 							0,
 							datosVuelos.get(position).getAeropuertoOrigen()
-									.indexOf("(") - 1);
+							.indexOf("(") - 1);
 			String textDestino = datosVuelos
 					.get(position)
 					.getAeropuertoDestino()
 					.substring(
 							0,
 							datosVuelos.get(position).getAeropuertoDestino()
-									.indexOf("(") - 1);
+							.indexOf("(") - 1);
 
 			int estado = controlEstado(getHora(datosVuelos.get(position)
 					.getEstadoVueloOrigen()), datosVuelos.get(position)

@@ -115,7 +115,7 @@ public class ResultadoActivity extends ResultadosAbstractActivity{
 				//Log.w(TAG, datosVuelos.get(arg2).getLinkInfoVuelo());
 				extras.putString("url",datosVuelos.get(arg2).getLinkInfoVuelo());
 				extras.putString("codigo", "");
-				extras.putString("dia", "no");
+				extras.putString("dia", dia);
 				intent.putExtras(extras);
 				if(!tieneRed()){
 					Toast toast1 = Toast.makeText(getApplicationContext(), "Necesitas tener red para poder continuar", Toast.LENGTH_SHORT);

@@ -37,6 +37,7 @@ public class AlarmaService extends Service {
 	private DatosVuelo datos;
 	private boolean depegado;
 	private boolean aterrizado;
+	private String salido;
 	private int estado = INICIAL;
 	private int id;
 
@@ -534,12 +535,15 @@ public class AlarmaService extends Service {
 									pDatos.getDatos().getAeropuertoDestino()
 									.indexOf("(") - 1);
 					actualizarBDRetrasoOrigen(pDatos, datos.getEstadoVueloOrigen());
-					notificar(
-							"El vuelo " + text + " - " + text2 + " ha sido modificado.",
-							datos.getEstadoVueloOrigen() + " (" + getDiferenciaEstados(
-									datos.getEstadoVueloOrigen(),
-									datos.getEstadoVueloOrigen()) + " mins)" + "",
-									sonido);
+					if(!datos.getEstadoVueloOrigen().contains("despe") && salido.equals("no")){
+						notificar(
+								"El vuelo " + text + " - " + text2 + " ha sido modificado.",
+								datos.getEstadoVueloOrigen() + " (" + getDiferenciaEstados(
+										datos.getEstadoVueloOrigen(),
+										datos.getEstadoVueloOrigen()) + " mins)" + "",
+										sonido);
+					}
+					
 				} else if (!(pDatos.getDatos().getEstadoVueloDestino()).equals(datos.getEstadoVueloDestino())) {
 					String text = pDatos
 							.getDatos() 
@@ -556,12 +560,15 @@ public class AlarmaService extends Service {
 									pDatos.getDatos().getAeropuertoDestino()
 									.indexOf("(") - 1);
 					actualizarBDRetrasoDestino(pDatos, datos.getEstadoVueloDestino());
-					notificar(
-							"El vuelo " + text + " - " + text2 + " ha sido modificado.",
-							datos.getEstadoVueloOrigen() + " (" + getDiferenciaEstados(
-									datos.getEstadoVueloDestino(),
-									datos.getEstadoVueloDestino()) + " mins)" + "",
-									sonido);
+					if(!datos.getEstadoVueloDestino().contains("aterrizado")){
+						notificar(
+								"El vuelo " + text + " - " + text2 + " ha sido modificado.",
+								datos.getEstadoVueloOrigen() + " (" + getDiferenciaEstados(
+										datos.getEstadoVueloDestino(),
+										datos.getEstadoVueloDestino()) + " mins)" + "",
+										sonido);
+					}
+					
 				}
 			default:
 				break;
@@ -611,20 +618,26 @@ public class AlarmaService extends Service {
 						.getDatos()
 						.getAeropuertoOrigen()
 						.substring(
-								0,
+								pDatos.getDatos().getAeropuertoDestino()
+								.indexOf("ORIGEN") + 1,
 								pDatos.getDatos().getAeropuertoOrigen()
 								.indexOf("(") - 1);
 				String text2 = pDatos
 						.getDatos()
 						.getAeropuertoDestino()
-						.substring(
-								0,
+						.substring(pDatos.getDatos().getAeropuertoDestino()
+								.indexOf("DESTINO") + 1	,
 								pDatos.getDatos().getAeropuertoDestino()
 								.indexOf("(") - 1);
 				if(pDatos.getDespegar() == SI){
-					notificar("El vuelo " + text + " - " + text2 + " ha despegado.", 
-							"A las: " + getHora(pDatos.getDatos().getEstadoVueloOrigen()),
-							pDatos.getSonido());
+					if(pEstado.contains("despegado") && !(pDatos.getDatos().getEstadoVueloOrigen().contains("despegado"))){
+						actualizarBDRetrasoOrigen(pDatos, pEstado);
+						ponerSalido(pDatos);
+						notificar("El vuelo " + text + " - " + text2 + " ha despegado.", 
+								"A las: " + getHora(pDatos.getDatos().getEstadoVueloOrigen()),
+								pDatos.getSonido());
+						
+					}	
 				}
 				return pEstado.contains("despegado");
 
@@ -638,7 +651,7 @@ public class AlarmaService extends Service {
 					Log.d(TAG,
 							"AlarmaService - verSiDespegado - DESCONECTADO - dif: " + dif);
 					if (dif <= 0) {
-						notificar("El vuelo deberia haber despegado ",
+						notificar("El vuelo debería haber despegado ",
 								"SIN CONEXION", pDatos.getSonido());
 					}
 					return false;
@@ -687,9 +700,12 @@ public class AlarmaService extends Service {
 								pDatos.getDatos().getAeropuertoDestino()
 								.indexOf("(") - 1);
 				if(pDatos.getDespegar() == SI){
-					notificar("El vuelo " + text + " - " + text2 + " ha aterrizado.", 
-							"A las: " + getHora(pDatos.getDatos().getEstadoVueloOrigen()),
-							pDatos.getSonido());
+					if(pEstado.contains("aterrizado")){
+						actualizarBDRetrasoDestino(pDatos, datos.getEstadoVueloDestino());
+						notificar("El vuelo " + text + " - " + text2 + " ha aterrizado.", 
+								"A las: " + getHora(pDatos.getDatos().getEstadoVueloOrigen()),
+								pDatos.getSonido());
+					}
 				}
 				return pEstado.contains("aterrizado");
 
@@ -761,7 +777,7 @@ public class AlarmaService extends Service {
 		AlarmasSqlAux alarms = new AlarmasSqlAux(this);
 		SQLiteDatabase db = alarms.getReadableDatabase();
 		Log.d(TAG,
-				"AlarmaService - actualizarBDAterrizadoSin - Funciona la llamada");
+				"AlarmaService - ponerDespegadoSin - Funciona la llamada");
 		ContentValues editor = new ContentValues();
 		editor.put(AlarmasSqlAux.ATERRIZADOSIN, "si");
 		String[] args2 = { pDatos.getId() + "" };
@@ -769,6 +785,18 @@ public class AlarmaService extends Service {
 		db.close();
 	}
 
+	private void ponerSalido(DatosAlarma pDatos){
+		AlarmasSqlAux alarms = new AlarmasSqlAux(this);
+		SQLiteDatabase db = alarms.getReadableDatabase();
+		Log.d(TAG,
+				"AlarmaService - ponerSalido - Funciona la llamada");
+		ContentValues editor = new ContentValues();
+		editor.put(AlarmasSqlAux.SALIDO, "si");
+		String[] args2 = { pDatos.getId() + "" };
+		db.update("alarmas_aux", editor, "id=?", args2);
+		db.close();
+	}
+	
 	public int getDiferencia(String pEstado) {
 		try{
 			String[] horaVuelo = pEstado.substring(pEstado.indexOf("a las ") + 6)
@@ -931,7 +959,7 @@ public class AlarmaService extends Service {
 				AlarmasSqlAux.CAMBIOS, AlarmasSqlAux.MINUTOS, 
 				AlarmasSqlAux.ESTADOORIGEN, AlarmasSqlAux.ESTADODESTINO,
 				AlarmasSqlAux.AEROPUERTOORIGEN, AlarmasSqlAux.AEROPUERTODESTINO,
-				AlarmasSqlAux.DESPEGADOSIN};
+				AlarmasSqlAux.DESPEGADOSIN, AlarmasSqlAux.SALIDO};
 
 		Cursor c = db.query("alarmas_aux", args, null, null, null, null, null);
 		// Nos aseguramos de que existe al menos un registro
@@ -953,7 +981,7 @@ public class AlarmaService extends Service {
 				datos.setAeropuertoDestino(c.getString(16));
 				aterrizadoSin = c.getString(6);
 				despegadoSin = c.getString(17);
-
+				salido = c.getString(18);
 				url = datos.getLinkInfoVuelo();
 				id = c.getInt(7);
 				Log.d(TAG, "AlarmaService - getAlarmas - id: " + id);
@@ -985,7 +1013,6 @@ public class AlarmaService extends Service {
 		db.close();
 		// estado = TERMINADO;
 		stopService(pIntent);
-
 	}
 
 	public void getAlarmasId(int id, Intent intent) {
@@ -1000,7 +1027,8 @@ public class AlarmaService extends Service {
 				AlarmasSqlAux.ATERRIZAR, AlarmasSqlAux.DESPEGAR,
 				AlarmasSqlAux.MINUTOS, AlarmasSqlAux.ESTADOORIGEN,
 				AlarmasSqlAux.ESTADODESTINO, AlarmasSqlAux.AEROPUERTOORIGEN,
-				AlarmasSqlAux.AEROPUERTODESTINO, AlarmasSqlAux.DESPEGADOSIN};
+				AlarmasSqlAux.AEROPUERTODESTINO, AlarmasSqlAux.DESPEGADOSIN,
+				AlarmasSqlAux.SALIDO};
 		String[] args2 = { id + "" };
 		Cursor c = db.query("alarmas_aux", args, "id=?", args2, null, null,
 				null);
@@ -1029,6 +1057,7 @@ public class AlarmaService extends Service {
 
 				aterrizadoSin = c.getString(6);
 				despegadoSin = c.getString(17);
+				salido = c.getString(18);
 				url = datos.getLinkInfoVuelo();
 				id = c.getInt(7);
 				Log.d(TAG, "AlarmaService - getAlarmasId " + id);
@@ -1070,7 +1099,6 @@ public class AlarmaService extends Service {
 			alarmManager.set(AlarmManager.RTC_WAKEUP,
 					System.currentTimeMillis() + (i * 100000), pendingIntent);
 		}
-
 	}
 
 	public void borrarAlarma(String pUrl, int pId, DatosAlarma pDatos) {
@@ -1080,26 +1108,6 @@ public class AlarmaService extends Service {
 		SQLiteDatabase db = alarms.getWritableDatabase();
 		db.execSQL("DELETE FROM alarmas_aux WHERE " + AlarmasSqlAux.ID + "='" + id + "' ");
 		ponerSeg(pUrl, pDatos);
-		db.close();
-	}
-
-	public void ponerAterrizadoSin() {
-		AlarmasSql alarms = new AlarmasSql(this);
-		SQLiteDatabase db = alarms.getWritableDatabase();
-
-		ContentValues cv = new ContentValues();
-		cv.put(AlarmasSql.URL, datos.getLinkInfoVuelo());
-		cv.put(AlarmasSql.NOMBREVUELO, datos.getNombreVuelo());
-		cv.put(AlarmasSql.ALARMA, 1);
-		cv.put(AlarmasSql.EMPEZADO, 0);
-		cv.put(AlarmasSql.HORAORIGEN, datos.getHoraOrigen());
-		cv.put(AlarmasSql.FECHAORIGEN, datos.getFechaOrigen());
-		cv.put(AlarmasSql.NOMBRECOMPANY, datos.getNombreCompany());
-		cv.put(AlarmasSqlAux.HORADESTINO, datos.getHoraDestino());
-		cv.put(AlarmasSqlAux.ATERRIZADOSIN, "si");
-
-		String[] args = { datos.getLinkInfoVuelo() };
-		db.update("alarmas", cv, AlarmasSqlAux.URL + "=?", args);
 		db.close();
 	}
 
@@ -1116,6 +1124,12 @@ public class AlarmaService extends Service {
 		cv.put(AlarmasSql.NOMBREVUELO, datos.getNombreVuelo());
 		cv.put(AlarmasSql.FECHAORIGEN, datos.getFechaOrigen());
 		cv.put(AlarmasSql.NOMBRECOMPANY, datos.getNombreCompany());
+		cv.put(AlarmasSql.HORAORIGEN, pDatos.getDatos().getHoraOrigen());
+		cv.put(AlarmasSql.ESTADOORIGEN, pDatos.getDatos().getEstadoVueloOrigen());
+		cv.put(AlarmasSql.ESTADODESTINO, pDatos.getDatos().getEstadoVueloDestino());
+		cv.put(AlarmasSql.HORADESTINO, pDatos.getDatos().getHoraDestino());
+		cv.put(AlarmasSql.AEROPUERTOORIGEN, pDatos.getDatos().getAeropuertoOrigen());
+		cv.put(AlarmasSql.AEROPUERTODESTINO, pDatos.getDatos().getAeropuertoDestino());
 
 		db.insert("alarmas", AlarmasSql.URL, cv);
 

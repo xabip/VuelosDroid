@@ -2,8 +2,11 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:drawable="@android:color/transparent" android:state_focused="true" android:state_pressed="true"/>
-    <item android:drawable="@android:color/transparent" android:state_focused="false" android:state_pressed="true"/>
-    <item android:drawable="@android:color/transparent" android:state_focused="true"/>
+    <item android:drawable="@android:color/transparent" android:state_focused="false" android:state_pressed="true" android:state_selected="true"/>
+    <item android:drawable="@color/trasparente_medio" android:state_focused="false" android:state_pressed="true" android:state_selected="false"/>
+    <item android:drawable="@color/trasparente_medio" android:state_focused="true" android:state_pressed="false"/>
+    <item android:drawable="@color/trasparente_medio" android:state_focused="false" android:state_pressed="true"/>
+    <item android:drawable="@color/trasparente_medio" android:state_selected="true"/>
     <item android:drawable="@android:color/transparent" android:state_focused="false" android:state_pressed="false"/>
-
+    
 </selector>

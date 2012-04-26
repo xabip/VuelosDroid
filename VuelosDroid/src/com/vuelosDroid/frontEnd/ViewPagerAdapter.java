@@ -16,6 +16,8 @@ import kankan.wheel.widget.adapters.ArrayWheelAdapter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
+
 import com.viewpagerindicator.TitleProvider;
 import com.vuelosDroid.R;
 import com.vuelosDroid.backEnd.behind.BusquedaRecienteSql;
@@ -187,6 +189,9 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 			setLayoutLlegadas(v);
 		}    
 		((ViewPager) pager).addView(v, 0);
+		InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
 		return v;
 	}
 
@@ -195,6 +200,8 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		//final RadioGroup radioDia = (RadioGroup)v.findViewById(R.id.grupo_dia_cod);
 		//radioDia.clearCheck();
 		//radioDia.check(R.id.radio1_cod); 
+		TextView text = (TextView)v.findViewById(R.id.text_columna1_codigo);
+		text.setPressed(true);
 		Button boton = (Button)v.findViewById(R.id.btn_codigo);
 		InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(edit.getWindowToken(), 0);
@@ -241,12 +248,18 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.list_item, aeropuertos);	
 		autoDestinos.setAdapter(adapter);
 		//autoOrigen.setHint("Introduce el origen");
+		autoDestinos.setPressed(false);
 		autoDestinos.setThreshold(1);
+		InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(autoDestinos.getWindowToken(), 0);
+
 
 		//<-- Autocomplete Aeropuerto Destino -->
 		final AutoCompleteTextView autoOrigen = (AutoCompleteTextView) v.findViewById(R.id.autocomplete_origen_llegadas);
 		autoOrigen.setEnabled(false);
 		autoOrigen.setThreshold(1);
+		imm.hideSoftInputFromWindow(autoOrigen.getWindowToken(), 0);
+
 
 		/*	     //Spinner Horario
 	     final Spinner spinnerHorario = (Spinner) v.findViewById(R.id.spinner_horario_llegadas);
@@ -402,12 +415,19 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		autoOrigen.setAdapter(adapter);
 		autoOrigen.setHint("Introduce el origen");
 		autoOrigen.setThreshold(1);
+		autoOrigen.setPressed(false);
+		InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(autoOrigen.getWindowToken(), 0);
+
+		
 
 		//<-- Autocomplete Aeropuerto Destino -->
 		final AutoCompleteTextView autoDestino = (AutoCompleteTextView) v.findViewById(R.id.autocomplete_destino);
 		autoDestino.setEnabled(false);
 		autoDestino.setHint("Introduce un origen primero");
 		autoDestino.setThreshold(1);
+		imm.hideSoftInputFromWindow(autoDestino.getWindowToken(), 0);
+
 
 		/*	     //Spinner Horario
 	     final Spinner spinnerHorario = (Spinner) v.findViewById(R.id.spinner_horario);

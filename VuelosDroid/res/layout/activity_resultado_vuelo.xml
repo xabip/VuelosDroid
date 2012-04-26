@@ -142,7 +142,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:text="(VLC1423)"
-                android:textStyle="bold" />
+                android:textStyle="bold" />
             -->
         </LinearLayout>
 
@@ -175,6 +175,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:text="Mas" />
+
+            <TextView
+                android:id="@+id/text_resultado_vuelo_estado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:textStyle="bold"
+                android:text="Mas" />
         </LinearLayout>
 
         <!--
@@ -188,7 +196,7 @@
                 android:onClick="onClickActualizar"
                 android:text="Actualizar" 
                 />
-        </LinearLayout>
+        </LinearLayout>
         -->
 
         <LinearLayout
@@ -246,7 +254,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:text="(VLC1423)"
-                android:textStyle="bold" />
+                android:textStyle="bold" />
             -->
         </LinearLayout>
 
@@ -299,7 +307,7 @@
                 android:onClick="onClickActualizar"
                 android:text="Actualizar" 
                 />
-        </LinearLayout>
+        </LinearLayout>
         -->
 
         <LinearLayout
@@ -414,33 +422,6 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="onClickMarcador"
-            android:orientation="vertical" >
-
-            <ImageButton
-                android:id="@+id/boton_resultado_favorito"
-                style="@style/FooterButton"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="7dp"
-                android:src="@drawable/footer_favorito" />
-
-            <TextView
-                android:id="@+id/boton_resultado_favorito"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="Favorito"
-                android:textColor="#FFFFFF"
-                android:textSize="17dp" />
-        </LinearLayout>
-
-        <ImageView style="@style/TitleBarSeparator" />
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:onClick="onClickAlarma"
@@ -451,15 +432,56 @@
                 style="@style/FooterButton"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:onClick="onClickAlarma"
                 android:paddingTop="7dp"
                 android:src="@drawable/footer_alarma" />
 
             <TextView
-                android:id="@+id/boton_resultado_alarma"
+                android:id="@+id/text_resultado_vuelo_alarma"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="Alarma"
+                android:textColor="#FFFFFF"
+                android:textSize="17dp" />
+        </LinearLayout>
+
+        <ImageView style="@style/TitleBarSeparator" />
+
+        <LinearLayout
+            android:id="@+id/layout_resultado_vuelo_manana"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onClickBtnManana"
+            android:orientation="vertical" >
+
+            <!-- android:onClick="onClickBtnManana" -->
+
+            <ImageButton
+                android:id="@+id/boton_resultado_favorito"
+                style="@style/FooterButton"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onClickBtnManana"
+                android:paddingTop="7dp"
+                android:src="@drawable/footer_favorito" />
+
+            <ImageButton
+                android:id="@+id/boton_resultado_vuelo_manana"
+                style="@style/FooterButton"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onClickBtnManana"
+                android:paddingTop="7dp"
+                android:src="@drawable/footer_alarma" />
+
+            <TextView
+                android:id="@+id/text_resultado_vuelo_dia"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Mañana"
                 android:textColor="#FFFFFF"
                 android:textSize="17dp" />
         </LinearLayout>

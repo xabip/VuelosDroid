@@ -11,6 +11,7 @@
         android:paddingBottom="20dp" >
 
         <TextView
+            android:id="@+id/text_columna1_codigo"
             style="@style/TextViewt"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

@@ -15,7 +15,11 @@ public class AlarmasSql extends SQLiteOpenHelper{
 	public static final String AEROPUERTOORIGEN = "aeropuerto_origen";
 	public static final String FECHAORIGEN = "fecha_origen";
 	public static final String HORAORIGEN = "hora_origen";
+	public static final String HORADESTINO = "hora_destino";
 	public static final String AEROPUERTODESTINO = "aeropuerto_destino";
+	public static final String ESTADOORIGEN = "estado_origen";
+	public static final String ESTADODESTINO = "estado_destino";
+
 	public static final String ALARMA = "alarma";
 	public static final String EMPEZADO = "empezado";
 	public static final String SALIDO = "salido";
@@ -24,7 +28,7 @@ public class AlarmasSql extends SQLiteOpenHelper{
 	
 	private String sqlCreate = "CREATE TABLE alarmas (url TEXT PRIMARY KEY, nombre_vuelo TEXT, nombre_company TEXT, " +
 			"aeropuerto_origen TEXT, fecha_origen TEXT, hora_origen TEXT, aeropuerto_destino TEXT, alarma INTEGER," +
-			"empezado INTEGER, salido INTEGER)";
+			"empezado INTEGER, salido INTEGER, estado_destino TEXT, hora_destino TEXT, estado_origen TEXT)";
 
 	
 	public AlarmasSql(Context context, String name, CursorFactory factory,
