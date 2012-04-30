@@ -8,6 +8,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 
 public class MiReceiverAntelacion extends BroadcastReceiver {
@@ -17,6 +18,7 @@ public class MiReceiverAntelacion extends BroadcastReceiver {
 	private String origen;
 	private String destino;
 	private String hora;
+	private String url;
 	private int minutos;
 	private int SIMPLE_NOTFICATION_ID;
 
@@ -31,6 +33,7 @@ public class MiReceiverAntelacion extends BroadcastReceiver {
 		destino = intent.getStringExtra("destino");
 		hora = intent.getStringExtra("hora");
 		minutos = intent.getIntExtra("minutos", 0);
+		url = intent.getStringExtra("url");
 		Log.d("VuelosAndroid", "MiReceiverAntelacion - onReceive - origen: " + origen);
 		Log.d("VuelosAndroid", "MiReceiverAntelacion - onReceive - destino: " + destino);
 		Log.d("VuelosAndroid", "MiReceiverAntelacion - onReceive - hora: " + hora);
@@ -59,7 +62,14 @@ public class MiReceiverAntelacion extends BroadcastReceiver {
 		Notification mNotificacion = new Notification(icono, contentTitle, hora);
 
 		//Creacion del intent
-		Intent notIntent = new Intent(context, AbstractActivity.class);
+		
+		Intent notIntent = new Intent(context, com.vuelosDroid.frontEnd.VueloResultadoActivity.class);
+		notIntent.setAction(Intent.ACTION_MAIN);
+		Bundle bun = new Bundle();
+		bun.putString("url", url);
+		bun.putString("dia", "hoy");
+		bun.putString("codigo" ,"");
+		notIntent.putExtras(bun);
 		PendingIntent contIntent = PendingIntent.getActivity(context, 0, notIntent, 0);
 
 		mNotificacion.setLatestEventInfo(context, contentTitle, contentText, contIntent);

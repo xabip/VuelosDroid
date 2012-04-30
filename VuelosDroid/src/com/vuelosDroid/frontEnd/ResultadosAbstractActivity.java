@@ -36,7 +36,7 @@ public class ResultadosAbstractActivity extends AbstractActivity {
 
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
-		debug("OnCreate ResultadosAbstracActivity");
+		Log.i(TAG, "ResultadosAbstractActivity - OnCreate");
 		vuelosJsoup = new VuelosJSoup();
 		prefer = getSharedPreferences("MisPreferencias",Context.MODE_PRIVATE);
 		tamano = prefer.getInt("tamano", 10);
@@ -79,78 +79,86 @@ public class ResultadosAbstractActivity extends AbstractActivity {
 	}
 
 	public DatosVuelo getInfoUnVuelo(String in, String cod, String dia)  throws MoreFlightsException, NoHayVueloException{
-		Log.v(TAG, "Busqueda codigo: in=" + in + " codigo: " +cod+ " dia: "+dia);
+		Log.d(TAG, "ResultadoAbstractActivity - getInfoUnVuelo - Busqueda codigo: in=" + in + " codigo: " +cod+ " dia: "+dia);
 		//formatearFecha2(dia);
 		DatosVuelo datoVue = new DatosVuelo();
-		Log.i(TAG, "Un vuelo: pasa");
+		Log.i(TAG, "ResultadoAbstractActivity - getInfoUnVuelo - pasa");
 		formatearFecha(dia);
-		Log.i(TAG, "Un vuelo: pasa2 "+horaFormat);
+		Log.d(TAG, "ResultadoAbstractActivity - getInfoUnVuelo - pasa2 - horaFormat: "+horaFormat);
 		//Gson gson = new Gson();
 		try {
 			datoVue = vuelosJsoup.getDatosVuelo(cod,horaFormat);
-			Log.i(TAG, "datoVue"+ datoVue.getAeropuertoDestino()+" "+datoVue.getAeropuertoOrigen()+
+			Log.d(TAG, "ResultadoAbstractActivity - getInfoUnVuelo - datos..: "+ datoVue.getAeropuertoDestino()+" "+datoVue.getAeropuertoOrigen()+
 					datoVue.getNombreVuelo()+ datoVue.getTerminalOrigen()+ datoVue.getEstadoVueloDestino());
 
 		} catch (NoHayVueloException e) {
-			Log.w(TAG, "No hay Vuelos con esos parámetros");
+			Log.e(TAG, "ResultadoAbstractActivity - getInfoUnVuelo - No hay Vuelos con esos parámetros " + e.getMessage());
 			throw e;
 		}catch(IOException ex1){
+			Log.e(TAG, "ResultadoAbstractActivity - getInfoUnVuelo - IOException: " + ex1.getMessage());
 			System.out.println("error no hay conexion a internet");
 
 		}catch(MoreFlightsException ex1){
+			Log.e(TAG, "ResultadoAbstractActivity - getInfoUnVuelo - MoreFligthsException: " + ex1.getMessage());
 			System.out.println("error no hay conexion a internet");
 			throw ex1;
 		} catch (Exception e) {
-			Log.e(TAG, "Excepcion "+e.toString());
+			Log.e(TAG, "ResultadoAbstractActivity - getInfoUnVuelo - generalException: " + e.getMessage());
 		}
 		return datoVue;
 	}
 
 	public DatosVuelo getInfoUnVuelo(String in, String link){
-		Log.v(TAG, "Un vuelo: in=" + in + " link: " +link);
+		Log.d(TAG, "ResultadoAbstractActivity - getInfoUnVueloCod: in=" + in + " link: " +link);
 		DatosVuelo datoVue = new DatosVuelo();
-		Log.i(TAG, "Un vuelo: pasa");
-		Log.i(TAG, "Un vuelo: pasa2 "+horaFormat);
+		Log.i(TAG, "ResultadoAbstractActivity - getInfoUnVueloCod - pasa");
+		Log.d(TAG, "ResultadoAbstractActivity - getInfoUnVueloCod - horaFormat: "+horaFormat);
 		try {
 			datoVue = vuelosJsoup.getDatosVuelo(link);
 
-			Log.i(TAG, "datoVue"+ datoVue.getAeropuertoDestino()+" "+datoVue.getAeropuertoOrigen()+
+			Log.i(TAG, "ResultadoAbstractActivity - getInfoUnVueloCod - datoVue"+ datoVue.getAeropuertoDestino()+" "+datoVue.getAeropuertoOrigen()+
 					datoVue.getNombreVuelo()+ datoVue.getTerminalOrigen()
 					+datoVue.getEstadoVueloDestino());
 
 
 		} catch (NoHayVueloException e) {
+			Log.e(TAG, "ResultadoAbstractActivity - getInfoUnVueloCod - No hay Vuelos con esos parámetros " + e.getMessage());
 			System.out.println("No hay Vuelos con esos parámetros");
 		}catch(IOException ex1){
+			Log.e(TAG, "ResultadoAbstractActivity - getInfoUnVueloCod - IOException: " + ex1.getMessage());
 			System.out.println("error no hay conexion a internet");
 
 		} catch (Exception e) {
+			Log.e(TAG, "ResultadoAbstractActivity - getInfoUnVueloCod - generalException: " + e.getMessage());
 			Log.e(TAG, "Excepcion "+e.toString());
 		}
 		return datoVue;
 	}
 
-	public DatosGroup getInfoMasVuelos(String pCod, String pDia){
+	public DatosGroup getInfoMasVuelos(String pCod, String pDia) throws NoHayVueloException{
 		DatosGroup listaVuelos = new DatosGroup();
-		Log.w(TAG, "antes de buscar. "+ pCod + pDia);
+		Log.d(TAG, "ResultadoAbstractActivity -  getInfoMasVuelos - antes de buscar. "+ pCod + pDia);
 
 		formatearFecha(pDia);
 		try {
-			Log.w(TAG, "antes de buscar. "+ pCod + horaFormat);
+			Log.d(TAG, "ResultadoAbstractActivity - getInfoMasVuelos  - antes de buscar:  "+ pCod + horaFormat);
 			listaVuelos.setValues(vuelosJsoup.recorrerMultiplesVuelos(pCod, horaFormat));
-		} catch (Exception e) {
-			Log.e(TAG, "excepcion al buscar");
+		} catch (NoHayVueloException e){
+			Log.e(TAG, "ResultadosAbstractActivity - getInfoMasVuelos - No hay vuelo " + e.getMessage());
+			throw e;
 		}
-
+		catch (Exception e) {
+			Log.e(TAG, "ResultadosAbstractActivity - excepcion al buscar " + e.getMessage());
+		}
 		return listaVuelos;
 	}
 
 	public DatosGroup getInfoVuelos(String destino, String origen, String horario, String dia, String compania, String tipo) 
 			throws NoHayMasPaginasDeVuelosException{
-		Log.v(TAG, "Todos los vuelos: destino: " + destino + " origen: " + origen + " horario: " + horario + 
+		Log.d(TAG, "ResultadoAbstractActivity - getInfoVuelos  - Todos los vuelos: destino: " + destino + " origen: " + origen + " horario: " + horario + 
 				" dia: " + dia +  " compañia: "+ compania);
 		formatearFecha(dia);
-		Log.v(TAG, "Todos los vuelos: destino: " + destino + " origen: " + origen + " horario: "+ horario + 
+		Log.d(TAG, "ResultadoAbstractActivity - getInfoVuelos - Todos los vuelos: destino: " + destino + " origen: " + origen + " horario: "+ horario + 
 				" dia: " + horaFormat+  " compañia: "+ compania);
 
 		DatosGroup listaVuelos = new DatosGroup();
@@ -168,11 +176,10 @@ public class ResultadosAbstractActivity extends AbstractActivity {
 			}
 			//Log.v(TAG, "Todos los vuelos: " + listaVuelos.getValues());
 		}catch (NoHayMasPaginasDeVuelosException e){
-			Log.e(TAG, "ResultadosAbstractActivity - getInfoVuelos - NoHayMasPaginasDeVuelosExteption"+ e.toString());
+			Log.e(TAG, "ResultadosAbstractActivity - getInfoVuelos - NoHayMasPaginasDeVuelosExteption"+ e.getMessage());
 			throw e;
 		}catch (Exception e1) {
-			Log.e(TAG, "Fallo");
-
+			Log.e(TAG, "ResultadoAbstractActivity - getInfoVuelos - FalloGeneral " + e1.getMessage());
 			e1.printStackTrace();
 		}
 		return listaVuelos;
@@ -180,7 +187,9 @@ public class ResultadosAbstractActivity extends AbstractActivity {
 
 	
 	public String cambiarFechaToUrl(String pUrl, String pDia){
+		pDia = pDia.toLowerCase();
 		formatearFecha(pDia);
+		Log.d(TAG, "ResultadosAbstractActivity - cambiarFechaToUrl - pDia: " + pDia);
 		Log.e(TAG, "ResultadosAbstractActivity - cambiarFechaToUrl - horaFormat: " + horaFormat);
 		return vuelosJsoup.cambiarFechaToUrl(pUrl, horaFormat);
 	}

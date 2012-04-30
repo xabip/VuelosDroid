@@ -5,6 +5,7 @@ import java.util.Date;
 
 import com.vuelosDroid.backEnd.scrapper.*;
 import com.vuelosDroid.frontEnd.AbstractActivity;
+import com.vuelosDroid.frontEnd.VueloResultadoActivity;
 
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -213,7 +214,7 @@ public class AlarmaService extends Service {
 					}
 					if (verSiCancelado(datos.getEstadoVueloDestino())) {
 						estado = TERMINADO;
-						notificar(TEXTO_CANCELADO, "", sonido);
+						notificar(TEXTO_CANCELADO, "", sonido, pDatos);
 					}
 					if (verSiRetrasado(datos.getEstadoVueloDestino())) {
 						/*notificar(TEXTO_RETRASADO,
@@ -244,7 +245,7 @@ public class AlarmaService extends Service {
 					}
 					if (verSiCancelado(datos.getEstadoVueloDestino())) {
 						estado = TERMINADO;
-						notificar(TEXTO_CANCELADO, "", sonido);
+						notificar(TEXTO_CANCELADO, "", sonido, pDatos);
 					}
 					if (verSiRetrasado(datos.getEstadoVueloDestino())) {
 						/*notificar(TEXTO_RETRASADO,
@@ -284,7 +285,7 @@ public class AlarmaService extends Service {
 					ponerEstado(getDiferencia(datos.getEstadoVueloDestino()));
 					if (verSiCancelado(datos.getEstadoVueloDestino())) {
 						estado = TERMINADO;
-						notificar(TEXTO_CANCELADO, "", sonido);
+						notificar(TEXTO_CANCELADO, "", sonido, pDatos);
 					}
 					if (verSiRetrasado(datos.getEstadoVueloDestino())) {
 						/*notificar(TEXTO_RETRASADO,
@@ -323,7 +324,7 @@ public class AlarmaService extends Service {
 					ponerEstado(getDiferencia(datos.getEstadoVueloDestino()));
 					if (verSiCancelado(datos.getEstadoVueloDestino())) {
 						estado = TERMINADO;
-						notificar(TEXTO_CANCELADO, "", sonido);
+						notificar(TEXTO_CANCELADO, "", sonido, pDatos);
 					}
 					if (verSiRetrasado(datos.getEstadoVueloDestino())) {
 						/*notificar(TEXTO_RETRASADO,
@@ -364,7 +365,7 @@ public class AlarmaService extends Service {
 					}
 					if (verSiCancelado(datos.getEstadoVueloOrigen())) {
 						estado = TERMINADO;
-						notificar("El vuelo ha sido cancelado", "", sonido);
+						notificar("El vuelo ha sido cancelado", "", sonido, pDatos);
 					}
 					if (verSiDespegado(datos.getEstadoVueloOrigen(), pDatos)) {
 
@@ -461,7 +462,7 @@ public class AlarmaService extends Service {
 					if (verSiDespegado(datos.getEstadoVueloOrigen(), pDatos)) {
 						ponerEstado(getDiferencia(datos.getEstadoVueloDestino()));
 						notificar(TEXTO_SALIDO, datos.getEstadoVueloOrigen(),
-								sonido);
+								sonido, pDatos);
 						alarmManager.set(AlarmManager.RTC_WAKEUP,
 								System.currentTimeMillis() + (20 * 10000),
 								pendingIntent);
@@ -535,13 +536,13 @@ public class AlarmaService extends Service {
 									pDatos.getDatos().getAeropuertoDestino()
 									.indexOf("(") - 1);
 					actualizarBDRetrasoOrigen(pDatos, datos.getEstadoVueloOrigen());
-					if(!datos.getEstadoVueloOrigen().contains("despe") && salido.equals("no")){
+					if(!datos.getEstadoVueloOrigen().contains("espe") && !salido.equals("si")){
 						notificar(
 								"El vuelo " + text + " - " + text2 + " ha sido modificado.",
 								datos.getEstadoVueloOrigen() + " (" + getDiferenciaEstados(
 										datos.getEstadoVueloOrigen(),
 										datos.getEstadoVueloOrigen()) + " mins)" + "",
-										sonido);
+										sonido, pDatos);
 					}
 					
 				} else if (!(pDatos.getDatos().getEstadoVueloDestino()).equals(datos.getEstadoVueloDestino())) {
@@ -566,7 +567,7 @@ public class AlarmaService extends Service {
 								datos.getEstadoVueloOrigen() + " (" + getDiferenciaEstados(
 										datos.getEstadoVueloDestino(),
 										datos.getEstadoVueloDestino()) + " mins)" + "",
-										sonido);
+										sonido, pDatos);
 					}
 					
 				}
@@ -630,13 +631,12 @@ public class AlarmaService extends Service {
 								pDatos.getDatos().getAeropuertoDestino()
 								.indexOf("(") - 1);
 				if(pDatos.getDespegar() == SI){
-					if(pEstado.contains("despegado") && !(pDatos.getDatos().getEstadoVueloOrigen().contains("despegado"))){
+					if(pEstado.contains("pegado") && !(pDatos.getDatos().getEstadoVueloOrigen().contains("pegado"))){
 						actualizarBDRetrasoOrigen(pDatos, pEstado);
 						ponerSalido(pDatos);
 						notificar("El vuelo " + text + " - " + text2 + " ha despegado.", 
 								"A las: " + getHora(pDatos.getDatos().getEstadoVueloOrigen()),
-								pDatos.getSonido());
-						
+								pDatos.getSonido(), pDatos);
 					}	
 				}
 				return pEstado.contains("despegado");
@@ -652,7 +652,7 @@ public class AlarmaService extends Service {
 							"AlarmaService - verSiDespegado - DESCONECTADO - dif: " + dif);
 					if (dif <= 0) {
 						notificar("El vuelo debería haber despegado ",
-								"SIN CONEXION", pDatos.getSonido());
+								"SIN CONEXION", pDatos.getSonido(), pDatos);
 					}
 					return false;
 
@@ -704,7 +704,7 @@ public class AlarmaService extends Service {
 						actualizarBDRetrasoDestino(pDatos, datos.getEstadoVueloDestino());
 						notificar("El vuelo " + text + " - " + text2 + " ha aterrizado.", 
 								"A las: " + getHora(pDatos.getDatos().getEstadoVueloOrigen()),
-								pDatos.getSonido());
+								pDatos.getSonido(), pDatos);
 					}
 				}
 				return pEstado.contains("aterrizado");
@@ -720,7 +720,7 @@ public class AlarmaService extends Service {
 							"AlarmaService - verSiArerrizado - DESCONECTADO - dif: " + dif);
 					if (dif <= 0) {
 						notificar("El vuelo deberia haber aterrizado ",
-								"SIN CONEXION", pDatos.getSonido());
+								"SIN CONEXION", pDatos.getSonido(), pDatos);
 					}
 					return false;
 
@@ -912,12 +912,12 @@ public class AlarmaService extends Service {
 		}
 	}
 
-	public void notificar(String pMens, String pMens2, int pSonido) {
+	public void notificar(String pMens, String pMens2, int pSonido, DatosAlarma pDatos) {
 		Context context = getApplicationContext();
 		String ns = Context.NOTIFICATION_SERVICE;
 		int icono = android.R.drawable.btn_star_big_on;
 		CharSequence contentTitle = pMens;
-		CharSequence contentText = pMens2;
+		CharSequence contentText = pDatos.getDatos().getEstadoVueloDestino();
 		long hora = System.currentTimeMillis();
 
 		// Creacion de la notificacion
@@ -925,9 +925,17 @@ public class AlarmaService extends Service {
 		Notification mNotificacion = new Notification(icono, contentTitle, hora);
 
 		// Creacion del intent
-		Intent notIntent = new Intent(context, AbstractActivity.class);
+		Intent notIntent = new Intent(context, com.vuelosDroid.frontEnd.VueloResultadoActivity.class);
+		notIntent.setAction(Intent.ACTION_MAIN);
+		Bundle bun = new Bundle();
+		bun.putString("url", pDatos.getDatos().getLinkInfoVuelo());
+		bun.putString("dia", "hoy");
+		bun.putString("codigo" ,"");
+		notIntent.putExtras(bun);
 		PendingIntent contIntent = PendingIntent.getActivity(context, 0,
 				notIntent, 0);
+		
+		
 
 		mNotificacion.setLatestEventInfo(context, contentTitle, contentText,
 				contIntent);
@@ -1091,9 +1099,13 @@ public class AlarmaService extends Service {
 		bun.putString("origen", pDatos.getDatos().getAeropuertoOrigen());
 		bun.putString("destino", pDatos.getDatos().getAeropuertoDestino());
 		bun.putInt("minutos", pDatos.getMinutos());
+		bun.putString("url", pDatos.getDatos().getLinkInfoVuelo());
+		bun.putString("dia", "hoy");
 		Intent intentA = new Intent(this, MiReceiverAntelacion.class);
 		intentA.putExtras(bun);
 		if (i > 0) {
+			//intentA.set(getApplicationContext(), com.vuelosDroid.frontEnd.VueloResultadoActivity.class);
+			
 			pendingIntent = PendingIntent.getBroadcast(this, id + 999, intentA,
 					PendingIntent.FLAG_CANCEL_CURRENT);
 			alarmManager.set(AlarmManager.RTC_WAKEUP,

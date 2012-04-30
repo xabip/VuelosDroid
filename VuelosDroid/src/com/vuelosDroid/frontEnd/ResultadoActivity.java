@@ -7,6 +7,7 @@ import com.vuelosDroid.R;
 import com.vuelosDroid.backEnd.scrapper.DatosGroup;
 import com.vuelosDroid.backEnd.scrapper.DatosVuelo;
 import com.vuelosDroid.backEnd.scrapper.NoHayMasPaginasDeVuelosException;
+import com.vuelosDroid.backEnd.scrapper.NoHayVueloException;
 
 import android.content.Context;
 import android.content.Intent;
@@ -52,7 +53,7 @@ public class ResultadoActivity extends ResultadosAbstractActivity{
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		debug("onCreate VuelosAndroidActivity");
+		debug("ResultadoActivity - onCreate - VuelosAndroidActivity");
 		context = this;
 		setContentView(R.layout.activity_resultado);
 		TextView text = (TextView) findViewById(R.id.text_busqueda_resultado_vuelo);
@@ -65,13 +66,17 @@ public class ResultadoActivity extends ResultadosAbstractActivity{
 		tipo = bundle.getString("tipo");
 		dia = bundle.getString("dia");
 
+		if(!tipo.equals(null)){
 		if (tipo.contains("Destino")){
 			text.setText(tipo + destino);
-		}else{
+		}else if (tipo.contains("rigen")){
 			text.setText(tipo + origen);
 
+		}else {
+			text.setText("");
 		}
-		Log.e(TAG, "Seguimos vivos...");
+		}
+		Log.i(TAG, "ResultadoActivity - onCreate - Seguimos vivos...");
 
 		lay = (LinearLayout) findViewById(R.id.layout_progress_resultado);
 
@@ -91,7 +96,7 @@ public class ResultadoActivity extends ResultadosAbstractActivity{
 
 		//Si viene de busqueda de un vuelo
 		if(origen.equals("") && destino.equals("")){
-			Log.w(TAG, "Viene de un vuelo");
+			Log.w(TAG, "ResultadoActivity - onCreate - Viene de un vuelo");
 			loadData2(bundle.getString("codigo"), bundle.getString("dia").toLowerCase());
 		}
 		//Si viene de la busqueda por aeropuertos de origen y destino
@@ -131,7 +136,6 @@ public class ResultadoActivity extends ResultadosAbstractActivity{
 
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
 				Log.i(TAG, "ResultadoActivity - OnScrollListener - OnScroll - onScrollStateChanged "+scrollState);
-
 			}
 
 			public void onScroll(AbsListView view, int firstVisibleItem,
@@ -149,28 +153,29 @@ public class ResultadoActivity extends ResultadosAbstractActivity{
 
 	private final Handler progressHandler = new Handler() {
 		public void handleMessage(Message msg) {
-			Log.e(TAG, "Dentro del Handler1");
+			Log.e(TAG, "ResultadoActivity - progressHandler - Dentro del Handler1");
 			if (msg.obj != null) {
 				if(msg.arg1 == 0){
-					Log.e(TAG, "Dentro del Handler");
+					Log.i(TAG, "ResultadoActivity - progressHandler - 	Dentro del Handler");
 					listaVuelos = (DatosGroup)msg.obj;
-					Log.e(TAG, listaVuelos.getValues().isEmpty()+"");
-					Log.e(TAG, "Final del handler");
+					//Log.d(TAG, "ResultadoActivity - progressHandler - isEmpty: " + listaVuelos.getValues().isEmpty());
 					//progressDialog.dismiss();
 					lay.setVisibility(View.GONE);
 					adapter = new miAdapter(context, listaVuelos);
 					miLista.setAdapter(adapter);
 					datosVuelos = (List<DatosVuelo>) listaVuelos.getValues();
 					pag++;
+					Log.i(TAG, "ResultadoActivity - progressHandler - Final del handler");
+
 				}else{
 					if(!(msg.arg2==9)){
-					Log.e(TAG, "ResultadoActivity - Dentro del Handler - Pagina " + msg.arg1);
+					Log.d(TAG, "ResultadoActivity - Dentro del Handler - Pagina " + msg.arg1);
 					DatosGroup listaVuelosH;
 					listaVuelosH = (DatosGroup)msg.obj;
-					Log.e(TAG, "ResultadoActivity - Dentro del Handler - Tamaño - " +listaVuelos.getValues().size());
+					Log.d(TAG, "ResultadoActivity - Dentro del Handler - Tamaño - " +listaVuelos.getValues().size());
 					listaVuelos.getValues().addAll(listaVuelosH.getValues());
-					Log.e(TAG, "ResultadoActivity - Dentro del Handler - Pagina " +listaVuelos.getValues().isEmpty()+"");
-					Log.e(TAG, "ResultadoActivity - Dentro del Handler - Pagina - Final del handler" +listaVuelos.getValues().size());
+					Log.d(TAG, "ResultadoActivity - Dentro del Handler - Pagina " +listaVuelos.getValues().isEmpty()+"");
+					Log.d(TAG, "ResultadoActivity - Dentro del Handler - Pagina - Final del handler" +listaVuelos.getValues().size());
 					//progressDialog.dismiss();
 					//lay.setVisibility(View.GONE);
 					pag++;
@@ -181,8 +186,10 @@ public class ResultadoActivity extends ResultadosAbstractActivity{
 				}
 			}
 			else {
-				Log.e(TAG, "Dentro del Handler NUll"+msg.obj);
-
+				Log.w(TAG, "ResultadoActivity - Dentro del Handler NUll");
+				lay.setVisibility(View.GONE);
+				LinearLayout layNo = (LinearLayout) findViewById(R.id.layout_resultado_sin_resultado);
+				layNo.setVisibility(View.VISIBLE);
 			}
 		}
 	};
@@ -207,8 +214,8 @@ public class ResultadoActivity extends ResultadosAbstractActivity{
 				}
 				msg.arg1 = pTipo;
 				DatosGroup dats = (DatosGroup)msg.obj;
-				Log.e(TAG, dats.getValues().isEmpty()+"");
-				Log.e(TAG, "Dentro del LoadData antes de mandar el mensaje");
+				Log.d(TAG, dats.getValues().isEmpty()+"");
+				Log.i(TAG, "ResultadoActivity - loadData - Dentro del LoadData antes de mandar el mensaje");
 				//progressDialog = ProgressDialog.show(cont, "", "Por favor espere mientras se cargan los datos...", true);
 				progressHandler.sendMessage(msg);
 
@@ -216,15 +223,19 @@ public class ResultadoActivity extends ResultadosAbstractActivity{
 	}
 
 	private void loadData2(final String pCod, final String pDia) {
-		Log.e(TAG, "Dentro del LoadData2 principio");
+		Log.i(TAG, "ResultadoActivity - loadData2 - Dentro del LoadData2 principio");
 		new Thread(new Runnable(){
 			public void run() {
-				Log.e(TAG, "Dentro del new Thread");
+				Log.i(TAG, "ResultadoActivity - loadData2 - Dentro del new Thread");
 				Message msg = progressHandler.obtainMessage();
-				msg.obj = getInfoMasVuelos(pCod, pDia);
-				Log.e(TAG, "Dentro del LoadData antes de mandar el mensaje");
+				try {
+					msg.obj = getInfoMasVuelos(pCod, pDia);
+				} catch (NoHayVueloException e) {
+					Log.e(TAG, "ResultadoActivity - loadData2 - noHayVueloException " + e.getMessage());
+					msg.obj = null;
+				}
+				Log.i(TAG, "ResultadoActivity - loadData2 - Dentro del LoadData antes de mandar el mensaje");
 				//progressDialog = ProgressDialog.show(cont, "", "Por favor espere mientras se cargan los datos...", true);
-
 				progressHandler.sendMessage(msg);
 			}}).start();
 	}

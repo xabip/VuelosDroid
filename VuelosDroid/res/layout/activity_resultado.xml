@@ -71,6 +71,23 @@
             android:layout_height="wrap_content"
             android:text="Obteniendo datos..." />
     </LinearLayout>
+    
+       <LinearLayout
+        android:id="@+id/layout_resultado_sin_resultado"
+        style="@style/Theme.LayoutResultado"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" 
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/text_resultado_progrees"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="17dp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:text="No hay nigún vuelo que coincida con esos datos" />
+    </LinearLayout>
 
     <ListView
         android:id="@+id/lista_resultados"

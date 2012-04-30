@@ -2,9 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical" 
-    android:scrollbars="vertical" 
-    android:scrollbarAlwaysDrawVerticalTrack="true">
+    android:orientation="vertical"
+    android:scrollbarAlwaysDrawVerticalTrack="true"
+    android:scrollbars="vertical" >
 
     <LinearLayout style="@style/TitleBar" >
 
@@ -35,56 +35,69 @@
             android:src="@drawable/title_search" />
     </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Alarmas" />
-
-    <LinearLayout
-        android:id="@+id/layout_progress_alarmas_alarmas"
-        style="@style/Theme.LayoutResultado" >
-
-        <ProgressBar
-            android:id="@+id/progressalarmas"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/text_no_hay_alarmas"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="No ninguna alarma programada" />
-
-    <ListView
-        android:id="@+id/lista_resultados_alarmas"
+    <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="fill_parent" >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Antiguas Alarmas" />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical" >
 
-    <LinearLayout
-        android:id="@+id/layout_progress_alarmas_seguimiento"
-        style="@style/Theme.LayoutResultado" >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Alarmas" />
 
-        <ProgressBar
-            android:id="@+id/progress_seguimiento"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/layout_progress_alarmas_alarmas"
+                style="@style/Theme.LayoutResultado" >
 
-    <TextView
-        android:id="@+id/text_no_hay_seguimiento"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="No ningún vuelo en seguimiento" />
+                <ProgressBar
+                    android:id="@+id/progressalarmas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
 
-    <ListView
-        android:id="@+id/lista_resultados_seguimiento"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/text_no_hay_alarmas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No ninguna alarma programada" />
+
+            <ListView
+                android:id="@+id/lista_resultados_alarmas"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" 
+                android:scrollbars="vertical"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Antiguas Alarmas" />
+
+            <LinearLayout
+                android:id="@+id/layout_progress_alarmas_seguimiento"
+                style="@style/Theme.LayoutResultado" >
+
+                <ProgressBar
+                    android:id="@+id/progress_seguimiento"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/text_no_hay_seguimiento"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No ningún vuelo en seguimiento" />
+
+            <ListView
+                android:id="@+id/lista_resultados_seguimiento"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

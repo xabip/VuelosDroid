@@ -20,13 +20,13 @@
 
     <style name="Theme.llayout_general" parent="android:style/Theme.Light">
         <item name="android:windowNoTitle">false</item>
-        <item name="android:windowContentOverlay">@null</item>
+        <!-- <item name="android:windowContentOverlay">@null</item>-->
         <item name="android:background">@color/background1</item>
     </style>
 
     <style name="Theme.D1" parent="android:style/Theme.Light">
         <item name="android:windowNoTitle">true</item>
-        <item name="android:windowContentOverlay">@null</item>
+        <!-- <item name="android:windowContentOverlay">@null</item>-->
         <item name="android:radioButtonStyle">@style/RadioButton</item>
     </style>
 

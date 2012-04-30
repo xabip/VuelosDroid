@@ -63,7 +63,7 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 	public static int NADA = 2;
 	public boolean reciente;
 	public boolean rapido = false;
-	
+
 	private static final int ONTIME = 0;
 	private static final int DELAYED = 1;
 	private static final int CANCELED = 2;
@@ -95,21 +95,23 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 		bundle = this.getIntent().getExtras();
 		url = bundle.getString("url");
 		String dia = bundle.getString("dia");
-		Log.w(TAG, "VueloResultadoActivity - On create " + url);
+		dia = dia.toLowerCase();
+		Log.d(TAG, "VueloResultadoActivity - Oncreate - url: " + url);
 
-		Log.w(TAG, dia);
+		Log.d(TAG, "VueloResultadoActivity - onCreate - dia: " + dia);
 
 		if(!dia.equals("no")){
-			Log.w(TAG, "VueloResultadoActivity - On create " + dia);
-			Log.w(TAG, "VueloResultadoActivity - On create " + url);
+			Log.d(TAG, "VueloResultadoActivity - Oncreate - Antes de cambiar url - dia: " + dia);
+			Log.d(TAG, "VueloResultadoActivity - Oncreate - Antes de cambiar url - url: " + url);
+			if(!url.equals(" " )){
+				url = cambiarFechaToUrl(url, dia);
+			}
+			Log.d(TAG, "VueloResultadoActivity - Oncreate - Despues de cambiar url - dia: " + dia);
 
-			url = cambiarFechaToUrl(url, dia);
-			Log.w(TAG, "VueloResultadoActivity - On create " + dia);
-
-			Log.w(TAG, "VueloResultadoActivity - On create " + url);
+			Log.d(TAG, "VueloResultadoActivity - Oncreate - Despues de cambiar url - url: " + url);
 
 		}
-		Log.e(TAG, url);
+		Log.e(TAG, "VueloResultadoActivity - onCreate - url: " + url);
 		if(!RED){
 			Toast toast1 = Toast.makeText(getApplicationContext(), "No hay red.", Toast.LENGTH_SHORT);
 			lay.setVisibility(View.GONE);
@@ -122,9 +124,9 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 
 	private final Handler progressHandler = new Handler() {
 		public void handleMessage(Message msg) {
-			Log.e(TAG, "Dentro del Handler1");
+			Log.i(TAG, "VueloResultadoActivity - progressHandler - Principio del Handler");
 			if (msg.obj != null) {
-				Log.e(TAG, "Dentro del Handler");
+				Log.i(TAG, "VueloResultadoActivity - progressHandler - Dentro del Handler");
 				datos = (DatosVuelo)msg.obj;
 				Log.e(TAG, "Final del handler"+ datos.getAeropuertoDestino());
 				//progressDialog.dismiss();
@@ -133,30 +135,29 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 				layAlarmas.setVisibility(View.VISIBLE);
 				controlEstado(url);	
 				dia = bundle.getString("dia");
-				Log.w(TAG, "VueloResultadoActivity - handleMenssage " + dia);
+				Log.d(TAG, "VueloResultadoActivity - progressHandler - dia: " + dia);
 				estado = controlEstado(datos.getEstadoVueloOrigen(),datos.getHoraOrigen());
-				Log.d(TAG, "VueloResultadoAtivity - Handler - estado: " + estado);
+				Log.d(TAG, "VueloResultadoAtivity - progressHandler - estado: " + estado);
 				setLayout();
 				controlReciente(datos);
 				guardarReciente(datos);
 				//guardarReciente(datos);
 			}
 			else {
-				Log.e(TAG, "Dentro del Handler NUll"+msg.obj);
+				Log.w(TAG, "Dentro del Handler NUll"+msg.obj);
 			}
 		}
 	};
 
 	private void loadData(final String pUrl) {
-		Log.e(TAG, "Dentro del LoadData principio");
+		Log.i(TAG, "VueloResultadoActivity - loadData - Dentro del LoadData principio");
 		new Thread(new Runnable(){
 			public void run() {
-				Log.e(TAG, "Dentro del new Thread");
+				Log.i(TAG, "VueloResultadoActivity - loadData -  Dentro del new Thread");
 				Message msg = progressHandler.obtainMessage();
 				msg.obj = getInfoUnVuelo("", pUrl);
-				Log.e(TAG, "Dentro del LoadData antes de mandar el mensaje");
+				Log.i(TAG, "VueloResultadoActivity - loadData - Antes de mandar el mensaje");
 				//progressDialog = ProgressDialog.show(cont, "", "Por favor espere mientras se cargan los datos...", true);
-
 				progressHandler.sendMessage(msg);
 			}}).start();
 	}
@@ -164,18 +165,31 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 
 	public void controlOperaciones(){
 		if (url.equals(" ")){
-			Log.e(TAG, "hola");
+			Log.d(TAG, "VueloResultadoActivity - controlOperaciones - url: " + url);
 			codigo = bundle.getString("codigo");
 			dia = bundle.getString("dia");
-			Log.i(TAG, codigo+dia);
+			Log.d(TAG, "VueloResultadoActivity - controlOperaciones - codigo y dia: " +codigo+dia);
 			if(dia.equals("Mañana")){
 				dia = "manana";
 			}
 			try {
 				datos=getInfoUnVuelo("", codigo.toUpperCase(), dia.toLowerCase());
+				Log.i(TAG, "VueloResultadoActivity - controlOperaciones - despues de la llamada al codigo");
+				//progressDialog.dismiss();
+				lay.setVisibility(View.GONE);
+				lay2.setVisibility(View.VISIBLE);
+				layAlarmas.setVisibility(View.VISIBLE);
+				controlEstado(url);	
+				dia = bundle.getString("dia");
+				Log.d(TAG, "VueloResultadoActivity - controlOperaciones - try - dia: " + dia);
+				estado = controlEstado(datos.getEstadoVueloOrigen(),datos.getHoraOrigen());
+				Log.d(TAG, "VueloResultadoAtivity - controlOperaciones - try - estado: " + estado);
+				setLayout();
+				controlReciente(datos);
+				guardarReciente(datos);
 			} catch (MoreFlightsException e) {
 				//e.printStackTrace();
-				Log.e(TAG, "Mas vuelos");
+				Log.e(TAG, "VueloResultadoActivity - controlOperaciones - MoreFlightsException");
 				Intent intent = new Intent(this, ResultadoActivity.class);
 				Bundle extras = new Bundle();
 				extras.putString("codigo", codigo);
@@ -184,16 +198,16 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 				extras.putString("origen", "");
 				extras.putString("destino", "");
 				extras.putString("horario", "");
+				extras.putString("tipo", "codigo");
 				intent.putExtras(extras);
 				this.startActivity(intent);
 			} catch (NoHayVueloException e){
-				Log.e(TAG, "No hay vuelo");
-
+				Log.e(TAG, "VueloResultadoActivity - controlOperaciones - No hay vuelo Exception " + e.getMessage());
 			}
 
 			//setLayout();
 		}else {
-			Log.w(TAG, "con url");
+			Log.i(TAG, "VueloResultadoActivity - controlOperaciones - Con url");
 			//setLayout();
 
 			loadData(url);
@@ -234,7 +248,7 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 		if(!dia.equals("no")){
 			Log.w(TAG, "VueloResultadoActivity - setLayout " + dia);
 
-			if(dia.equals("hoy")){
+			if(dia.equalsIgnoreCase("hoy")){
 				Log.w(TAG, "VueloResultadoActivity - setLayout " + dia);
 				layManana = (LinearLayout) findViewById(R.id.layout_resultado_vuelo_boton_manana);
 				btnHoy.setVisibility(View.GONE);
@@ -255,7 +269,7 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 			//layoutManana.setVisibility(View.GONE);
 
 		}
-		
+
 		if (estado == ONTIME){
 			textEstado.setText("En Hora");
 			textEstado.setTextColor(Color.argb(255, 00, 150, 33));
@@ -287,8 +301,8 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 		textDestinoSala.setText("Sala: " + datos.getSalaDestino());
 		textDestinoCinta.setText("Cinta: " + datos.getCintaDestino());
 		//textCod.setText(datos.)
-		Log.i(TAG, radAlarma.isChecked()+"");
-		Log.i(TAG, radMarcador.isChecked()+"");
+		Log.i(TAG, "VueloResultadoActivity - setLayout - radAlarma: " + radAlarma.isChecked()+"");
+		Log.i(TAG, "VueloResultadoActivity - setLayout - radMarcador: " + radMarcador.isChecked()+"");
 
 		if (alarma){
 			//btnAlarma.setEnabled(false);
@@ -354,12 +368,12 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 	}
 
 	public void onClickSeguimientoVuelo(View v){
-		Log.e(TAG, "Funciona el boton Seguimiento " + datos.getLinkInfoVuelo());
+		Log.d(TAG, "VueloResultadoActivity - onClickSeguimiento - getLinkInfoVuelo: " + datos.getLinkInfoVuelo());
 		ponerSeguimiento(datos);
 	}
 
 	public void onClickAlarmaVuelo(View v){
-		Log.e(TAG, "Funciona el boton Alarma " + datos.getLinkInfoVuelo());
+		Log.e(TAG, "VueloResultadoActivity - onClickAlarmaVuelo - getLinkInfoVuelo: " + datos.getLinkInfoVuelo());
 		ponerAlarma(datos);
 
 	}
@@ -379,7 +393,7 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 	public boolean getSeguimiento(){
 		AlarmasSql alarms =  new AlarmasSql(this); 
 		SQLiteDatabase db = alarms.getReadableDatabase();
-		Log.e(TAG, "Funciona el boton set_seguimiento" + datos.getLinkInfoVuelo());
+		Log.d(TAG, "VueloResultadoActivity - getSeguimiento - getLinkInfoVuelo" + datos.getLinkInfoVuelo());
 
 		String[] args = new String[] {"url"};
 		//String[] args1 = new String[] {"0"};
@@ -391,7 +405,7 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 			do {
 				Log.d(TAG, c.getString(0));
 				if(datos.getLinkInfoVuelo().equals(c.getString(0))){
-					Log.d(TAG, "Ya esta en seguimiento");
+					Log.i(TAG, "VueloResultadoActivity - getSeguimiento - Ya esta en seguimiento");
 					return true;
 				}
 			} while(c.moveToNext());
@@ -403,9 +417,9 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 	public boolean getAlarma(){
 		AlarmasSqlAux alarmsAux =  new AlarmasSqlAux(this); 
 		SQLiteDatabase db2 = alarmsAux.getReadableDatabase();
-		Log.e(TAG, "Funciona el boton set_seguimiento" + datos.getLinkInfoVuelo());
+		Log.d(TAG, "VueloResultadoActivity - getAlarma - getLinkInfoVuelo: " + datos.getLinkInfoVuelo());
 
-		String[] args2 = new String[] {"url"};
+		String[] args2 = new String[] {AlarmasSqlAux.NOMBREVUELO, AlarmasSqlAux.FECHAORIGEN};
 		//String[] args1 = new String[] {"0"};
 
 		Cursor c2 = db2.query("alarmas_aux", args2, null, null, null, null, null);
@@ -413,8 +427,15 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 		if (c2.moveToFirst()) {
 			//Recorremos el cursor hasta que no haya más registros
 			do {
-				Log.d(TAG, c2.getString(0));
-				if(datos.getLinkInfoVuelo().equals(c2.getString(0))){
+				Log.d(TAG, "VueloResultadoActivity - getAlarma - c2.getString(0): " + c2.getString(0));
+				Log.d(TAG, "VueloResultadoActivity - getAlarma - c2.getString(1): " + c2.getString(0));
+				Log.d(TAG, "VueloResultadoActivity - getAlarma - nombreVuelo: " + datos.getNombreVuelo());
+				Log.d(TAG, "VueloResultadoActivity - getAlarma - fechaOrigen: " + datos.getFechaOrigen());
+
+				/*if(datos.getLinkInfoVuelo().equals(c2.getString(0))){
+					return true;
+				}*/
+				if (datos.getNombreVuelo().equals(c2.getString(0)) && datos.getFechaOrigen().equals(c2.getString(1))){
 					return true;
 				}
 			} while(c2.moveToNext());
@@ -506,7 +527,7 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 		cv.put(AlarmasSqlAux.AEROPUERTOORIGEN, pDatos.getAeropuertoOrigen());
 		cv.put(AlarmasSqlAux.AEROPUERTODESTINO, pDatos.getAeropuertoDestino());
 
-		
+
 		db.insert("alarmas_aux", AlarmasSqlAux.URL, cv);
 		db.close();
 		radAlarma.setChecked(true);
@@ -525,7 +546,7 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 		db.close();
 		radAlarma.setChecked(false);
 		botonAlarma.setPressed(false);
-		
+
 
 	}
 
@@ -586,7 +607,7 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 		db.close();
 		radMarcador.setChecked(false);
 		favorito.setPressed(false);
-		Log.i(TAG, "VueloResultadoActivity - Fin de borrar alarma");
+		Log.i(TAG, "VueloResultadoActivity - borrarMarcador - Fin de borrar alarma");
 
 	}
 
@@ -595,21 +616,22 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 		SQLiteDatabase db = alarms.getWritableDatabase();
 		String[] args = {"*"};
 		db.execSQL("DELETE FROM alarmas_aux WHERE "+ AlarmasSqlAux.URL+"='"+pDatos.getLinkInfoVuelo()+"' ");
+		db.execSQL("DELETE FROM alarmas_aux WHERE "+ AlarmasSqlAux.NOMBREVUELO+"='"+pDatos.getNombreVuelo()+"' AND " 
+				+ AlarmasSqlAux.FECHAORIGEN + "='"+pDatos.getFechaOrigen()+"' ");
 		db.close();
 		radAlarma.setChecked(false);
 		ponerSeguimiento(pDatos);
 		//botonAlarma.setPressed(false);
-
 	}
 
 	public void onClickMarcador(View v){
-		Log.i(TAG, "onClick Layout Marcador");
+		Log.i(TAG, "VueloResultadoActivity - onClickMarcador");
 
 		if (marcador){
-			Log.i(TAG, "onClick Layout Marcador seguimiento");
+			Log.i(TAG, "VueloResultadoActivity - onClickMarcador - Con seguimiento");
 			marcador = false;
 			borrarMarcador(datos);
-			Log.i(TAG, radMarcador.isChecked()+"");
+			Log.d(TAG, "VueloResultadoActivity - onClickMarcador - radMarcador: " + radMarcador.isChecked()+"");
 
 
 			setContentView(R.layout.activity_resultado_vuelo);
@@ -621,7 +643,7 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 			radMarcador.setChecked(false);
 			favorito.setPressed(false);
 
-			Log.i(TAG, radMarcador.isChecked()+"");
+			Log.d(TAG, "VueloResultadoActivity - onClickMarcador - radMarcador " + radMarcador.isChecked());
 
 			lay.setVisibility(View.GONE);
 			lay2.setVisibility(View.VISIBLE);
@@ -630,7 +652,7 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 
 
 		}else{
-			Log.i(TAG, "onClick Layout Marcador sin seguimiento");
+			Log.i(TAG, "VueloResultadoActivity - onClickMarcador - Sin seguimiento");
 			marcador = true;
 			ponerSeguimiento(datos);
 			Log.i(TAG, radMarcador.isChecked()+"");
