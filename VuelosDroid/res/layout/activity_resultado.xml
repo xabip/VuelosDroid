@@ -21,8 +21,8 @@
         <ImageButton
             style="@style/TitleBarAction"
             android:contentDescription="@string/descripcion_about"
-            android:onClick="onClickPreferencias"
-            android:src="@drawable/title_about" />
+            android:onClick="onClickActualizar"
+            android:src="@drawable/title_refresh"/>
 
         <ImageView style="@style/TitleBarSeparator" />
 

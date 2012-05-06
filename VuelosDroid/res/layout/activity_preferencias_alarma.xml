@@ -18,12 +18,6 @@
             style="@style/TitleBarText"
             android:text="Preferencias" />
 
-        <ImageButton
-            style="@style/TitleBarAction"
-            android:contentDescription="@string/descripcion_about"
-            android:onClick="onClickActualizar"
-            android:src="@drawable/title_about" />
-
         <ImageView style="@style/TitleBarSeparator" />
 
         <ImageButton

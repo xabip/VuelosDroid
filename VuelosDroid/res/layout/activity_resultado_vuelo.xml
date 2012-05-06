@@ -59,8 +59,7 @@
         android:id="@+id/scrollView_vuelo_resultado"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@id/header_resultado" 
-       >
+        android:layout_below="@id/header_resultado" >
 
         <LinearLayout
             android:id="@+id/layout_vuelo_resultado_sup"
@@ -148,7 +147,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:text="(VLC1423)"
-                android:textStyle="bold" />
+                android:textStyle="bold" />
                 -->
             </LinearLayout>
 
@@ -202,7 +201,7 @@
                 android:onClick="onClickActualizar"
                 android:text="Actualizar" 
                 />
-        </LinearLayout>
+        </LinearLayout>
             -->
 
             <LinearLayout
@@ -260,7 +259,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:text="(VLC1423)"
-                android:textStyle="bold" />
+                android:textStyle="bold" />
                 -->
             </LinearLayout>
 
@@ -313,7 +312,7 @@
                 android:onClick="onClickActualizar"
                 android:text="Actualizar" 
                 />
-        </LinearLayout>
+        </LinearLayout>
             -->
 
             <LinearLayout
@@ -406,8 +405,7 @@
         android:layout_marginTop="10dp"
         android:gravity="right"
         android:orientation="horizontal"
-        android:visibility="gone" 
-        >
+        android:visibility="gone" >
 
         <Button
             android:layout_width="wrap_content"
@@ -450,7 +448,8 @@
                 android:gravity="center"
                 android:text="Alarma"
                 android:textColor="#FFFFFF"
-                android:textSize="17dp" />
+                android:textSize="17dp" 
+                />
         </LinearLayout>
 
         <ImageView style="@style/TitleBarSeparator" />
@@ -459,6 +458,7 @@
             android:id="@+id/layout_resultado_vuelo_manana"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_weight="1"
             android:onClick="onClickBtnManana"
             android:orientation="vertical" >
@@ -467,7 +467,7 @@
 
             <ImageButton
                 android:id="@+id/boton_resultado_favorito"
-                style="@style/FooterButton"
+               style="@style/FooterButton"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:onClick="onClickBtnManana"
@@ -481,7 +481,8 @@
                 android:layout_height="wrap_content"
                 android:onClick="onClickBtnManana"
                 android:paddingTop="7dp"
-                android:src="@drawable/footer_alarma" />
+                android:src="@drawable/footer_hoy" 
+                />
 
             <TextView
                 android:id="@+id/text_resultado_vuelo_dia"

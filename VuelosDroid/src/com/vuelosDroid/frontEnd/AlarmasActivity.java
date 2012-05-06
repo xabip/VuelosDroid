@@ -2,6 +2,7 @@ package com.vuelosDroid.frontEnd;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -27,20 +29,27 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
+import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
+import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
+
+/**
+ * Activity para controlar las alarmas y las antiguas alarmas
+ * @author Xabi
+ *
+ */
 public class AlarmasActivity extends AbstractActivity {
 
 	ListView miLista;
@@ -57,6 +66,9 @@ public class AlarmasActivity extends AbstractActivity {
 	TextView textoNoHayAlarmas;
 	TextView textoNoHaySeguimiento;
 	int idLista;
+
+	ExpandableListView lv;
+	MyExpandableListAdapter mAdapter;
 
 	int prefs = ESTATICO;
 
@@ -112,19 +124,87 @@ public class AlarmasActivity extends AbstractActivity {
 			} else {
 				layAlarm.setVisibility(View.GONE);
 				controlAlarm();
-
 				laySeg.setVisibility(View.GONE);
 				controlSeg();
 				Toast toast1 = Toast.makeText(getApplicationContext(),
 						"No hay ninguna conexión de red", Toast.LENGTH_SHORT);
 				toast1.show();
+			}
+		}
+		lv = (ExpandableListView)findViewById(R.id.expandable_alarmas);
+		List<DatosVuelo> datosss = new ArrayList<DatosVuelo>();
 
+		if (datosAlarmas.isEmpty()){
+			DatosVuelo data = new DatosVuelo();
+			data.setNombreVuelo("NoHayAlarmas");
+			datosss.add(data);
+		} else {
+			DatosVuelo data = new DatosVuelo();
+			data.setNombreVuelo("Cargando");
+			datosss.add(data);
+		}
+		if(datosVuelos.isEmpty()){
+			DatosVuelo data = new DatosVuelo();
+			data.setNombreVuelo("NoHayAntiguas");
+			datosss.add(data);
+
+		}else{
+		
+			Collections.reverse(datosVuelos);
+			if(datosVuelos.size()>10){
+				for(int i = 11; i < datosVuelos.size(); i++){
+					datosVuelos.remove(i);
+				}
 			}
 		}
 
+		mAdapter = new MyExpandableListAdapter(this, datosss, datosVuelos);
+		lv.setAdapter(mAdapter);
+		lv.expandGroup(0);
+		lv.expandGroup(1);
+		final Intent intent = new Intent(context, VueloResultadoActivity.class);
+
+		lv.setOnChildClickListener(new OnChildClickListener() {
+
+			public boolean onChildClick(ExpandableListView parent, View v,
+					int groupPosition, int childPosition, long id) {
+				if(groupPosition == 0){
+					if (!datosAlarmas.isEmpty()){
+						DemoPopupWindow dw = new DemoPopupWindow(v);
+						Log.d(TAG, "AlarmasActivity - AlarmasOnClickListener - pos: "
+								+ childPosition);
+						idLista = childPosition;
+						dw.showLikePopDownMenu();
+					}
+				}
+				else{
+					Bundle extras = new Bundle();
+					Log.d(TAG,
+							"AlarmasActivity - setListenersSeguimiento - miLista.setOnItemClickListener - Pulsada la posicion: "
+									+ childPosition);
+					extras.putString("url", datosVuelos.get(childPosition)
+							.getLinkInfoVuelo());
+					extras.putString("codigo", "");
+					extras.putString("dia", "hoy");
+					intent.putExtras(extras);
+					if (!tieneRed()) {
+						Toast toast1 = Toast.makeText(context,
+								"Necesitas tener red para poder continuar",
+								Toast.LENGTH_SHORT);
+						toast1.show();
+					} else {
+						context.startActivity(intent);
+					}
+				}
+				return false;
+			}
+		});
+
+		mAdapter.notifyDataSetChanged();
+
 	}
 
-	public void controlAlarm() {
+	public List<DatosVuelo> controlAlarm() {
 		if (datosVuelosAlarmas.isEmpty()) {
 			Log.w(TAG,
 					"AlarmasActivity - controlAlarm - La lista de alarmas NO tiene vuelos");
@@ -132,10 +212,14 @@ public class AlarmasActivity extends AbstractActivity {
 		} else {
 			Log.w(TAG,
 					"AlarmasActivity - controlAlarm - La lista de alarmas tiene vuelos");
-			miListaAlarmas = (ListView) findViewById(R.id.lista_resultados_alarmas);
+			/*			miListaAlarmas = (ListView) findViewById(R.id.lista_resultados_alarmas);
 			miListaAlarmas.setAdapter(new miAdapter(this, datosVuelosAlarmas));
-			setListenersAlarma();
+			 */			mAdapter = new MyExpandableListAdapter(this, datosVuelosAlarmas, datosVuelos);
+			 lv.setAdapter(mAdapter);
+			 lv.expandGroup(0);
+			 lv.expandGroup(1);
 		}
+		return null;
 	}
 
 	public void onClickPopupResumen(View v) {
@@ -188,16 +272,16 @@ public class AlarmasActivity extends AbstractActivity {
 		} else {
 			Log.w(TAG,
 					"AlarmasActivity - controlSeg - La lista de seguimiento tiene vuelos");
-			miLista = (ListView) findViewById(R.id.lista_resultados_seguimiento);
+			/*			miLista = (ListView) findViewById(R.id.lista_resultados_seguimiento);
 			miLista.setAdapter(new miAdapter(this, datosVuelos));
 			setListenersSeguimiento();
-		}
+			 */		}
 	}
 
 	public void setAdapAlarm() {
-		miListaAlarmas = (ListView) findViewById(R.id.lista_resultados_alarmas);
+		/*	miListaAlarmas = (ListView) findViewById(R.id.lista_resultados_alarmas);
 		miListaAlarmas.setAdapter(new miAdapter(this, datosVuelosAlarmas));
-		setListenersAlarma();
+		setListenersAlarma();*/
 	}
 
 	public void setListenersSeguimiento() {
@@ -404,6 +488,9 @@ public class AlarmasActivity extends AbstractActivity {
 					// listaVuelos = (DatosGroup)msg.obj;
 					datosVuelosAlarmas = (List<DatosVuelo>) msg.obj;
 					layAlarm.setVisibility(View.GONE);
+
+					mAdapter.notifyDataSetInvalidated();
+
 					controlAlarm();
 					break;
 				case 1:
@@ -499,7 +586,10 @@ public class AlarmasActivity extends AbstractActivity {
 	public int controlEstado(String pEstado, String pHora) {
 		int dif = getDiferencia(pEstado, pHora);
 		Log.d(TAG, "AlarmasActivity - controlEstado - diferencia: " + dif);
-		if (dif < 10) {
+		if(pEstado.contains("celado")){
+			return CANCELED;
+		}
+		if (dif > 10) {
 			return DELAYED;
 		} else {
 			return ONTIME;
@@ -537,9 +627,9 @@ public class AlarmasActivity extends AbstractActivity {
 			return text;
 		} else {
 			if ((dif / 60) * (-1) > 0) {
-				text = "Quedan: ";
+				text = "En ";
 			} else {
-				text = "Quedan: " + (dif / 60) + " h y ";
+				text = "En " + (dif / 60) + " h y ";
 			}
 
 			text = text + (dif % 60) + " mins";
@@ -565,9 +655,9 @@ public class AlarmasActivity extends AbstractActivity {
 			return text;
 		} else {
 			if ((dif / 60) * (-1) > 0) {
-				text = "Quedan: ";
+				text = "En ";
 			} else {
-				text = "Quedan: " + (dif / 60) + " h y ";
+				text = "En " + (dif / 60) + " h y ";
 			}
 
 			text = text + (dif % 60) + " mins";
@@ -651,7 +741,26 @@ public class AlarmasActivity extends AbstractActivity {
 		return pEstado.substring(pEstado.indexOf("a las ") + 6);
 	}
 
-	private class miAdapter extends BaseAdapter {
+	public void onClickBusqueda(View v){
+		startActivity (new Intent(getApplicationContext(), BusquedaActivity.class));
+	}
+
+	public void onClickHome(View v){
+		goHome(this);
+	}
+
+	public void goHome(Context context){
+		final Intent intent = new Intent(context, PrincipalActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		context.startActivity(intent);
+	}
+
+	protected void onResume(){
+		onCreate(bun);
+	}
+
+	
+	/*	private class miAdapter extends BaseAdapter {
 
 		private LayoutInflater mInflater;
 		private List<DatosVuelo> datosVuelos;
@@ -682,21 +791,27 @@ public class AlarmasActivity extends AbstractActivity {
 					.findViewById(R.id.text_item_alarmas_hora_salida);
 			text5 = (TextView) convertView
 					.findViewById(R.id.text_item_alarmas_hora_llegada);
+			if ((datosVuelos.get(position).getAeropuertoOrigen() != null ) && 
+					(!datosVuelos.get(position).getAeropuertoOrigen().equals("--"))){
 
-			String textOrigen = datosVuelos
-					.get(position)
-					.getAeropuertoOrigen()
-					.substring(
-							0,
-							datosVuelos.get(position).getAeropuertoOrigen()
-							.indexOf("(") - 1);
-			String textDestino = datosVuelos
-					.get(position)
-					.getAeropuertoDestino()
-					.substring(
-							0,
-							datosVuelos.get(position).getAeropuertoDestino()
-							.indexOf("(") - 1);
+				String textOrigen = datosVuelos
+						.get(position)
+						.getAeropuertoOrigen()
+						.substring(
+								0,
+								datosVuelos.get(position).getAeropuertoOrigen()
+								.indexOf("(") - 1);
+			}
+			if ((datosVuelos.get(position).getAeropuertoDestino() != null) && 
+					(!datosVuelos.get(position).getAeropuertoDestino().equals("--"))){
+				String textDestino = datosVuelos
+						.get(position)
+						.getAeropuertoDestino()
+						.substring(
+								0,
+								datosVuelos.get(position).getAeropuertoDestino()
+								.indexOf("(") - 1);
+			}
 
 			int estado = controlEstado(getHora(datosVuelos.get(position)
 					.getEstadoVueloOrigen()), datosVuelos.get(position)
@@ -706,7 +821,7 @@ public class AlarmasActivity extends AbstractActivity {
 					+ datosVuelos.get(position).getFechaOrigen());
 			text.setText(datosVuelos.get(position).getNombreVuelo() + "  -  "
 					+ datosVuelos.get(position).getNombreCompany());
-			text2.setText(textOrigen + " - " + textDestino);
+			//text2.setText(textOrigen + " - " + textDestino);
 			text3.setText("Fecha de salida: "
 					+ datosVuelos.get(position).getFechaOrigen());
 			text4.setText("Hora Salida: "
@@ -737,6 +852,7 @@ public class AlarmasActivity extends AbstractActivity {
 		}
 
 	}
+	 */
 
 	private static class DemoPopupWindow extends MenuContextual {
 		public DemoPopupWindow(View anchor) {
@@ -788,5 +904,223 @@ public class AlarmasActivity extends AbstractActivity {
 		public void onClickPopupResumen(View v) {
 			Log.d(TAG, "AlarmasActivity - Popup - onClickPopupResumen");
 		}
+
+	}
+
+	/** 
+	 * Adapter para el ExpandableList 
+	 * @author Xabi
+	 *
+	 */
+	public class MyExpandableListAdapter extends BaseExpandableListAdapter {
+		private String[] groups = { "Alarmas", "Alarmas Recientes"};
+
+		private List<List<DatosVuelo>> children = new ArrayList<List<DatosVuelo>>();
+		private LayoutInflater mInflater;
+
+		MyExpandableListAdapter(Context context, List<DatosVuelo> pAlarmas, List<DatosVuelo> pAntiguas){
+			mInflater = LayoutInflater.from(context);
+			children.add(pAlarmas);
+			children.add(pAntiguas);
+		}
+
+		public Object getChild(int groupPosition, int childPosition) {
+			return children.get(groupPosition).get(childPosition);
+		}
+
+		public long getChildId(int groupPosition, int childPosition) {
+			return childPosition;
+		}
+
+		public int getChildrenCount(int groupPosition) {
+			return children.get(groupPosition).size();
+		}
+
+		public View getChildView(final int groupPosition,final int childPosition, boolean isLastChild,
+				View convertView, ViewGroup parent) {
+			if (convertView == null) {
+				convertView = mInflater.inflate(R.layout.item_alarmas, null);
+			}
+			TextView textNombre = (TextView)convertView.findViewById(R.id.text_item_alarmas_nombre);
+			TextView textCodigo = (TextView)convertView.findViewById(R.id.text_item_alarmas_codigo);
+			TextView textFecha = (TextView)convertView.findViewById(R.id.text_item_alarmas_fecha);
+			TextView textHoraSalida = (TextView)convertView.findViewById(R.id.text_item_alarmas_hora_salida);
+			TextView textHoraLlegada = (TextView)convertView.findViewById(R.id.text_item_alarmas_hora_llegada);
+			String textOrigen = "";
+			String textDestino = "";
+			TextView textEstado = (TextView)convertView.findViewById(R.id.text_item_alarmas_estado);
+
+			ProgressBar prog = (ProgressBar)convertView.findViewById(R.id.progress_item_alarmas);
+
+			if(children.get(groupPosition).get(childPosition).getNombreVuelo().equals("NoHayAlarmas")){
+				textNombre.setText("No hay alarmas programadas");
+				textNombre.setTextSize(19);
+				textNombre.setTextColor(Color.DKGRAY);
+				textCodigo.setVisibility(View.GONE);
+				textFecha.setVisibility(View.GONE);
+				textHoraLlegada.setVisibility(View.GONE);
+				textHoraSalida.setVisibility(View.GONE);
+				textEstado.setVisibility(View.GONE);
+
+				prog.setVisibility(View.GONE);
+
+			} else if(children.get(groupPosition).get(childPosition).getNombreVuelo().equals("Cargando")){
+				prog.setVisibility(View.VISIBLE);
+				textCodigo.setVisibility(View.GONE);
+				textFecha.setVisibility(View.GONE);
+				textFecha.setVisibility(View.GONE);
+				textHoraLlegada.setVisibility(View.GONE);
+				textHoraSalida.setVisibility(View.GONE);
+				textEstado.setVisibility(View.GONE);
+
+				textNombre.setText("Cargando");
+			}else if(children.get(groupPosition).get(childPosition).getNombreVuelo().equals("NoHayAntiguas")){
+				textNombre.setText("No has tenido ninguna alarma");
+				textNombre.setTextSize(19);
+				textNombre.setTextColor(Color.DKGRAY);
+				textCodigo.setVisibility(View.GONE);
+				textFecha.setVisibility(View.GONE);
+				textFecha.setVisibility(View.GONE);
+				textHoraLlegada.setVisibility(View.GONE);
+				textHoraSalida.setVisibility(View.GONE);
+				textEstado.setVisibility(View.GONE);
+
+				prog.setVisibility(View.GONE);
+
+			}else {
+				textCodigo.setVisibility(View.VISIBLE);
+				textFecha.setVisibility(View.VISIBLE);
+				textFecha.setVisibility(View.VISIBLE);
+				textHoraLlegada.setVisibility(View.VISIBLE);
+				textHoraSalida.setVisibility(View.VISIBLE);
+				textEstado.setVisibility(View.VISIBLE);
+				
+				prog.setVisibility(View.GONE);
+				textNombre.setTextSize(17);
+				textNombre.setTextColor(Color.DKGRAY);
+
+				if ((children.get(groupPosition).get(childPosition).getAeropuertoOrigen() != null ) && 
+						(!children.get(groupPosition).get(childPosition).getAeropuertoOrigen().equals("--"))){
+
+					textOrigen = children
+							.get(groupPosition)
+							.get(childPosition)
+							.getAeropuertoOrigen()
+							.substring(
+									0,
+									children.get(groupPosition).get(childPosition).getAeropuertoOrigen()
+									.indexOf("(") - 1);
+					if(textOrigen.contains("Origen")){
+						textOrigen = textOrigen.replace("Origen: ", "");
+					}
+				}
+				if ((children.get(groupPosition).get(childPosition).getAeropuertoDestino() != null) && 
+						(!children.get(groupPosition).get(childPosition).getAeropuertoDestino().equals("--"))){
+					textDestino = children
+							.get(groupPosition)
+							.get(childPosition)
+							.getAeropuertoDestino()
+							.substring(
+									0,
+									children.get(groupPosition).get(childPosition).getAeropuertoDestino()
+									.indexOf("(") - 1);
+					if (textDestino.contains("Destino")){
+						textDestino = textDestino.replace("Destino: ", "");
+					}
+				}
+
+				int estado;
+				
+				if (verSiDespegado(children.get(groupPosition).get(childPosition).getEstadoVueloOrigen())){
+					estado = controlEstado(getHora(children.get(groupPosition).get(childPosition)
+							.getEstadoVueloDestino()), children.get(groupPosition).get(childPosition).getHoraDestino());
+				}else{
+					estado = controlEstado(getHora(children.get(groupPosition).get(childPosition)
+							.getEstadoVueloOrigen()), children.get(groupPosition).get(childPosition).getHoraOrigen());
+				}
+				
+				if(groupPosition==0){
+					if (estado == ONTIME){
+						textEstado.setText("En Hora");
+						textEstado.setTextColor(Color.argb(255, 00, 150, 33));
+						textEstado.setTextSize(17);
+					} else if(estado == DELAYED){
+						textEstado.setText("Retrasado");
+						textEstado.setTextColor(Color.argb(255, 255, 99, 33));
+
+					} else if (estado == CANCELED){
+						textEstado.setText("Cancelado");
+						textEstado.setTextColor(Color.RED);
+					}
+					
+
+					Log.d(TAG, "AlarmasActivity - ExpandableAdapter - getChildView - nombreVuelo: " + children.get(groupPosition).get(childPosition).getNombreVuelo());
+
+					textNombre.setText(textOrigen + " - " + textDestino);
+					textCodigo.setText(children.get(groupPosition).get(childPosition).getNombreVuelo() + "  -  "
+							+ children.get(groupPosition).get(childPosition).getNombreCompany());
+					textFecha.setText("Fecha de salida: " + children.get(groupPosition).get(childPosition).getFechaOrigen());
+					textHoraSalida.setText("Sale a las: "
+							+ getHora(children.get(groupPosition).get(childPosition).getEstadoVueloOrigen())
+							+ " ("
+							+ controlDepegado(children.get(groupPosition).get(childPosition)
+									.getEstadoVueloOrigen()) + ")");
+					textHoraLlegada.setText("Llega a las: "
+							+ getHora(children.get(groupPosition).get(childPosition).getEstadoVueloDestino())
+							+ " ("
+							+ controlAterrizado(children.get(groupPosition).get(childPosition)
+									.getEstadoVueloDestino()) + ")");
+				}else{
+					textEstado.setVisibility(View.GONE);
+					Log.d(TAG, "AlarmasActivity - ExpandableAdapter - getChildView - nombreVuelo: " + children.get(groupPosition).get(childPosition).getNombreVuelo());
+
+					textNombre.setText(textOrigen + " - " + textDestino);
+					textCodigo.setText(children.get(groupPosition).get(childPosition).getNombreVuelo() + "  -  "
+							+ children.get(groupPosition).get(childPosition).getNombreCompany());
+					textFecha.setText("Fecha de salida: " + children.get(groupPosition).get(childPosition).getFechaOrigen());
+					textHoraSalida.setText("Salió a las: "
+							+ getHora(children.get(groupPosition).get(childPosition).getEstadoVueloOrigen()));
+					textHoraLlegada.setText("Llegó a las: "
+							+ getHora(children.get(groupPosition).get(childPosition).getEstadoVueloDestino()));
+				}
+
+
+
+			}
+			return convertView;
+		}
+
+		public Object getGroup(int groupPosition) {
+			return groups[groupPosition];
+		}
+
+		public int getGroupCount() {
+			return groups.length;
+		}
+
+		public long getGroupId(int groupPosition) {
+			return groupPosition;
+		}
+
+		public View getGroupView(int groupPosition, boolean isExpanded, View convertView,
+				ViewGroup parent) {
+			if (convertView == null) {
+				convertView = mInflater.inflate(R.layout.group_row, null);
+			}
+			TextView text1 = (TextView)convertView.findViewById(R.id.text11);
+
+			text1.setText(groups[groupPosition]);
+
+			return convertView;	   
+		}
+
+		public boolean isChildSelectable(int groupPosition, int childPosition) {
+			return true;
+		}
+
+		public boolean hasStableIds() {
+			return true;
+		}
+
 	}
 }

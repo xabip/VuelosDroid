@@ -54,7 +54,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-
+/**
+ * 
+ * @author Xabi
+ *
+ */
 public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 
 	public String TAG = "VUELOS ANDROID";
@@ -134,6 +138,11 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 			for(int i = 11; i < dias.size(); i++){
 				dias.remove(i);
 			}
+		}
+		if(datos.isEmpty()){
+			DatosVuelo dats = new DatosVuelo();
+			dats.setAeropuertoOrigen("NoHay");
+			datos.add(dats);
 		}
 		miLista.setAdapter(new miAdapter(context, datos, dias));
 		final Intent intent = new Intent(context, VueloResultadoActivity.class);
@@ -738,10 +747,21 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 					substring(0, datosVuelos.get(position).getAeropuertoOrigen().indexOf("(")-1);
 			String text2 = datosVuelos.get(position).getAeropuertoDestino().
 					substring(0, datosVuelos.get(position).getAeropuertoDestino().indexOf("(")-1);
-
-			textNombre.setText(text + " - " + text2);
-			textCodigo.setText(datosVuelos.get(position).getNombreVuelo());
-			textHora.setText(datosVuelos.get(position).getHoraOrigen());
+			if (text2.contains("esti")){
+				text2 = text2.replace("Destino: ", "");
+			}
+			
+			if(text.contains("Origen:")){
+				text = text.replace("Origen: ", "");
+			}	
+			if(text.equals("NoHay")){
+				textNombre.setText("No has realizado ninguna búsqueda");
+			}else{
+				textNombre.setText(text + " - " + text2);
+				textCodigo.setText(datosVuelos.get(position).getNombreVuelo());
+				textHora.setText(datosVuelos.get(position).getHoraOrigen());
+			}
+			
 
 			//text2.setText(datosVuelos.get(position).getNombreCompany());
 

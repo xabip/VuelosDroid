@@ -1,9 +1,11 @@
 package com.vuelosDroid.frontEnd;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import com.vuelosDroid.R;
+import com.vuelosDroid.backEnd.behind.CargaVuelosService;
 import com.vuelosDroid.backEnd.scrapper.DatosGroup;
 import com.vuelosDroid.backEnd.scrapper.DatosVuelo;
 import com.vuelosDroid.backEnd.scrapper.NoHayMasPaginasDeVuelosException;
@@ -46,13 +48,16 @@ public class ResultadoActivity extends ResultadosAbstractActivity{
 	static String tipo = "";
 
 	int pag = 0;
-	boolean cargando = false;
+	public boolean cargando = false;
+	boolean carga = false;
 	miAdapter adapter;
 	LinearLayout lay;
+	Bundle bun;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		bun = savedInstanceState;
 		debug("ResultadoActivity - onCreate - VuelosAndroidActivity");
 		context = this;
 		setContentView(R.layout.activity_resultado);
@@ -67,14 +72,14 @@ public class ResultadoActivity extends ResultadosAbstractActivity{
 		dia = bundle.getString("dia");
 
 		if(!tipo.equals(null)){
-		if (tipo.contains("Destino")){
-			text.setText(tipo + destino);
-		}else if (tipo.contains("rigen")){
-			text.setText(tipo + origen);
+			if (tipo.contains("Destino")){
+				text.setText(tipo + destino);
+			}else if (tipo.contains("rigen")){
+				text.setText(tipo + origen);
 
-		}else {
-			text.setText("");
-		}
+			}else {
+				text.setText("");
+			}
 		}
 		Log.i(TAG, "ResultadoActivity - onCreate - Seguimos vivos...");
 
@@ -142,14 +147,59 @@ public class ResultadoActivity extends ResultadosAbstractActivity{
 					int visibleItemCount, int totalItemCount) {
 				Log.i(TAG, "ResultadoActivity - OnScrollListener - OnScroll "+firstVisibleItem + " " + visibleItemCount + " " + totalItemCount);
 				if(pag>0){
+					/*if (cargando && !carga && (firstVisibleItem+visibleItemCount)==totalItemCount){
+						carga = true;
+						ponerCargando();
+						Log.e(TAG, ""+	firstVisibleItem+visibleItemCount);
+					}*/
 					if (!cargando && (firstVisibleItem/pag)>15){
+						ponerCargando();
+
 						loadData(codOrigen, codDestino, horario, dia.toLowerCase(), "", pag);
+						carga = true;
 						cargando = true; 
 					}
+
 				}
 			}
 		});
 	}   
+
+	private void ponerCargando(){
+		DatosVuelo dat = new DatosVuelo();
+		dat.setAeropuertoOrigen("cargando");
+		dat.setAeropuertoDestino("cargando");
+		datosVuelos.add(dat);
+		listaVuelos.setValues(datosVuelos);
+		adapter.notifyDataSetChanged();
+	}
+
+	private void quitarCargando(DatosGroup listaVuelosH){
+
+
+		Iterator<DatosVuelo> it = datosVuelos.iterator();
+		//it.next();
+		DatosVuelo datos = it.next();
+		while (it.hasNext()){
+			datos = it.next();
+			if(datos.getAeropuertoOrigen().equals("cargando")){
+				it.remove();
+			}
+		}
+		adapter.notifyDataSetChanged();
+
+		if(listaVuelosH != null){
+			listaVuelos.getValues().addAll(listaVuelosH.getValues());
+			carga = false;
+			datosVuelos = (List<DatosVuelo>) listaVuelos.getValues();
+			adapter.notifyDataSetChanged();
+		}
+
+	}
+
+	public void onClickActualizar(View v){
+		onCreate(bun);
+	}
 
 	private final Handler progressHandler = new Handler() {
 		public void handleMessage(Message msg) {
@@ -158,34 +208,37 @@ public class ResultadoActivity extends ResultadosAbstractActivity{
 				if(msg.arg1 == 0){
 					Log.i(TAG, "ResultadoActivity - progressHandler - 	Dentro del Handler");
 					listaVuelos = (DatosGroup)msg.obj;
+					datosVuelos = (List<DatosVuelo>) listaVuelos.getValues();
+
 					//Log.d(TAG, "ResultadoActivity - progressHandler - isEmpty: " + listaVuelos.getValues().isEmpty());
 					//progressDialog.dismiss();
 					lay.setVisibility(View.GONE);
-					adapter = new miAdapter(context, listaVuelos);
+					adapter = new miAdapter(context, datosVuelos);
 					miLista.setAdapter(adapter);
-					datosVuelos = (List<DatosVuelo>) listaVuelos.getValues();
 					pag++;
 					Log.i(TAG, "ResultadoActivity - progressHandler - Final del handler");
 
 				}else{
 					if(!(msg.arg2==9)){
-					Log.d(TAG, "ResultadoActivity - Dentro del Handler - Pagina " + msg.arg1);
-					DatosGroup listaVuelosH;
-					listaVuelosH = (DatosGroup)msg.obj;
-					Log.d(TAG, "ResultadoActivity - Dentro del Handler - Tamaño - " +listaVuelos.getValues().size());
-					listaVuelos.getValues().addAll(listaVuelosH.getValues());
-					Log.d(TAG, "ResultadoActivity - Dentro del Handler - Pagina " +listaVuelos.getValues().isEmpty()+"");
-					Log.d(TAG, "ResultadoActivity - Dentro del Handler - Pagina - Final del handler" +listaVuelos.getValues().size());
-					//progressDialog.dismiss();
-					//lay.setVisibility(View.GONE);
-					pag++;
-					adapter.notifyDataSetChanged();
-					datosVuelos = (List<DatosVuelo>) listaVuelos.getValues();
-					cargando = false;
+						Log.d(TAG, "ResultadoActivity - Dentro del Handler - Pagina " + msg.arg1);
+						DatosGroup listaVuelosH;
+						listaVuelosH = (DatosGroup)msg.obj;
+						quitarCargando(listaVuelosH);
+						Log.d(TAG, "ResultadoActivity - Dentro del Handler - Tamaño - " +listaVuelos.getValues().size());
+						Log.d(TAG, "ResultadoActivity - Dentro del Handler - Pagina " +listaVuelos.getValues().isEmpty()+"");
+						Log.d(TAG, "ResultadoActivity - Dentro del Handler - Pagina - Final del handler" +listaVuelos.getValues().size());
+						//progressDialog.dismiss();
+						//lay.setVisibility(View.GONE);
+						pag++;
+						//adapter.notifyDataSetChanged();
+						cargando = false;
 					}
 				}
 			}
 			else {
+				if(!(msg.arg2==9)){
+					quitarCargando(null);
+				}
 				Log.w(TAG, "ResultadoActivity - Dentro del Handler NUll");
 				lay.setVisibility(View.GONE);
 				LinearLayout layNo = (LinearLayout) findViewById(R.id.layout_resultado_sin_resultado);
@@ -193,6 +246,7 @@ public class ResultadoActivity extends ResultadosAbstractActivity{
 			}
 		}
 	};
+
 	private void loadData(final String codOrigen, final String codDestino, final String horario, 
 			final String dia, final String company, final int pTipo) {
 		Log.e(TAG, "Dentro del LoadData principio");
@@ -244,26 +298,33 @@ public class ResultadoActivity extends ResultadosAbstractActivity{
 
 		private LayoutInflater mInflater;
 		private List<DatosVuelo> datosVuelos;
+		private boolean cargando = false;
+		private int pag = 0;
 
-		miAdapter(Context context, DatosGroup datos) {
+		miAdapter(Context context, 	List<DatosVuelo> datosVuelos) {
 			mInflater = LayoutInflater.from(context);
 			//listaVuelos = getInfoVuelos("", "BIO", "8", "hoy", "");
-
-			datosVuelos = (List<DatosVuelo>) datos.getValues();
+			this.datosVuelos = datosVuelos;
 		}
 
 		public View getView(int position, View convertView, ViewGroup parent) {
-			TextView text;
+			TextView text; 
 			TextView text2;	 
 			TextView text3;
 			TextView textHoraLlegada;
 			TextView textCod;
+			LinearLayout lin;
+			LinearLayout linDats;
 			if (convertView == null) {
 				convertView = mInflater.inflate(R.layout.item_resultados, null);
 			}
-/*			if ((position%2 == 1)){
+			/*			if ((position%2 == 1)){
 				convertView.setBackgroundColor(R.drawable.background_gris);
 			}*/
+			lin = (LinearLayout) convertView.findViewById(R.id.layout_item_resultados_cargando);
+			linDats = (LinearLayout) convertView.findViewById(R.id.layout_item_resultados_datos);
+
+
 			text = (TextView) convertView.findViewById(R.id.text_lista1);
 			//text2 = (TextView) convertView.findViewById(R.id.text_lista2);
 			text3 = (TextView) convertView.findViewById(R.id.text_lista3);
@@ -284,6 +345,31 @@ public class ResultadoActivity extends ResultadosAbstractActivity{
 				//text.setText(datosVuelos.get(position).getAeropuertoOrigen());
 
 			}
+
+			if(datosVuelos.get(position).getAeropuertoOrigen().equals("cargando")){
+				Log.w(TAG, "ResultadoActivity - miAdapter - getView - ha entrado en cargando");
+				lin.setVisibility(View.VISIBLE);
+				linDats.setVisibility(View.GONE);
+
+
+				//return convertView;
+			} else {
+				lin.setVisibility(View.GONE);
+				linDats.setVisibility(View.VISIBLE);
+			}
+
+			/*			Log.d(TAG, "ResultadoActivity - miAdapter - getView - cargando: " + cargando);
+			Log.d(TAG, "ResultadoActivity - miAdapter - getView - posicion: " + position);
+			Log.d(TAG, "ResultadoActivity - miAdapter - getView - pag: " + pag);
+			Log.w(TAG, "ResultadoActivity - miAdapter - getView - condicion: " + (cargando && (position/pag)==20));*/
+
+
+			/*if (cargando && (position/pag)==20){
+				Log.w(TAG, "ResultadoActivity - miAdapter - getView - ha entrado");
+
+				LinearLayout lin = (LinearLayout) convertView.findViewById(R.id.layout_item_resultados_cargando);
+				lin.setVisibility(View.VISIBLE);
+			}*/
 			//textHoraLlegada.setText("Hora de llegada:   " + datosVuelos.get(position).getHoraDestino());
 			return convertView;	 
 		}
@@ -302,6 +388,13 @@ public class ResultadoActivity extends ResultadosAbstractActivity{
 		public long getItemId(int position) {
 			return position;
 		}
+
+		/*		public void notifyDataSetChanged(boolean pCargando, int pPag){
+			cargando = pCargando;
+			pag = pPag;
+			super.notifyDataSetChanged();
+
+		}*/
 
 	}
 }

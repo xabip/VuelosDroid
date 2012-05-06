@@ -1,25 +1,46 @@
 package com.vuelosDroid.frontEnd;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import android.app.Activity;
+import android.app.ExpandableListActivity;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.BaseExpandableListAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.RadioGroup;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.SimpleExpandableListAdapter;
 import android.widget.TextView;
+
 
 import com.vuelosDroid.R;
 import com.vuelosDroid.backEnd.behind.AlarmaService;
 import com.vuelosDroid.backEnd.behind.AlarmasSqlAux;
+import com.vuelosDroid.backEnd.scrapper.DatosVuelo;
 
-public class PreferenciasActivity extends AbstractActivity {
+/**
+ * 
+ * @author Xabi
+ *
+ */
+public class PreferenciasActivity extends AbstractActivity  {
 
 	/**
 	 * Constantes de estado
@@ -180,68 +201,68 @@ public class PreferenciasActivity extends AbstractActivity {
 		});
 
 		checkBoxSonido
-				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
-					public void onCheckedChanged(CompoundButton buttonView,
-							boolean isChecked) {
-						Log.i(TAG,
-								"PreferenciasActivity - setListeners - checkBoxSonido - onCheckedChanged");
-						if (isChecked) {
-							sonido = SI;
-						} else {
-							sonido = NO;
-						}
-						guardarCambios();
-					}
-				});
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				Log.i(TAG,
+						"PreferenciasActivity - setListeners - checkBoxSonido - onCheckedChanged");
+				if (isChecked) {
+					sonido = SI;
+				} else {
+					sonido = NO;
+				}
+				guardarCambios();
+			}
+		});
 
 		checkBoxDespegar
-				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
-					public void onCheckedChanged(CompoundButton buttonView,
-							boolean isChecked) {
-						Log.i(TAG,
-								"PreferenciasActivity - setListeners - checkBoxDespegar - onCheckedChanged");
-						if (isChecked) {
-							despegar = SI;
-						} else {
-							despegar = NO;
-						}
-						guardarCambios();
-					}
-				});
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				Log.i(TAG,
+						"PreferenciasActivity - setListeners - checkBoxDespegar - onCheckedChanged");
+				if (isChecked) {
+					despegar = SI;
+				} else {
+					despegar = NO;
+				}
+				guardarCambios();
+			}
+		});
 
 		checkBoxAterrizar
-				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
-					public void onCheckedChanged(CompoundButton buttonView,
-							boolean isChecked) {
-						Log.i(TAG,
-								"PreferenciasActivity - setListeners - checkBoxAterrizar - onCheckedChanged");
-						if (isChecked) {
-							aterrizar = SI;
-						} else {
-							aterrizar = NO;
-						}
-						guardarCambios();
-					}
-				});
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				Log.i(TAG,
+						"PreferenciasActivity - setListeners - checkBoxAterrizar - onCheckedChanged");
+				if (isChecked) {
+					aterrizar = SI;
+				} else {
+					aterrizar = NO;
+				}
+				guardarCambios();
+			}
+		});
 
 		checkBoxCambios
-				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
-					public void onCheckedChanged(CompoundButton buttonView,
-							boolean isChecked) {
-						Log.i(TAG,
-								"PreferenciasActivity - setListeners - checkBoxCambios - onCheckedChanged");
-						if (isChecked) {
-							cambios = SI;
-						} else {
-							cambios = NO;
-						}
-						guardarCambios();
-					}
-				});
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				Log.i(TAG,
+						"PreferenciasActivity - setListeners - checkBoxCambios - onCheckedChanged");
+				if (isChecked) {
+					cambios = SI;
+				} else {
+					cambios = NO;
+				}
+				guardarCambios();
+			}
+		});
 
 	}
 

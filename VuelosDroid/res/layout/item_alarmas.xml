@@ -4,6 +4,17 @@
     android:layout_height="fill_parent"
     android:orientation="vertical"
     android:padding="5dp" >
+    
+     <ProgressBar
+                android:id="@+id/progress_item_alarmas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_gravity="center"
+                android:paddingTop="5dp" 
+                android:paddingBottom="5dp"
+                android:tag="Cargando"
+                />
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -76,5 +87,14 @@
             android:layout_marginRight="10dp"
             android:textSize="17dp" />
     </LinearLayout>
+    
+      <TextView
+            android:id="@+id/text_item_alarmas_estado"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:textSize="19dp" />
 
 </LinearLayout>

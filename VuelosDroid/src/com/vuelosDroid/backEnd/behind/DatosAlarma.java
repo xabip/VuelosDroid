@@ -2,6 +2,11 @@ package com.vuelosDroid.backEnd.behind;
 
 import com.vuelosDroid.backEnd.scrapper.DatosVuelo;
 
+/**
+ * 
+ * @author Xabi
+ *
+ */
 public class DatosAlarma {
 
 	private DatosVuelo datos;

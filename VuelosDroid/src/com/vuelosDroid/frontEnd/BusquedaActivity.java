@@ -13,7 +13,11 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-
+/**
+ * 
+ * @author Xabi
+ *
+ */
 public class BusquedaActivity extends AbstractActivity {
 	 	
 		private ViewPager cols;
@@ -38,6 +42,7 @@ public class BusquedaActivity extends AbstractActivity {
 	        
 	        TitlePageIndicator titleIndicator = (TitlePageIndicator)findViewById(R.id.titulos);
 	        titleIndicator.setViewPager(cols);	      
+	        titleIndicator.setFooterIndicatorPadding(7);
 			InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 			imm.hideSoftInputFromWindow(titleIndicator.getWindowToken(), 0);
 			getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);

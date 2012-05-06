@@ -14,13 +14,9 @@
 
         <ImageView style="@style/TitleBarSeparator" />
 
-        <TextView style="@style/TitleBarText" />
+        <TextView style="@style/TitleBarText" 
+            android:text="Busqueda"/>
 
-        <ImageButton
-            style="@style/TitleBarAction"
-            android:contentDescription="@string/descripcion_about"
-            android:onClick="onClickPreferencias"
-            android:src="@drawable/title_about" />
 
         <ImageView style="@style/TitleBarSeparator" />
 

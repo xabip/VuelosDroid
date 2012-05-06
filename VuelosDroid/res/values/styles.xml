@@ -9,7 +9,7 @@
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
 
-         http://www.apache.org/licenses/LICENSE-2.0
+         http://www.apache.org/licenses/LICENSE-2.0
 -->
 
 <resources>
@@ -20,13 +20,13 @@
 
     <style name="Theme.llayout_general" parent="android:style/Theme.Light">
         <item name="android:windowNoTitle">false</item>
-        <!-- <item name="android:windowContentOverlay">@null</item>-->
+        <!-- <item name="android:windowContentOverlay">@null</item> -->
         <item name="android:background">@color/background1</item>
     </style>
 
     <style name="Theme.D1" parent="android:style/Theme.Light">
         <item name="android:windowNoTitle">true</item>
-        <!-- <item name="android:windowContentOverlay">@null</item>-->
+        <!-- <item name="android:windowContentOverlay">@null</item> -->
         <item name="android:radioButtonStyle">@style/RadioButton</item>
     </style>
 
@@ -116,7 +116,7 @@
         <item name="android:layout_height">fill_parent</item>
         <item name="android:background">@color/title_separator</item>
     </style>
-    
+
     <style name="PreferencesSeparator">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">1px</item>
@@ -159,9 +159,10 @@
 
     <style name="CustomTitlePageIndicator">
         <item name="android:background">#FFDDDDDD</item>
-        <item name="footerColor">#33AA77</item>
-        <item name="footerLineHeight">2dp</item>
-        <item name="footerIndicatorStyle">none</item>
+        <item name="footerColor">#8cbed5</item>
+        <item name="footerLineHeight">1dp</item>
+        <item name="footerIndicatorHeight">3dp</item>
+        <item name="footerIndicatorStyle">underline</item>
         <item name="textColor">#FF999999</item>
         <item name="selectedColor">#000000</item>
         <item name="selectedBold">true</item>
@@ -175,27 +176,29 @@
     <style name="autocomplete_style">
         <item name="android:paddingRight">5dp</item>
     </style>
-    
+
     <style name="Animations" />
 
-	<style name="Animations.GrowFromBottom">
-		<item name="@android:windowEnterAnimation">@anim/grow_from_bottom</item>
-		<item name="@android:windowExitAnimation">@anim/shrink_from_top</item>
-	</style>
-	
-	<style name="Animations.GrowFromTop">
-		<item name="@android:windowEnterAnimation">@anim/grow_from_top</item>
-		<item name="@android:windowExitAnimation">@anim/shrink_from_bottom</item>
-	</style>
-	
-	<style name="Animations.PopDownMenu">
-		<item name="@android:windowEnterAnimation">@anim/grow_from_topleft_to_bottomright</item>
-		<item name="@android:windowExitAnimation">@anim/shrink_from_bottomright_to_topleft</item>
-	</style>
+    <style name="Animations.GrowFromBottom">
+        <item name="@android:windowEnterAnimation">@anim/grow_from_bottom</item>
+        <item name="@android:windowExitAnimation">@anim/shrink_from_top</item>
+    </style>
+
+    <style name="Animations.GrowFromTop">
+        <item name="@android:windowEnterAnimation">@anim/grow_from_top</item>
+        <item name="@android:windowExitAnimation">@anim/shrink_from_bottom</item>
+    </style>
+
+    <style name="Animations.PopDownMenu">
+        <item name="@android:windowEnterAnimation">@anim/grow_from_topleft_to_bottomright</item>
+        <item name="@android:windowExitAnimation">@anim/shrink_from_bottomright_to_topleft</item>
+    </style>
+
     <style name="Button_popup">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">fill_parent</item>
         <!-- - <item name="android:background">@null</item> -->
         <item name="android:background">@drawable/background_trasparente</item>
     </style>
+
 </resources>
