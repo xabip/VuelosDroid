@@ -2,9 +2,9 @@
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:drawable="@drawable/ic_menu_gear_touch" android:state_focused="true" android:state_pressed="true"/>
-    <item android:drawable="@drawable/ic_menu_gear_touch" android:state_focused="false" android:state_pressed="true"/>
-    <item android:drawable="@drawable/ic_menu_gear_touch" android:state_focused="true"/>
-    <item android:drawable="@drawable/ic_menu_gear1" android:state_focused="false" android:state_pressed="false"/>
-
+    <item android:drawable="@drawable/boton_alarmas_press" android:state_focused="true" android:state_pressed="true"/>
+    <item android:drawable="@drawable/boton_alarmas_press" android:state_focused="false" android:state_pressed="true"/>
+    <item android:drawable="@drawable/boton_alarmas_press" android:state_focused="true"/>
+    <item android:drawable="@drawable/boton_alarmas_unpressed" android:state_focused="false" android:state_pressed="false"/>
+    
 </selector>

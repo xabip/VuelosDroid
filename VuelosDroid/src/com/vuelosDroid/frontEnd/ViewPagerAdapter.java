@@ -176,8 +176,10 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		if (netInfo != null && netInfo.isConnectedOrConnecting()) {
 			return true;
 		}
+		Toast toast1 = Toast.makeText(context.getApplicationContext(), "No hay red. No puedes hacer búsquedas", Toast.LENGTH_SHORT);
+		toast1.show();
 
-		return false;
+		return true;
 	}
 	@Override
 	public int getCount() {

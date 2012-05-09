@@ -136,18 +136,18 @@ public class AlarmasActivity extends AbstractActivity {
 
 		if (datosAlarmas.isEmpty()){
 			DatosVuelo data = new DatosVuelo();
-			data.setNombreVuelo("NoHayAlarmas");
+			data.setNombreVuelo("NoHayAlarmas"); 
 			datosss.add(data);
 		} else {
 			DatosVuelo data = new DatosVuelo();
-			data.setNombreVuelo("Cargando");
-			datosss.add(data);
+			data.setNombreVuelo("Cargando"); 
+			datosss.add(data); 
 		}
 		if(datosVuelos.isEmpty()){
 			DatosVuelo data = new DatosVuelo();
 			data.setNombreVuelo("NoHayAntiguas");
-			datosss.add(data);
-
+			datosss.add(data); 
+ 
 		}else{
 		
 			Collections.reverse(datosVuelos);
@@ -564,7 +564,7 @@ public class AlarmasActivity extends AbstractActivity {
 			return true;
 		}
 
-		return false;
+		return true;
 	}
 
 	public boolean verSiDespegado(String pEstado) {

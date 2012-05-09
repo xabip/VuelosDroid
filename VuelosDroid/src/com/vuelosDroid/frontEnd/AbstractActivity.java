@@ -91,7 +91,7 @@ public abstract class AbstractActivity extends Activity{
 		return true;
 		}
 
-		return false;
+		return true;
 		}
 
 	/**
@@ -117,20 +117,20 @@ public abstract class AbstractActivity extends Activity{
 			startActivity (new Intent(getApplicationContext(), BusquedaActivity.class));
 		}else if (v.getId() == R.id.preferencias_btn){
 			startActivity (new Intent(getApplicationContext(), AlarmasActivity.class)); 
-		}else if (v.getId() == R.id.seguimiento_btn){
+/*		}else if (v.getId() == R.id.seguimiento_btn){
 			startActivity (new Intent(getApplicationContext(), PreferenciasActivity.class));
-/*		case R.id.about_btn :
+		case R.id.about_btn :
 		    Bundle extras = new Bundle();
 		    //extras.putString("url","");
 		    Intent intent = new Intent(getApplicationContext(), VueloResultadoActivity.class);
 		    intent.putExtras(extras); 
 			startActivity (intent);
 			break;*/
-		}else if(v.getId() == R.id.ayuda_btn ){
+		}/*else if(v.getId() == R.id.ayuda_btn ){
 			startActivity (new Intent(getApplicationContext(), AboutActivity.class));
-		}
+		}*/
 		
-	}
+	} 
 
 	/**
 	 */
