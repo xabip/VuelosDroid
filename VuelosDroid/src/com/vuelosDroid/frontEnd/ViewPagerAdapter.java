@@ -171,7 +171,7 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 	}
 
 	public boolean tieneRed() {
-		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		/*ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo netInfo = cm.getActiveNetworkInfo();
 		if (netInfo != null && netInfo.isConnectedOrConnecting()) {
 			return true;
@@ -179,7 +179,21 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		Toast toast1 = Toast.makeText(context.getApplicationContext(), "No hay red. No puedes hacer búsquedas", Toast.LENGTH_SHORT);
 		toast1.show();
 
-		return true;
+		return true;*/
+		boolean wifi = false;
+		boolean mobile = false;
+
+		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo[] info = cm.getAllNetworkInfo();
+		for (NetworkInfo ni : info) {
+			if (ni.getTypeName().equalsIgnoreCase("WIFI"))
+				if (ni.isConnected())
+					wifi = true;
+			if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
+				if (ni.isConnected())
+					mobile = true;
+		}
+		return wifi || mobile;
 	}
 	@Override
 	public int getCount() {

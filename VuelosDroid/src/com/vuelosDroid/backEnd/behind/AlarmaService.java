@@ -146,14 +146,28 @@ public class AlarmaService extends Service {
 	}
 
 	public boolean tieneRed() {
-		ConnectivityManager cm = (ConnectivityManager) this
+		/*		ConnectivityManager cm = (ConnectivityManager) this
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo netInfo = cm.getActiveNetworkInfo();
 		if (netInfo != null && netInfo.isConnectedOrConnecting()) {
 			return true;
 		}
 
-		return false;
+		return false;*/
+		boolean wifi = false;
+		boolean mobile = false;
+
+		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo[] info = cm.getAllNetworkInfo();
+		for (NetworkInfo ni : info) {
+			if (ni.getTypeName().equalsIgnoreCase("WIFI"))
+				if (ni.isConnected())
+					wifi = true;
+			if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
+				if (ni.isConnected())
+					mobile = true;
+		}
+		return wifi || mobile;
 	}
 
 	@Override public void onDestroy() {
@@ -544,7 +558,7 @@ public class AlarmaService extends Service {
 										datos.getEstadoVueloOrigen()) + " mins)" + "",
 										sonido, pDatos);
 					}
-					
+
 				} else if (!(pDatos.getDatos().getEstadoVueloDestino()).equals(datos.getEstadoVueloDestino())) {
 					String text = pDatos
 							.getDatos() 
@@ -569,7 +583,7 @@ public class AlarmaService extends Service {
 										datos.getEstadoVueloDestino()) + " mins)" + "",
 										sonido, pDatos);
 					}
-					
+
 				}
 			default:
 				break;
@@ -796,7 +810,7 @@ public class AlarmaService extends Service {
 		db.update("alarmas_aux", editor, "id=?", args2);
 		db.close();
 	}
-	
+
 	public int getDiferencia(String pEstado) {
 		try{
 			String[] horaVuelo = pEstado.substring(pEstado.indexOf("a las ") + 6)
@@ -934,8 +948,8 @@ public class AlarmaService extends Service {
 		notIntent.putExtras(bun);
 		PendingIntent contIntent = PendingIntent.getActivity(context, 0,
 				notIntent, 0);
-		
-		
+
+
 
 		mNotificacion.setLatestEventInfo(context, contentTitle, contentText,
 				contIntent);
@@ -1105,7 +1119,7 @@ public class AlarmaService extends Service {
 		intentA.putExtras(bun);
 		if (i > 0) {
 			//intentA.set(getApplicationContext(), com.vuelosDroid.frontEnd.VueloResultadoActivity.class);
-			
+
 			pendingIntent = PendingIntent.getBroadcast(this, id + 999, intentA,
 					PendingIntent.FLAG_CANCEL_CURRENT);
 			alarmManager.set(AlarmManager.RTC_WAKEUP,

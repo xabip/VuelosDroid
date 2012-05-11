@@ -35,7 +35,7 @@ import com.vuelosDroid.R;
  * @author Xabier Pena
  */
 public abstract class AbstractActivity extends Activity{
-	
+
 	//Constantes
 	protected static final String TAG = "VuelosAndroid";
 	public static boolean RED = true;
@@ -72,27 +72,41 @@ public abstract class AbstractActivity extends Activity{
 	}
 
 	public void onClickPreferencias(View v){
-    	Intent intent = new Intent(getApplicationContext(), PreferenciasActivity.class);
-    	startActivity(intent);
-    }
-	
+		Intent intent = new Intent(getApplicationContext(), PreferenciasActivity.class);
+		startActivity(intent);
+	}
+
 	public void onClickBusqueda(View v){
 		startActivity (new Intent(getApplicationContext(), BusquedaActivity.class));
 	}
-	
+
 	public void onClickHome(View v){
 		goHome(this);
 	}
 
 	public boolean tieneRed() {
-		ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+		/*	ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo netInfo = cm.getActiveNetworkInfo();
 		if (netInfo != null && netInfo.isConnectedOrConnecting()) {
 		return true;
 		}
 
-		return true;
+		return true;*/
+		boolean wifi = false;
+		boolean mobile = false;
+
+		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo[] info = cm.getAllNetworkInfo();
+		for (NetworkInfo ni : info) {
+			if (ni.getTypeName().equalsIgnoreCase("WIFI"))
+				if (ni.isConnected())
+					wifi = true;
+			if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
+				if (ni.isConnected())
+					mobile = true;
 		}
+		return wifi || mobile;
+	}
 
 	/**
 	 * Handle the click on the About button.
@@ -117,7 +131,7 @@ public abstract class AbstractActivity extends Activity{
 			startActivity (new Intent(getApplicationContext(), BusquedaActivity.class));
 		}else if (v.getId() == R.id.preferencias_btn){
 			startActivity (new Intent(getApplicationContext(), AlarmasActivity.class)); 
-/*		}else if (v.getId() == R.id.seguimiento_btn){
+			/*		}else if (v.getId() == R.id.seguimiento_btn){
 			startActivity (new Intent(getApplicationContext(), PreferenciasActivity.class));
 		case R.id.about_btn :
 		    Bundle extras = new Bundle();
@@ -129,7 +143,7 @@ public abstract class AbstractActivity extends Activity{
 		}/*else if(v.getId() == R.id.ayuda_btn ){
 			startActivity (new Intent(getApplicationContext(), AboutActivity.class));
 		}*/
-		
+
 	} 
 
 	/**

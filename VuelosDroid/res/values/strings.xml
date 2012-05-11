@@ -18,15 +18,8 @@
     <string name="titulo_resultado_vuelo">Resultado Vuelo</string>
     <string name="titulo1">Búsqueda</string>
     <string name="titulo2">Alarmas</string>
-    <string name="titulo3">Preferencias</string>
-    <string name="titulo4">About</string>
-    <string name="titulo5">Ayuda</string>
-    <string name="titulo6"></string>
-    <string name="about_principal">VuelosDroid - 2012.           Xabier Pena y Urko Guinea</string>
-    <string name="resumen_principal">VuelosDroid es una aplicación libre. Puedes encontrar el codigo en: www.github.com</string>
-    <string name="texto_intro">Bienvenido a la aplicacion de seguimiento de vuelos Vuelos Android".
-Selecciona Búsqueda para buscar por código, aeropuerto de origen o de destino. 
-Una vez seleccionado el vuelo puedes seguirlo y ponerle una alarma para que te avise cuando aterrice.</string>
+    <string name="about_principal">VuelosDroid - 2012.     \n\n   Realizado por Xabier Pena y Urko Guinea</string>
+    <string name="resumen_principal">VuelosDroid es una aplicación libre. Puedes encontrar el código en: www.github.com/delto/vuelosDroid</string>
     <string name="about_intro">Realizado por Xabier Pena y Urko Ginea</string>
     <string name="search_intro">Content for the Search page goes here.</string>
     <string name="desc">Descripcion</string>

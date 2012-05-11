@@ -20,16 +20,17 @@ public class AlarmasSqlAux extends SQLiteOpenHelper{
 	public static final String AEROPUERTODESTINO = "aeropuerto_destino";
 	public static final String ESTADOORIGEN = "estado_origen";
 	public static final String ESTADODESTINO = "estado_destino";
-	public static final String ALARMA = "alarma";
-	public static final String EMPEZADO = "empezado";
-	public static final String SALIDO = "salido";
-	public static final String ATERRIZADOSIN = "aterrizado_sin";
-	public static final String DESPEGADOSIN = "despegado_sin";
-	public static final String ATERRIZAR = "aterrizar";
-	public static final String DESPEGAR = "despegar";
-	public static final String CAMBIOS = "retrasos";
-	public static final String SONIDO = "sonido";
-	public static final String MINUTOS = "minutos";
+	public static final String ALARMA = "alarma"; //Necesita alarma
+	public static final String EMPEZADO = "empezado"; 
+	public static final String SALIDO = "salido";   //Si ha despegado
+	public static final String ATERRIZADOSIN = "aterrizado_sin";  //Aterrizado sin conexion
+	public static final String DESPEGADOSIN = "despegado_sin";  //Despegado sin conexion
+	public static final String ATERRIZAR = "aterrizar"; //Aviso al aterrizar
+	public static final String DESPEGAR = "despegar";  //Aviso al despegar
+	public static final String CAMBIOS = "retrasos"; //Aviso al retrasar
+	public static final String SONIDO = "sonido"; //Sonido
+	public static final String MINUTOS = "minutos"; 
+	public static final String DESPEGADO = "despegado";  //Si ha despegado
 	
 	public static final String TAG = "VuelosAndroid";
 	
@@ -38,13 +39,12 @@ public class AlarmasSqlAux extends SQLiteOpenHelper{
 			"aeropuerto_origen TEXT, fecha_origen TEXT, hora_origen TEXT, aeropuerto_destino TEXT, hora_destino TEXT," +
 			"aterrizado_sin TEXT, alarma INTEGER,  empezado INTEGER, salido INTEGER, aterrizar INTEGER, despegar INTEGER, " +
 			"retrasos INTEGER, sonido INTEGER, minutos INTEGER, estado_origen TEXT, estado_destino TEXT, " +
-			"despegado_sin TEXT)";
+			"despegado_sin TEXT, despegado TEXT)";
 
 	
 	public AlarmasSqlAux(Context context, String name, CursorFactory factory,
 			int version) {
 		super(context, name, factory, version);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public AlarmasSqlAux(Context context){
@@ -55,7 +55,6 @@ public class AlarmasSqlAux extends SQLiteOpenHelper{
 	public void onCreate(SQLiteDatabase db) {
 		Log.i(TAG, "Creando BD");
 		db.execSQL(sqlCreate);
-
 	}
 	
     @Override

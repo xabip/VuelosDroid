@@ -86,7 +86,7 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 		lay = (LinearLayout) findViewById(R.id.layout_progress_vuelo_resultado);
 		lay2 = (LinearLayout) findViewById(R.id.layout_vuelo_resultado_sup);
 		layMarcador = (LinearLayout) findViewById(R.id.layout_marcador);
-		layManana = (LinearLayout) findViewById(R.id.layout_resultado_vuelo_boton_manana);
+		//		layManana = (LinearLayout) findViewById(R.id.layout_resultado_vuelo_boton_manana);
 		layAlarmas = (LinearLayout) findViewById(R.id.layout_resultado_alarmas);
 		lay2.setVisibility(View.INVISIBLE);
 		layAlarmas.setVisibility(View.INVISIBLE);
@@ -127,6 +127,9 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 		}	
 	}  
 
+	/**
+	 * 
+	 */
 	private final Handler progressHandler = new Handler() {
 		public void handleMessage(Message msg) {
 			Log.i(TAG, "VueloResultadoActivity - progressHandler - Principio del Handler");
@@ -141,7 +144,7 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 				controlEstado(url);	
 				dia = bundle.getString("dia");
 				Log.d(TAG, "VueloResultadoActivity - progressHandler - dia: " + dia);
-				estado = controlEstado(datos.getEstadoVueloOrigen(),datos.getHoraOrigen());
+				estado = controlEstado(datos.getEstadoVueloOrigen(), datos.getHoraOrigen());
 				Log.d(TAG, "VueloResultadoAtivity - progressHandler - estado: " + estado);
 				setLayout();
 				controlReciente(datos);
@@ -186,7 +189,7 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 				controlEstado(url);	
 				dia = bundle.getString("dia");
 				Log.d(TAG, "VueloResultadoActivity - controlOperaciones - try - dia: " + dia);
-				estado = controlEstado(datos.getEstadoVueloOrigen(),datos.getHoraOrigen());
+				estado = controlEstado(datos.getEstadoVueloOrigen(), datos.getHoraOrigen());
 				Log.d(TAG, "VueloResultadoAtivity - controlOperaciones - try - estado: " + estado);
 				setLayout();
 				controlReciente(datos);
@@ -245,7 +248,7 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 		TextView textDestinoTerminal = (TextView) findViewById(R.id.text_resultado_destino_terminal);
 		TextView textDestinoSala = (TextView) findViewById(R.id.text_resultado_destino_sala);
 		TextView textDestinoCinta = (TextView) findViewById(R.id.text_resultado_destino_cinta);
-		TextView textCodigoVuelo = (TextView) findViewById(R.id.text_resultado_codigo);
+		//TextView textCodigoVuelo = (TextView) findViewById(R.id.text_resultado_codigo);
 		TextView textCompany = (TextView) findViewById(R.id.text_resultado_company);
 		TextView textLayManana = (TextView) findViewById(R.id.text_resultado_vuelo_dia);
 		ImageButton btnHoy = (ImageButton) findViewById(R.id.boton_resultado_vuelo_manana);
@@ -259,7 +262,7 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 
 			if(dia.equalsIgnoreCase("hoy")){
 				Log.w(TAG, "VueloResultadoActivity - setLayout " + dia);
-				layManana = (LinearLayout) findViewById(R.id.layout_resultado_vuelo_boton_manana);
+				//layManana = (LinearLayout) findViewById(R.id.layout_resultado_vuelo_boton_manana);
 				btnHoy.setVisibility(View.GONE);
 				//layManana.setVisibility(View.VISIBLE);
 			}else if(dia.equals("manana")){
@@ -300,12 +303,12 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 		if (dest.contains("esti")){
 			dest = dest.replace("Destino:", "");
 		}
-		
+
 		if(ori.contains("Origen:")){
 			ori = ori.replace("Origen:", "");
 		}		
-		
-		
+
+
 		//textCompany.setText(datos.getNombreCompany());
 		textCompany.setText(datos.getNombreVuelo() + "  -  " + datos.getNombreCompany());
 		text1.setText(ori);
@@ -323,7 +326,7 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 		Log.i(TAG, "VueloResultadoActivity - setLayout - radAlarma: " + radAlarma.isChecked()+"");
 		Log.i(TAG, "VueloResultadoActivity - setLayout - radMarcador: " + radMarcador.isChecked()+"");
 
-/*		if (alarma){
+		/*		if (alarma){
 			//btnAlarma.setEnabled(false);
 			radAlarma.setChecked(true);
 			botonAlarma.setPressed(true);
@@ -788,12 +791,16 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 		if(pEstado.contains("celado")){
 			return CANCELED;
 		}
-		int dif = getDiferencia(pEstado, pHora);
-		Log.d(TAG, "VueloResultadoActivity - controlEstado - diferencia: " + dif);
-		if(dif>10){
-			return DELAYED;
-		}
-		else{
+		try{
+			int dif = getDiferencia(pEstado, pHora);
+			Log.d(TAG, "VueloResultadoActivity - controlEstado - diferencia: " + dif);
+			if(dif>10){
+				return DELAYED;
+			}
+			else{
+				return ONTIME;
+			}
+		}catch (Exception e){
 			return ONTIME;
 		}
 	}
@@ -821,7 +828,7 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 		return (0);
 
 	}
-	
+
 	protected void onResume(){
 		onCreate(bun);
 	}

@@ -5,8 +5,9 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <LinearLayout style="@style/TitleBar"
-        android:id="@+id/layout_superior_principal" >
+    <LinearLayout
+        android:id="@+id/layout_superior_principal"
+        style="@style/TitleBar" >
 
         <ImageView style="@style/TitleBarSeparator" />
 
@@ -23,111 +24,98 @@
             android:src="@drawable/title_search" />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/layout_superior_principal"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="4dip" >
 
         <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:layout_below="@id/layout_superior_principal"
-            android:padding="4dip"
-            android:gravity="center" >
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:orientation="horizontal" >
 
-            <LinearLayout
+            <Button
+                android:id="@+id/busqueda_btn"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="horizontal"
+                android:background="@drawable/principal_1"
                 android:gravity="center"
-                android:layout_gravity="center"
-                >
+                android:onClick="onClickFeature"
+                android:text="Búsqueda"
+                android:textColor="@android:color/white"
+                android:textSize="29dp"
+                android:textStyle="bold" />
 
-                <Button
-                    android:id="@+id/busqueda_btn"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/principal_1"
-                    android:gravity="center"
-                    android:onClick="onClickFeature"
-                    android:text="Búsqueda"
-                    android:textColor="@android:color/white"
-                    android:textSize="29dp"
-                    android:textStyle="bold" />
-
-                <!--
+            <!--
                  <Button
                 android:id="@+id/preferencias_btn"
                 style="@style/HomeButton"
                 android:drawableTop="@drawable/principal_2"
                 android:onClick="onClickFeature"
                 android:text="@string/titulo2" />
-                -->
-            </LinearLayout>
+            -->
+        </LinearLayout>
 
-            <LinearLayout
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/preferencias_btn"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:background="@drawable/principal_3"
                 android:gravity="center"
-                android:layout_gravity="center" >
+                android:onClick="onClickFeature"
+                android:text="Alarmas"
+                android:textColor="@android:color/white"
+                android:textSize="29dp"
+                android:textStyle="bold" />
 
-                <Button
-                    android:id="@+id/preferencias_btn"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="@drawable/principal_3"
-                    android:gravity="center"
-                    android:onClick="onClickFeature"
-                    android:text="Alarmas"
-                    android:textColor="@android:color/white"
-                    android:textSize="29dp"
-                    android:textStyle="bold" />
-
-                <!--
+            <!--
                  <Button
                 android:id="@+id/ayuda_btn"
                 style="@style/HomeButton"
                 android:drawableTop="@drawable/principal_4"
                 android:onClick="onClickFeature"
                 android:text="@string/titulo5" />
-                -->
-            </LinearLayout>
-
-            <LinearLayout
-                style="@style/Theme.LayoutInteriorDos"
-                android:layout_weight="0.25" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/about_principal"
-                    android:textColor="#cccccc" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/resumen_principal"
-                    android:textColor="#cccccc" />
-            </LinearLayout>
-
-            <LinearLayout
-                style="@style/Theme.LayoutInteriorDos"
-                android:layout_weight="0.75" >
-
-                <!--
-              <TextView 
-		       	android:layout_width="wrap_content"
-	       		android:layout_height="wrap_content"
-		        android:textColor="#cccccc"
-		        android:text="Publicidad"
-		        android:layout_gravity="center"/>
-                -->
-
-            </LinearLayout>
+            -->
         </LinearLayout>
+
+        <LinearLayout
+            style="@style/Theme.LayoutInteriorDos"
+            android:layout_gravity="center"
+            android:layout_weight="0.25"
+            android:gravity="center"
+            android:paddingBottom="5dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/about_principal"
+                android:textColor="#cccccc" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/resumen_principal"
+                android:textColor="#cccccc" />
+        </LinearLayout>
+
+
+    </LinearLayout>
 
 </RelativeLayout>

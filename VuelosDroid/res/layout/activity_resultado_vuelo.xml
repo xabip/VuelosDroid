@@ -55,10 +55,89 @@
             android:text="Obteniendo datos..." />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/layout_resultado_alarmas"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center"
+        android:background="@drawable/background_gris"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:onClick="onClickAlarma"
+            android:orientation="vertical" >
+
+            <ImageButton
+                android:id="@+id/boton_resultado_alarma"
+                style="@style/FooterButton"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onClickAlarma"
+                android:paddingTop="7dp"
+                android:src="@drawable/footer_alarma" />
+
+            <TextView
+                android:id="@+id/text_resultado_vuelo_alarma"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Alarma"
+                android:textColor="#FFFFFF"
+                android:textSize="17dp" />
+        </LinearLayout>
+
+        <ImageView style="@style/TitleBarSeparator" />
+
+        <LinearLayout
+            android:id="@+id/layout_resultado_vuelo_manana"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:onClick="onClickBtnManana"
+            android:orientation="vertical" >
+
+            <!-- android:onClick="onClickBtnManana" -->
+
+            <ImageButton
+                android:id="@+id/boton_resultado_favorito"
+                style="@style/FooterButton"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onClickBtnManana"
+                android:paddingTop="7dp"
+                android:src="@drawable/footer_favorito" />
+
+            <ImageButton
+                android:id="@+id/boton_resultado_vuelo_manana"
+                style="@style/FooterButton"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onClickBtnManana"
+                android:paddingTop="7dp"
+                android:src="@drawable/footer_hoy" />
+
+            <TextView
+                android:id="@+id/text_resultado_vuelo_dia"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Mañana"
+                android:textColor="#FFFFFF"
+                android:textSize="17dp" />
+        </LinearLayout>
+    </LinearLayout>
+
     <ScrollView
         android:id="@+id/scrollView_vuelo_resultado"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/layout_resultado_alarmas"
         android:layout_below="@id/header_resultado" >
 
         <LinearLayout
@@ -147,7 +226,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:text="(VLC1423)"
-                android:textStyle="bold" />
+                android:textStyle="bold" />
                 -->
             </LinearLayout>
 
@@ -201,7 +280,7 @@
                 android:onClick="onClickActualizar"
                 android:text="Actualizar" 
                 />
-        </LinearLayout>
+        </LinearLayout>
             -->
 
             <LinearLayout
@@ -259,7 +338,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:text="(VLC1423)"
-                android:textStyle="bold" />
+                android:textStyle="bold" />
                 -->
             </LinearLayout>
 
@@ -312,7 +391,7 @@
                 android:onClick="onClickActualizar"
                 android:text="Actualizar" 
                 />
-        </LinearLayout>
+        </LinearLayout>
             -->
 
             <LinearLayout
@@ -396,103 +475,5 @@
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
-
-    <LinearLayout
-        android:id="@+id/layout_resultado_vuelo_boton_manana"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:layout_marginTop="10dp"
-        android:gravity="right"
-        android:orientation="horizontal"
-        android:visibility="gone" >
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:onClick="onClickBtnManana"
-            android:text="Mañana" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layout_resultado_alarmas"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="center"
-        android:background="@drawable/background_gris"
-        android:orientation="horizontal" >
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:onClick="onClickAlarma"
-            android:orientation="vertical" >
-
-            <ImageButton
-                android:id="@+id/boton_resultado_alarma"
-                style="@style/FooterButton"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:onClick="onClickAlarma"
-                android:paddingTop="7dp"
-                android:src="@drawable/footer_alarma" />
-
-            <TextView
-                android:id="@+id/text_resultado_vuelo_alarma"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="Alarma"
-                android:textColor="#FFFFFF"
-                android:textSize="17dp" 
-                />
-        </LinearLayout>
-
-        <ImageView style="@style/TitleBarSeparator" />
-
-        <LinearLayout
-            android:id="@+id/layout_resultado_vuelo_manana"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:onClick="onClickBtnManana"
-            android:orientation="vertical" >
-
-            <!-- android:onClick="onClickBtnManana" -->
-
-            <ImageButton
-                android:id="@+id/boton_resultado_favorito"
-               style="@style/FooterButton"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:onClick="onClickBtnManana"
-                android:paddingTop="7dp"
-                android:src="@drawable/footer_favorito" />
-
-            <ImageButton
-                android:id="@+id/boton_resultado_vuelo_manana"
-                style="@style/FooterButton"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:onClick="onClickBtnManana"
-                android:paddingTop="7dp"
-                android:src="@drawable/footer_hoy" 
-                />
-
-            <TextView
-                android:id="@+id/text_resultado_vuelo_dia"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="Mañana"
-                android:textColor="#FFFFFF"
-                android:textSize="17dp" />
-        </LinearLayout>
-    </LinearLayout>
 
 </RelativeLayout>

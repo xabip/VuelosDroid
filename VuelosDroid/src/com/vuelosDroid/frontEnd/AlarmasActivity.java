@@ -146,7 +146,7 @@ public class AlarmasActivity extends AbstractActivity {
 		if(datosVuelos.isEmpty()){
 			DatosVuelo data = new DatosVuelo();
 			data.setNombreVuelo("NoHayAntiguas");
-			datosss.add(data); 
+			datosVuelos.add(data); 
  
 		}else{
 		
@@ -557,14 +557,28 @@ public class AlarmasActivity extends AbstractActivity {
 	}
 
 	public boolean tieneRed() {
+		boolean wifi = false;
+		boolean mobile = false;
+
 		ConnectivityManager cm = (ConnectivityManager) this
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo netInfo = cm.getActiveNetworkInfo();
+	/*	NetworkInfo netInfo = cm.getActiveNetworkInfo();
 		if (netInfo != null && netInfo.isConnectedOrConnecting()) {
 			return true;
 		}
 
-		return true;
+		return true;*/		
+		NetworkInfo[] info = cm.getAllNetworkInfo();
+
+		for (NetworkInfo ni : info) {
+			if (ni.getTypeName().equalsIgnoreCase("WIFI"))
+				if (ni.isConnected())
+					wifi = true;
+			if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
+				if (ni.isConnected())
+					mobile = true;
+		}
+		return wifi || mobile;
 	}
 
 	public boolean verSiDespegado(String pEstado) {
