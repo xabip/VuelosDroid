@@ -43,6 +43,17 @@ public class BusquedaActivity extends AbstractActivity {
 	        TitlePageIndicator titleIndicator = (TitlePageIndicator)findViewById(R.id.titulos);
 	        titleIndicator.setViewPager(cols);	      
 	        titleIndicator.setFooterIndicatorPadding(7);
+	        //titleIndicator.setPadding(10, 0, 0, 7);
+	        //titleIndicator.setTitlePadding(titlePadding)
+	        Log.d(TAG, "BusquedaActivity - TextSize: " + titleIndicator.getTextSize());
+	        Log.d(TAG, "BusquedaActivity - TitlePadding: " + titleIndicator.getTitlePadding());
+	        Log.d(TAG, "BusquedaActivity - TopPaggind: " + titleIndicator.getTopPadding());
+	        Log.d(TAG, "BusquedaActivity - ClipPadding: " + titleIndicator.getClipPadding());
+	        Log.d(TAG, "BusquedaActivity - FooterIndicatorPaddingPaggind: " + titleIndicator.getFooterIndicatorPadding());
+
+	        titleIndicator.setTopPadding(3);
+	        //titleIndicator.setTitlePadding(1);
+	        titleIndicator.setTextSize(16);
 			InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 			imm.hideSoftInputFromWindow(titleIndicator.getWindowToken(), 0);
 			getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);

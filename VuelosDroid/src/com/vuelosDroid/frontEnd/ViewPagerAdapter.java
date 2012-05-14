@@ -6,8 +6,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import kankan.wheel.widget.OnWheelChangedListener;
 import kankan.wheel.widget.WheelView;
@@ -27,6 +30,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -78,7 +82,6 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 	public ViewPagerAdapter(Context context){
 		this.context = context;
 		this.titulos = context.getResources().getStringArray(R.array.titulos);
-
 	}
 
 	public String getTitle(int position) {
@@ -91,8 +94,8 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		SQLiteDatabase db = alarms.getReadableDatabase();
 		Log.w(TAG, "Funciona la lectura de busqueda reciente");
 		String[] args = new String[] {BusquedaRecienteSql.CODIGOVUELO, BusquedaRecienteSql.HORAORIGEN,
-										BusquedaRecienteSql.AEROPUERTODESTINO, BusquedaRecienteSql.AEROPUERTOORIGEN,
-										BusquedaRecienteSql.DIA, BusquedaRecienteSql.URL};
+				BusquedaRecienteSql.AEROPUERTODESTINO, BusquedaRecienteSql.AEROPUERTOORIGEN,
+				BusquedaRecienteSql.DIA, BusquedaRecienteSql.URL, BusquedaRecienteSql.FECHAORIGEN};
 
 		Cursor c = db.query("busqueda_reciente", args, null, null, null, null, null);
 		//Nos aseguramos de que existe al menos un registro
@@ -107,6 +110,8 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 				dat.setAeropuertoDestino(c.getString(2));
 				dat.setAeropuertoOrigen(c.getString(3));
 				dat.setLinkInfoVuelo(c.getString(5));
+				dat.setFechaOrigen(c.getString(6));
+				Log.e(TAG, dat.getFechaOrigen());
 				dias.add(c.getString(4));
 
 				datos.add(dat);
@@ -115,10 +120,7 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		}
 		db.close();
 		if (!datos.isEmpty()){
-			
 			setListaReciente(v);
-			//TextView text = (TextView)v.findViewById(R.id.text_columna1_sin_resultados);
-			//text.setText("No hay busquedas recientes1");
 		}else{
 			TextView text = (TextView)v.findViewById(R.id.text_columna1_sin_resultados);
 			text.setText("No hay busquedas recientes");
@@ -158,6 +160,23 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 
 				extras.putString("codigo", "");
 				extras.putString("dia", "hoy");
+				if(!datos.get(arg2).getHoraOrigen().equals("--")){
+					String[] pHora = datos.get(arg2).getHoraOrigen().split(":");
+					if(Integer.parseInt(pHora[0]) >= 22){
+						if(!datos.get(arg2).getFechaOrigen().equals("--")){
+							String[] pDia = datos.get(arg2).getHoraOrigen().split("/");
+							GregorianCalendar cal = new GregorianCalendar();
+							if (cal.get(Calendar.HOUR_OF_DAY) < 2){
+								if(Integer.parseInt(pDia[0]) == (cal.get(Calendar.DATE) - 1)){
+									extras.putInt("or", 1);
+								}
+							}
+						}
+					}
+					else{
+						extras.putInt("or", 0);
+					}
+				}
 				intent.putExtras(extras);
 				if(!tieneRed()){
 					Toast toast1 = Toast.makeText(context, "Necesitas tener red para poder continuar", Toast.LENGTH_SHORT);
@@ -171,15 +190,7 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 	}
 
 	public boolean tieneRed() {
-		/*ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo netInfo = cm.getActiveNetworkInfo();
-		if (netInfo != null && netInfo.isConnectedOrConnecting()) {
-			return true;
-		}
-		Toast toast1 = Toast.makeText(context.getApplicationContext(), "No hay red. No puedes hacer búsquedas", Toast.LENGTH_SHORT);
-		toast1.show();
 
-		return true;*/
 		boolean wifi = false;
 		boolean mobile = false;
 
@@ -222,16 +233,12 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 
 	public void setLayoutCodigo(LinearLayout v){
 		final EditText edit = (EditText)v.findViewById(R.id.edittext_codigo);
-		//final RadioGroup radioDia = (RadioGroup)v.findViewById(R.id.grupo_dia_cod);
-		//radioDia.clearCheck();
-		//radioDia.check(R.id.radio1_cod); 
 		TextView text = (TextView)v.findViewById(R.id.text_columna1_codigo);
 		text.setPressed(true);
 		Button boton = (Button)v.findViewById(R.id.btn_codigo);
 		InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(edit.getWindowToken(), 0);
 		getBusquedaReciente(v);
-
 
 		//Listeners
 		boton.setOnClickListener(new OnClickListener() {
@@ -240,7 +247,12 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 				String text = edit.getText().toString();
 				if(text.equals("")){  
 					Log.w(TAG,text+ " No hay nada");
-
+					Toast toast1 = Toast.makeText(context.getApplicationContext(), "El código introducido es incorrecto", Toast.LENGTH_SHORT);
+					toast1.show();
+				} else if (!Pattern.matches("\\D{2,4}\\d{3,5}", text)){
+					Log.w(TAG,text+ "ViewPagerAdapter - setLayoutCodigo - onClick -  No valido");
+					Toast toast1 = Toast.makeText(context.getApplicationContext(), "El código introducido es incorrecto", Toast.LENGTH_SHORT);
+					toast1.show();
 				}else {
 					Log.w(TAG, text);
 
@@ -285,13 +297,6 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		autoOrigen.setThreshold(1);
 		imm.hideSoftInputFromWindow(autoOrigen.getWindowToken(), 0);
 
-
-		/*	     //Spinner Horario
-	     final Spinner spinnerHorario = (Spinner) v.findViewById(R.id.spinner_horario_llegadas);
-	     String[] horarios = v.getResources().getStringArray(R.array.horario_array);
-	     ArrayAdapter<String> spinner_adapter =  new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, horarios);
-	     spinnerHorario.setAdapter(spinner_adapter);*/
-		//<-- Wheel Horario -->
 		String[] horarios = v.getResources().getStringArray(R.array.horario_array);
 		for (int i = 0; i < horarios.length; i++) {
 			Log.e(TAG, horarios[i]);
@@ -338,7 +343,8 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 					long arg3) {
 				Log.d("TAG","onItemClick "+ arg0.getItemAtPosition(arg2));
 				setOrigenes(autoOrigen, arg0.getItemAtPosition(arg2).toString());
-				autoOrigen.setHint("Ninguno");
+				autoOrigen.setHint("Cualquiera");
+				autoOrigen.setHintTextColor(Color.argb(185,0, 0, 0));
 
 				autoOrigen.setEnabled(true);
 				botonLlegadas.setEnabled(true);
@@ -364,66 +370,27 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		//<--Boton-->
 		botonLlegadas.setOnClickListener( new OnClickListener(){
 			public void onClick(View arg0) {
-				Intent intent = new Intent(context, ResultadoActivity.class);
-				Bundle extras = new Bundle();
-				extras.putString("destino", autoDestinos.getText().toString());
-				extras.putString("origen", autoOrigen.getText().toString());
-				extras.putString("horario", horariosNum[valor2]);
-
-				/*  Log.w(TAG, "Spinner "+ spinnerHorario.getSelectedItem());
-			    extras.putString("horario", horariosNum[spinnerHorario.getFirstVisiblePosition()]);*/
-				RadioButton rad = (RadioButton)(radioDia.findViewById(radioDia.getCheckedRadioButtonId()));
-				extras.putString("dia", rad.getText().toString());
-				extras.putString("tipo", "Destino:  ");
-				intent.putExtras(extras);
-				if(!tieneRed()){
-					Toast toast1 = Toast.makeText(context.getApplicationContext(), "No hay red. No puedes hacer búsquedas", Toast.LENGTH_SHORT);
+				if(autoDestinos.getText().toString().equals("")){
+					Toast toast1 = Toast.makeText(context.getApplicationContext(), "No has seleccionado ningún destino", Toast.LENGTH_SHORT);
 					toast1.show();
+				} else{
+					Intent intent = new Intent(context, ResultadoActivity.class);
+					Bundle extras = new Bundle();
+					extras.putString("destino", autoDestinos.getText().toString());
+					extras.putString("origen", autoOrigen.getText().toString());
+					extras.putString("horario", horariosNum[valor2]);
+					RadioButton rad = (RadioButton)(radioDia.findViewById(radioDia.getCheckedRadioButtonId()));
+					extras.putString("dia", rad.getText().toString());
+					extras.putString("tipo", "Destino:  ");
+					intent.putExtras(extras);
+					if(!tieneRed()){
+						Toast toast1 = Toast.makeText(context.getApplicationContext(), "No hay red. No puedes hacer búsquedas", Toast.LENGTH_SHORT);
+						toast1.show();
 
-				}else{
-					context.startActivity(intent);
-				}	
-				/*final Dialog ventana=new Dialog(context);
-
-				ventana.setContentView(R.layout.activity_about);
-				 final WheelView hours =  (WheelView) ventana.findViewById(R.id.wheel_horario);
-					Log.d(TAG, "2");
-					String[] ah = { "6:00 – 8:00", "8:00 – 10:00", "10:00 – 12:00",	"12:00 – 14:00",
-							"14:00 – 16:00", "16:00 – 18:00", "18:00 – 20:00", "20:00 – 22:00",
-							"22:00 – 00:00", "00:00 – 2:00", "2:00 – 4:00", "4:00 – 6:00"};
-
-					//final TextView text = (TextView) findViewById(R.id.text_wheel);
-			        ArrayWheelAdapter<String> ampmAdapter = new ArrayWheelAdapter<String>(context, ah);
-					ampmAdapter.setItemResource(R.layout.wheel_text_item);
-					Log.d(TAG, "4");
-					ampmAdapter.setItemTextResource(R.id.text_wheel);
-					Log.d(TAG, "5");
-			        hours.setViewAdapter(ampmAdapter);
-					Log.d(TAG, "6");
-					OnWheelChangedListener wheelListener = new OnWheelChangedListener() {
-						public void onChanged(WheelView wheel, int oldValue, int newValue) {
-							Log.e(TAG, "Ruleta Cambiada: " + oldValue+ " "+ newValue);
-							valor = newValue;
-							hours.setCurrentItem(valor);
-
-						}
-
-					};
-					hours.addChangingListener(wheelListener);
-					hours.setCurrentItem(valor);
-					hours.setVisibleItems(4);
-					Button boton = (Button) ventana.findViewById(R.id.boton_ok_rueda);
-					boton.setOnClickListener(new OnClickListener() {
-
-						public void onClick(View v) {
-							Log.w(TAG, valor+"");
-							ventana.dismiss();
-
-						}
-					});
-					ventana.setTitle("Seleccione el horario");
-
-					ventana.show();*/
+					}else{
+						context.startActivity(intent);
+					}	
+				}
 			} 
 		});
 
@@ -444,7 +411,7 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(autoOrigen.getWindowToken(), 0);
 
-		
+
 
 		//<-- Autocomplete Aeropuerto Destino -->
 		final AutoCompleteTextView autoDestino = (AutoCompleteTextView) v.findViewById(R.id.autocomplete_destino);
@@ -452,13 +419,6 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		autoDestino.setHint("Introduce un origen primero");
 		autoDestino.setThreshold(1);
 		imm.hideSoftInputFromWindow(autoDestino.getWindowToken(), 0);
-
-
-		/*	     //Spinner Horario
-	     final Spinner spinnerHorario = (Spinner) v.findViewById(R.id.spinner_horario);
-	     final String[] horarios = v.getResources().getStringArray(R.array.horario_array);
-	     ArrayAdapter<String> spinner_adapter =  new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, horarios);
-	     spinnerHorario.setAdapter(spinner_adapter);*/
 
 		//<-- Wheel Horario -->
 		String[] horarios = v.getResources().getStringArray(R.array.horario_array);
@@ -480,7 +440,7 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		Log.d(TAG, "5");
 		horarioLlegada.setViewAdapter(ampmAdapter);
 		horarioLlegada.setVisibleItems(3);
-		horarioLlegada.setMinimumWidth(170);
+		horarioLlegada.setMinimumWidth(185);
 		horarioLlegada.setBackgroundColor(0xFFFFFF);
 		Log.d(TAG, "6");
 		OnWheelChangedListener wheelListener = new OnWheelChangedListener() {
@@ -507,8 +467,8 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 					long arg3) {
 				Log.d("TAG","onItemClick "+ arg0.getItemAtPosition(arg2));
 				setDestinos(autoDestino, arg0.getItemAtPosition(arg2).toString());
-				autoDestino.setHint("Ninguno");
-
+				autoDestino.setHint("Cualquiera");
+				autoDestino.setHintTextColor(Color.argb(185,0, 0, 0));
 				autoDestino.setEnabled(true);
 				botonSalidas.setEnabled(true);
 				InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -531,28 +491,28 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 
 		//<-- Boton -->
 		botonSalidas.setOnClickListener( new OnClickListener(){
-			public void onClick(View arg0) {				
-				Intent intent = new Intent(context, ResultadoActivity.class);
-				Bundle extras = new Bundle();
-				extras.putString("destino", autoDestino.getText().toString());
-				extras.putString("origen", autoOrigen.getText().toString());
-				extras.putString("horario", horariosNum[valor]);
-				extras.putString("tipo", "Origen:  ");
-				Log.w(TAG, horariosNum[valor]);
-				// extras.putString("horario", horariosNum[spinnerHorario.getFirstVisiblePosition()]);
-				/*			    Log.w(TAG, "Spinner "+ spinnerHorario.getSelectedItem());
-			    Log.d(TAG, "Spinner "+ spinnerHorario.getFirstVisiblePosition());
-			    Log.e(TAG, "Spinner "+ horariosNum[spinnerHorario.getFirstVisiblePosition()]);
-				 */
-				RadioButton rad = (RadioButton)(radioDia.findViewById(radioDia.getCheckedRadioButtonId()));
-				extras.putString("dia", rad.getText().toString());
-				intent.putExtras(extras);
-				if(!tieneRed()){
-					Toast toast1 = Toast.makeText(context.getApplicationContext(), "No hay red. No puedes hacer búsquedas", Toast.LENGTH_SHORT);
+			public void onClick(View arg0) {
+				if(autoOrigen.getText().toString().equals("")){
+					Toast toast1 = Toast.makeText(context.getApplicationContext(), "No has seleccionado ningún origen", Toast.LENGTH_SHORT);
 					toast1.show();
 				}else{
-					context.startActivity(intent);
-				}	
+					Intent intent = new Intent(context, ResultadoActivity.class);
+					Bundle extras = new Bundle();
+					extras.putString("destino", autoDestino.getText().toString());
+					extras.putString("origen", autoOrigen.getText().toString());
+					extras.putString("horario", horariosNum[valor]);
+					extras.putString("tipo", "Origen:  ");
+					Log.w(TAG, horariosNum[valor]);
+					RadioButton rad = (RadioButton)(radioDia.findViewById(radioDia.getCheckedRadioButtonId()));
+					extras.putString("dia", rad.getText().toString());
+					intent.putExtras(extras);
+					if(!tieneRed()){
+						Toast toast1 = Toast.makeText(context.getApplicationContext(), "No hay red. No puedes hacer búsquedas", Toast.LENGTH_SHORT);
+						toast1.show();
+					}else{
+						context.startActivity(intent);
+					}	
+				}
 			} 
 		});
 
@@ -568,12 +528,15 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		Log.v(TAG, "setAdapter " +cod);
 
 		String s=""; 
-		InputStream inp = context.getResources().openRawResource(R.raw.destinoorigenes); 
-		BufferedReader entrada = null; 
+		/*InputStream inp = context.getResources().openRawResource(R.raw.destinoorigenes); */
 		String jsonContentType = "";
 		int indice = 0;
 		try { 
-			entrada = new BufferedReader(new InputStreamReader(inp)); 
+			InputStreamReader inp = new InputStreamReader(context.openFileInput("destinoorigenes.txt"));
+			BufferedReader entrada = null; 
+
+			/*entrada = new BufferedReader(new InputStreamReader(inp));*/ 
+			entrada = new BufferedReader(inp);
 			Log.v(TAG, "setAdapter " +entrada.toString());
 			s = entrada.readLine();
 			Log.v(TAG, "setAdapter " +s);
@@ -627,12 +590,16 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		Log.v(TAG, "setAdapter " +cod);
 
 		String s=""; 
-		InputStream inp = context.getResources().openRawResource(R.raw.origendestinos); 
-		BufferedReader entrada = null; 
-		String jsonContentType = "";
+/*		InputStream inp = context.getResources().openRawResource(R.raw.origendestinos); 
+*/		String jsonContentType = "";
 		int indice = 0;
 		try { 
-			entrada = new BufferedReader(new InputStreamReader(inp)); 
+			InputStreamReader inp = new InputStreamReader(context.openFileInput("origendestinos.txt"));
+			BufferedReader entrada = null; 
+
+			/*entrada = new BufferedReader(new InputStreamReader(inp));*/ 
+			entrada = new BufferedReader(inp);
+			//entrada = new BufferedReader(new InputStreamReader(inp)); 
 			Log.v(TAG, "setAdapter " +entrada.toString());
 			s = entrada.readLine();
 			Log.v(TAG, "setAdapter " +s);
@@ -725,7 +692,7 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 			Log.d("VuelosAndroid", "LLega al adapter"); 
 			Log.i("VuelosAndroid", "LLega al adapter");
 			Log.i("VuelosAndroid", datos.isEmpty()+"");
-			
+
 			dias = pDia;
 			datosVuelos = datos;
 			Log.i("VuelosAndroid", 			datos.toString());
@@ -737,7 +704,7 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 			TextView textNombre; 
 			TextView textCodigo;	 
 			TextView textHora;
-		//	RadioGroup radioDia;
+			//	RadioGroup radioDia;
 			RadioButton radioRecienteHoy;
 			RadioButton radioRecienteMnn;
 			if (convertView == null) {
@@ -746,7 +713,7 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 			textNombre = (TextView) convertView.findViewById(R.id.text_item_reciente_nombre);
 			textCodigo = (TextView) convertView.findViewById(R.id.text_item_reciente_codigo);
 			textHora = (TextView) convertView.findViewById(R.id.text_item_reciente_hora);
-		//	radioDia =(RadioGroup) convertView.findViewById(R.id.grupo_reciente);
+			//	radioDia =(RadioGroup) convertView.findViewById(R.id.grupo_reciente);
 			radioRecienteHoy = (RadioButton) convertView.findViewById(R.id.radio_reciente_hoy);
 			radioRecienteMnn = (RadioButton) convertView.findViewById(R.id.radio_reciente_manana);
 			if(dias.get(position).contains("ho")){
@@ -766,7 +733,7 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 			if (text2.contains("esti")){
 				text2 = text2.replace("Destino: ", "");
 			}
-			
+
 			if(text.contains("Origen:")){
 				text = text.replace("Origen: ", "");
 			}	
@@ -777,7 +744,7 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 				textCodigo.setText(datosVuelos.get(position).getNombreVuelo());
 				textHora.setText(datosVuelos.get(position).getHoraOrigen());
 			}
-			
+
 
 			//text2.setText(datosVuelos.get(position).getNombreCompany());
 

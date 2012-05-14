@@ -15,7 +15,7 @@
         <ImageView style="@style/TitleBarSeparator" />
 
         <TextView style="@style/TitleBarText" 
-            android:text="Busqueda"/>
+            android:text="Búsqueda"/>
 
 
         <ImageView style="@style/TitleBarSeparator" />

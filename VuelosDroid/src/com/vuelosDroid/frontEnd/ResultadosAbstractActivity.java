@@ -42,13 +42,11 @@ public class ResultadosAbstractActivity extends AbstractActivity {
 		prefer = getSharedPreferences("MisPreferencias",Context.MODE_PRIVATE);
 		tamano = prefer.getInt("tamano", 10);
 		cal = new GregorianCalendar();
-
-
 	}
 
 
 	public void formatearFecha(String dia){
-
+		GregorianCalendar calen = new GregorianCalendar();
 		horaActual = new Date();
 		if (dia.equals("hoy")){
 			horaFormat = (dias[cal.get(Calendar.DAY_OF_MONTH)]+"/"+
@@ -63,6 +61,14 @@ public class ResultadosAbstractActivity extends AbstractActivity {
 						(meses[cal.get(Calendar.MONTH)])+"/"+
 						(cal.get(Calendar.YEAR)-2000));
 			}
+		}else if (dia.equals("ayer")){
+			cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)-1);
+			if(cal.get(Calendar.DAY_OF_MONTH) == 0){
+				cal.set(calen.get(Calendar.YEAR), calen.get(Calendar.MONTH), calen.get(Calendar.DAY_OF_MONTH));
+			}
+			horaFormat = (dias[cal.get(Calendar.DAY_OF_MONTH)]+"/"+
+					(meses[cal.get(Calendar.MONTH)])+"/"+
+					(cal.get(Calendar.YEAR)-2000));
 
 		}
 	}
@@ -186,8 +192,16 @@ public class ResultadosAbstractActivity extends AbstractActivity {
 		return listaVuelos;
 	}
 
-	
+
 	public String cambiarFechaToUrl(String pUrl, String pDia){
+		pDia = pDia.toLowerCase();
+		formatearFecha(pDia);
+		Log.d(TAG, "ResultadosAbstractActivity - cambiarFechaToUrl - pDia: " + pDia);
+		Log.e(TAG, "ResultadosAbstractActivity - cambiarFechaToUrl - horaFormat: " + horaFormat);
+		return vuelosJsoup.cambiarFechaToUrl(pUrl, horaFormat);
+	}
+
+	public String cambiarFechaToUrl(String pUrl, String pDia, int hora){
 		pDia = pDia.toLowerCase();
 		formatearFecha(pDia);
 		Log.d(TAG, "ResultadosAbstractActivity - cambiarFechaToUrl - pDia: " + pDia);

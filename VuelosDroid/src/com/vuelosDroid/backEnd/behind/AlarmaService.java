@@ -550,7 +550,18 @@ public class AlarmaService extends Service {
 									pDatos.getDatos().getAeropuertoDestino()
 									.indexOf("(") - 1);
 					actualizarBDRetrasoOrigen(pDatos, datos.getEstadoVueloOrigen());
-					if(!datos.getEstadoVueloOrigen().contains("espe") && !salido.equals("si")){
+					actualizarBDRetrasoDestino(pDatos, datos.getEstadoVueloDestino());
+
+
+					if(!datos.getEstadoVueloOrigen().contains("espe")  && salido.equals("si")){
+						Log.i(TAG, "AlarmaService - getDatos - retrasoOrigen - contiene espe y salido");
+						if (text2.contains("esti")){
+							text2 = text2.replace("Destino:", "");
+						}
+
+						if(text.contains("Origen:")){
+							text = text.replace("Origen:", "");
+						}
 						notificar(
 								"El vuelo " + text + " - " + text2 + " ha sido modificado.",
 								datos.getEstadoVueloOrigen() + " (" + getDiferenciaEstados(
@@ -576,8 +587,15 @@ public class AlarmaService extends Service {
 									.indexOf("(") - 1);
 					actualizarBDRetrasoDestino(pDatos, datos.getEstadoVueloDestino());
 					if(!datos.getEstadoVueloDestino().contains("aterrizado")){
-						notificar(
-								"El vuelo " + text + " - " + text2 + " ha sido modificado.",
+						Log.i(TAG, "AlarmaService - getDatos - retrasoOrigen - Retraso destino");
+						if (text2.contains("esti")){
+							text2 = text2.replace("Destino:", "");
+						}
+
+						if(text.contains("Origen:")){
+							text = text.replace("Origen:", "");
+						}
+						notificar("El vuelo " + text + " - " + text2 + " ha sido modificado.",
 								datos.getEstadoVueloOrigen() + " (" + getDiferenciaEstados(
 										datos.getEstadoVueloDestino(),
 										datos.getEstadoVueloDestino()) + " mins)" + "",
@@ -648,6 +666,13 @@ public class AlarmaService extends Service {
 					if(pEstado.contains("pegado") && !(pDatos.getDatos().getEstadoVueloOrigen().contains("pegado"))){
 						actualizarBDRetrasoOrigen(pDatos, pEstado);
 						ponerSalido(pDatos);
+						if (text2.contains("esti")){
+							text2 = text2.replace("Destino:", "");
+						}
+
+						if(text.contains("Origen:")){
+							text = text.replace("Origen:", "");
+						}
 						notificar("El vuelo " + text + " - " + text2 + " ha despegado.", 
 								"A las: " + getHora(pDatos.getDatos().getEstadoVueloOrigen()),
 								pDatos.getSonido(), pDatos);
@@ -699,6 +724,7 @@ public class AlarmaService extends Service {
 				Log.d(TAG,
 						"AlarmaService - verSiAterrizado - CONECTADO -aterrizado:  " + pEstado
 						.contains("aterrizado"));
+
 				String text = pDatos
 						.getDatos()
 						.getAeropuertoOrigen()
@@ -714,6 +740,13 @@ public class AlarmaService extends Service {
 								pDatos.getDatos().getAeropuertoDestino()
 								.indexOf("(") - 1);
 				if(pDatos.getDespegar() == SI){
+					if (text2.contains("esti")){
+						text2 = text2.replace("Destino:", "");
+					}
+
+					if(text.contains("Origen:")){
+						text = text.replace("Origen:", "");
+					}
 					if(pEstado.contains("aterrizado")){
 						actualizarBDRetrasoDestino(pDatos, datos.getEstadoVueloDestino());
 						notificar("El vuelo " + text + " - " + text2 + " ha aterrizado.", 
@@ -721,6 +754,7 @@ public class AlarmaService extends Service {
 								pDatos.getSonido(), pDatos);
 					}
 				}
+
 				return pEstado.contains("aterrizado");
 
 			case DESCONECTADO:
@@ -948,7 +982,6 @@ public class AlarmaService extends Service {
 		notIntent.putExtras(bun);
 		PendingIntent contIntent = PendingIntent.getActivity(context, 0,
 				notIntent, 0);
-
 
 
 		mNotificacion.setLatestEventInfo(context, contentTitle, contentText,

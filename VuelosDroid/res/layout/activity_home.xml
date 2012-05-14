@@ -18,10 +18,10 @@
         <ImageView style="@style/TitleBarSeparator" />
 
         <ImageButton
+            android:id="@+id/boton_actualizar_aeropuertos"
             style="@style/TitleBarAction"
-            android:contentDescription="@string/descripcion_search"
-            android:onClick="onClickBusqueda"
-            android:src="@drawable/title_search" />
+            android:onClick="onClickActualizarAeropuertos"
+            android:src="@drawable/title_refresh" />
     </LinearLayout>
 
     <LinearLayout
@@ -105,14 +105,14 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/about_principal"
-                android:textColor="#cccccc" />
+                android:textColor="#bbbbbb" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/resumen_principal"
-                android:textColor="#cccccc" />
+                android:textColor="#bbbbbb" />
         </LinearLayout>
 
 

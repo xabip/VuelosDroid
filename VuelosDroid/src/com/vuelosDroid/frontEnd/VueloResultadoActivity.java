@@ -1,5 +1,8 @@
 package com.vuelosDroid.frontEnd;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
@@ -43,6 +46,7 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 	String url = "";
 	String codigo = "";
 	String dia = "";
+	int or = 0;
 	DatosVuelo datos;
 	Bundle bun;
 	Context cont;
@@ -100,6 +104,7 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 		bundle = this.getIntent().getExtras();
 		url = bundle.getString("url");
 		String dia = bundle.getString("dia");
+		int or = bundle.getInt("or", 0);
 		dia = dia.toLowerCase();
 		Log.d(TAG, "VueloResultadoActivity - Oncreate - url: " + url);
 
@@ -109,7 +114,16 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 			Log.d(TAG, "VueloResultadoActivity - Oncreate - Antes de cambiar url - dia: " + dia);
 			Log.d(TAG, "VueloResultadoActivity - Oncreate - Antes de cambiar url - url: " + url);
 			if(!url.equals(" " )){
-				url = cambiarFechaToUrl(url, dia);
+				GregorianCalendar cal = new GregorianCalendar();
+				if (cal.get(Calendar.HOUR_OF_DAY) < 2 && !dia.equals("manana") && or == 1){
+					Log.i(TAG, "VueloResultadoActivity - Oncreate - Antes de cambiar url - diahoy");
+					url = cambiarFechaToUrl(url, "ayer");
+				}else if (cal.get(Calendar.HOUR_OF_DAY) < 2 && dia.equals("manana") && or == 1){
+					Log.i(TAG, "VueloResultadoActivity - Oncreate - Antes de cambiar url - diamanana");
+					url = cambiarFechaToUrl(url, "hoy");
+				}else{
+					url = cambiarFechaToUrl(url, dia);
+				}
 			}
 			Log.d(TAG, "VueloResultadoActivity - Oncreate - Despues de cambiar url - dia: " + dia);
 
@@ -186,7 +200,7 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 				lay.setVisibility(View.GONE);
 				lay2.setVisibility(View.VISIBLE);
 				layAlarmas.setVisibility(View.VISIBLE);
-				controlEstado(url);	
+				controlEstado(url);
 				dia = bundle.getString("dia");
 				Log.d(TAG, "VueloResultadoActivity - controlOperaciones - try - dia: " + dia);
 				estado = controlEstado(datos.getEstadoVueloOrigen(), datos.getHoraOrigen());
@@ -252,6 +266,8 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 		TextView textCompany = (TextView) findViewById(R.id.text_resultado_company);
 		TextView textLayManana = (TextView) findViewById(R.id.text_resultado_vuelo_dia);
 		ImageButton btnHoy = (ImageButton) findViewById(R.id.boton_resultado_vuelo_manana);
+		favorito = (ImageButton) findViewById(R.id.boton_resultado_favorito);
+		botonAlarma = (ImageButton) findViewById(R.id.boton_resultado_alarma);
 
 		//Button botonActualizar = (Button) findViewById(R.id.boton_actualizar);
 		//TextView textCod = (TextView) findViewById(R.id.text_resultado_codigo);
@@ -265,7 +281,7 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 				//layManana = (LinearLayout) findViewById(R.id.layout_resultado_vuelo_boton_manana);
 				btnHoy.setVisibility(View.GONE);
 				//layManana.setVisibility(View.VISIBLE);
-			}else if(dia.equals("manana")){
+			}else if(dia.equalsIgnoreCase("manana")){
 				favorito.setVisibility(View.GONE);
 				Log.w(TAG, "VueloResultadoActivity - setLayout " + dia);
 				textLayManana.setText("Hoy");
@@ -273,13 +289,18 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 			else{
 				layoutManana.setEnabled(false);
 				favorito.setEnabled(false);
-				//layoutManana.setVisibility(View.GONE);
+				favorito.setVisibility(View.GONE);
+				layoutManana.setVisibility(View.GONE);
 			}
 		}else{
 			layoutManana.setEnabled(false);
 			favorito.setEnabled(false);
 			//layoutManana.setVisibility(View.GONE);
 
+		}
+		if (alarma){
+			botonAlarma.setPressed(true);
+			botonAlarma.setSelected(true);
 		}
 
 		if (estado == ONTIME){
@@ -325,43 +346,6 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 		//textCod.setText(datos.)
 		Log.i(TAG, "VueloResultadoActivity - setLayout - radAlarma: " + radAlarma.isChecked()+"");
 		Log.i(TAG, "VueloResultadoActivity - setLayout - radMarcador: " + radMarcador.isChecked()+"");
-
-		/*		if (alarma){
-			//btnAlarma.setEnabled(false);
-			radAlarma.setChecked(true);
-			botonAlarma.setPressed(true);
-			botonAlarma.setSelected(true);
-		}
-		if (marcador){
-			//btnSeguimineto.setEnabled(false);
-			radMarcador.setChecked(true);
-			favorito.setPressed(true);
-		}*/
-
-		/*		radMarcador.setOnClickListener(new OnClickListener() {
-
-			public void onClick(View v) {
-				Log.i(TAG, "onClick rad marcador");
-				if (radAlarma.isChecked()){
-					radMarcador.setChecked(false);
-				}else if (!radAlarma.isChecked()) {
-					radMarcador.setChecked(true);
-				}
-			}
-		});
-
-		radAlarma.setOnClickListener(new OnClickListener() {
-
-			public void onClick(View v) {
-				Log.i(TAG, "onClick rad Alarma");
-				if (radAlarma.isChecked()){
-					radAlarma.setChecked(false);
-				}else if(!radAlarma.isChecked()) {
-					radAlarma.setChecked(true);
-				}
-			}
-		});*/
-
 	}
 
 	public void onClickBtnManana(View v){
@@ -372,12 +356,18 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 		extras.putString("url", datos.getLinkInfoVuelo());
 
 		extras.putString("codigo", "");
-		if(dia.equals("hoy")){
-			extras.putString("dia", "manana");
+		if (or == 1){
+			extras.putInt("or", 1);
+			Log.i(TAG, "VueloResultadoActivity - onClickBtnManana - OR = 1");
 
+		}else {
+			Log.i(TAG, "VueloResultadoActivity - onClickBtnManana - OR = 0");
+			extras.putInt("or", 0);
+		}
+		if(dia.equalsIgnoreCase("hoy")){
+			extras.putString("dia", "manana");
 		}else{
 			extras.putString("dia", "hoy");
-
 		}
 		intent.putExtras(extras);
 		if(!tieneRed()){
@@ -456,7 +446,6 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 				Log.d(TAG, "VueloResultadoActivity - getAlarma - c2.getString(1): " + c2.getString(0));
 				Log.d(TAG, "VueloResultadoActivity - getAlarma - nombreVuelo: " + datos.getNombreVuelo());
 				Log.d(TAG, "VueloResultadoActivity - getAlarma - fechaOrigen: " + datos.getFechaOrigen());
-
 				/*if(datos.getLinkInfoVuelo().equals(c2.getString(0))){
 					return true;
 				}*/
@@ -708,17 +697,14 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 
 	public void onClickAlarma(View v){
 		Log.i(TAG, "onClick Layout Alarma");
-
 		if(datos.getEstadoVueloDestino().equals("--")){
 			Toast toast1 = Toast.makeText(getApplicationContext(), "No funcionará el aviso de aterrizaje", Toast.LENGTH_SHORT);
 			toast1.show();
 		}
-
 		if(datos.getEstadoVueloOrigen().equals("--")){
 			Toast toast1 = Toast.makeText(getApplicationContext(), "No funcionará el aviso de despege", Toast.LENGTH_SHORT);
 			toast1.show();
 		}
-
 		if(datos.getEstadoVueloDestino().equals("--") && datos.getEstadoVueloOrigen().equals("--")){
 			Toast toast1 = Toast.makeText(getApplicationContext(), "No se puede poner la alarma", Toast.LENGTH_SHORT);
 			toast1.show();
@@ -736,13 +722,13 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 
 				radAlarma = (RadioButton) findViewById(R.id.radio_alarma);
 				botonAlarma = (ImageButton) findViewById(R.id.boton_resultado_alarma);
-				radAlarma.setChecked(false);
+				//radAlarma.setChecked(false);
 				botonAlarma.setPressed(false);
 				Log.i(TAG, radAlarma.isChecked()+"");
 
 				lay.setVisibility(View.GONE);
-				lay2.setVisibility(View.VISIBLE);
-				layAlarmas.setVisibility(View.VISIBLE);
+				//lay2.setVisibility(View.VISIBLE);
+				//layAlarmas.setVisibility(View.VISIBLE);
 				setLayout();
 
 
@@ -758,15 +744,15 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 				lay = (LinearLayout) findViewById(R.id.layout_progress_vuelo_resultado);
 				lay2 = (LinearLayout) findViewById(R.id.layout_vuelo_resultado_sup);
 				layAlarmas = (LinearLayout) findViewById(R.id.layout_resultado_alarmas);
-				radAlarma = (RadioButton) findViewById(R.id.radio_alarma);
+				//radAlarma = (RadioButton) findViewById(R.id.radio_alarma);
 				botonAlarma = (ImageButton) findViewById(R.id.boton_resultado_alarma);
 				botonAlarma.setPressed(true);
 				botonAlarma.setSelected(true);
-				radAlarma.setChecked(true);
+				//radAlarma.setChecked(true);
 				Log.i(TAG, radAlarma.isChecked()+"");
 				lay.setVisibility(View.GONE);
-				lay2.setVisibility(View.VISIBLE);
-				layAlarmas.setVisibility(View.VISIBLE);
+				//lay2.setVisibility(View.VISIBLE);
+				//layAlarmas.setVisibility(View.VISIBLE);
 				setLayout();
 			}
 		}
