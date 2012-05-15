@@ -1,31 +1,12 @@
-/*
- * Copyright (C) 2011 Wglxy.com
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.vuelosDroid.frontEnd;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 import com.vuelosDroid.R;
 import com.vuelosDroid.backEnd.behind.AlarmaService;
-import com.vuelosDroid.backEnd.scrapper.DatosVuelo;
 import com.vuelosDroid.backEnd.scrapper.airportsUpdater.AirportUpdater;
 
 import android.app.AlertDialog;
@@ -173,7 +154,7 @@ public class PrincipalActivity extends AbstractActivity{
 	 */
 	public void onClickActualizarAeropuertos(View v){
 		AlertDialog.Builder alertbox = new AlertDialog.Builder(this);
-		alertbox.setMessage("Esta operación puede tardar varios minutos");
+		alertbox.setMessage("Esta operación puede tardar varios minutos (Podrás seguir utilizando la aplicación)");
 		alertbox.setTitle("Actualizar Aeropuertos");
 		alertbox.setPositiveButton("Si", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface arg0, int arg1) {

@@ -3,7 +3,6 @@ package com.vuelosDroid.frontEnd;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -17,8 +16,6 @@ import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -79,7 +76,7 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 	private static final int DESPEGADO = 3;
 	private static final int ATERRIZADO = 4;
 
-	private int estdado;
+	//private int estdado;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -615,7 +612,7 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 	public void borrarMarcador(DatosVuelo pDatos){
 		AlarmasSql alarms =  new AlarmasSql(this); 
 		SQLiteDatabase db = alarms.getWritableDatabase();
-		String[] args = {"*"};
+		//String[] args = {"*"};
 		db.execSQL("DELETE FROM alarmas WHERE "+ AlarmasSql.URL+"='"+pDatos.getLinkInfoVuelo()+"' ");
 		db.close();
 		radMarcador.setChecked(false);
@@ -627,7 +624,7 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 	public void borrarAlarma(DatosVuelo pDatos){
 		AlarmasSqlAux alarms =  new AlarmasSqlAux(this); 
 		SQLiteDatabase db = alarms.getWritableDatabase();
-		String[] args = {"*"};
+		//String[] args = {"*"};
 		db.execSQL("DELETE FROM alarmas_aux WHERE "+ AlarmasSqlAux.URL+"='"+pDatos.getLinkInfoVuelo()+"' ");
 		db.execSQL("DELETE FROM alarmas_aux WHERE "+ AlarmasSqlAux.NOMBREVUELO+"='"+pDatos.getNombreVuelo()+"' AND " 
 				+ AlarmasSqlAux.FECHAORIGEN + "='"+pDatos.getFechaOrigen()+"' ");
@@ -764,7 +761,7 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 	}
 
 	public void onClickSearch(View v){
-
+		startActivity (new Intent(getApplicationContext(), BusquedaActivity.class));
 	}
 
 	public int controlEstado(String pEstado, String pHora){
@@ -780,7 +777,7 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 		try{
 			int dif = getDiferencia(pEstado, pHora);
 			Log.d(TAG, "VueloResultadoActivity - controlEstado - diferencia: " + dif);
-			if(dif>10){
+			if(dif<10){
 				return DELAYED;
 			}
 			else{

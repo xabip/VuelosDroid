@@ -1,6 +1,5 @@
 package com.vuelosDroid.backEnd.behind;
 
-import com.vuelosDroid.frontEnd.AbstractActivity;
 
 import android.app.Notification;
 import android.app.NotificationManager;

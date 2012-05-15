@@ -57,8 +57,11 @@ public class BusquedaActivity extends AbstractActivity {
 			InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 			imm.hideSoftInputFromWindow(titleIndicator.getWindowToken(), 0);
 			getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
 	    }   
+	    
+	    public void onClickBorrar(View v){
+	    	onCreate(bun);
+	    }
 	    
 	    public void onClickActualizar(View v){
 	    	onCreate(bun);

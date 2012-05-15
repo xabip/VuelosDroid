@@ -6,16 +6,22 @@
 
     <uses-sdk android:minSdkVersion="7" />
 
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    
+
     <application
+        android:debuggable="false"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name" 
-        android:theme="@style/Theme.D1" 
-        android:debuggable="true">
+        android:label="@string/app_name"
+        android:theme="@style/Theme.D1" >
         <activity
             android:name=".frontEnd.PrincipalActivity"
             android:label="@string/app_name" >
@@ -33,19 +39,19 @@
                 <action android:name=".behind.AlarmaService" />
             </intent-filter>
         </service>
-        
+        
         <receiver android:name=".backEnd.behind.StartUpReceiver" >
-            
+            
             <intent-filter>
-                
+                
                 <action android:name="android.intent.action.BOOT_COMPLETED" >
                 </action>
-                
+                
                 <category android:name="android.intent.category.LAUNCHER" >
                 </category>
-            
+            
             </intent-filter>
-        
+        
         </receiver>
         <receiver
             android:name=".backEnd.behind.MiReceiver"

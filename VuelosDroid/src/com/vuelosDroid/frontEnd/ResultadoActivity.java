@@ -1,11 +1,9 @@
 package com.vuelosDroid.frontEnd;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import com.vuelosDroid.R;
-import com.vuelosDroid.backEnd.behind.CargaVuelosService;
 import com.vuelosDroid.backEnd.scrapper.DatosGroup;
 import com.vuelosDroid.backEnd.scrapper.DatosVuelo;
 import com.vuelosDroid.backEnd.scrapper.NoHayMasPaginasDeVuelosException;
@@ -298,8 +296,6 @@ public class ResultadoActivity extends ResultadosAbstractActivity{
 
 		private LayoutInflater mInflater;
 		private List<DatosVuelo> datosVuelos;
-		private boolean cargando = false;
-		private int pag = 0;
 
 		miAdapter(Context context, 	List<DatosVuelo> datosVuelos) {
 			mInflater = LayoutInflater.from(context);
@@ -309,9 +305,9 @@ public class ResultadoActivity extends ResultadosAbstractActivity{
 
 		public View getView(int position, View convertView, ViewGroup parent) {
 			TextView text; 
-			TextView text2;	 
+			//TextView text2;	 
 			TextView text3;
-			TextView textHoraLlegada;
+			//TextView textHoraLlegada;
 			TextView textCod;
 			LinearLayout lin;
 			LinearLayout linDats;

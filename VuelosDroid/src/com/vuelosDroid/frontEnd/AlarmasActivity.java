@@ -31,7 +31,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.BaseAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.ExpandableListView;
@@ -335,8 +334,8 @@ public class AlarmasActivity extends AbstractActivity {
 	public void setListenersAlarma() {
 		miListaAlarmas.setOnItemClickListener(new OnItemClickListener() {
 
-			final Intent intent = new Intent(context,
-					VueloResultadoActivity.class);
+	/*		final Intent intent = new Intent(context,
+					VueloResultadoActivity.class);*/
 
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
@@ -474,7 +473,7 @@ public class AlarmasActivity extends AbstractActivity {
 	}
 
 	public void onClickSearch(View v) {
-		startActivity(new Intent(getApplicationContext(), AboutActivity.class));
+		startActivity(new Intent(getApplicationContext(), BusquedaActivity.class));
 	}
 
 	private final Handler progressHandler = new Handler() {

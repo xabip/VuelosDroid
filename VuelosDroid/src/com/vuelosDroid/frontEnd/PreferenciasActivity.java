@@ -1,39 +1,23 @@
 package com.vuelosDroid.frontEnd;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import android.app.Activity;
-import android.app.ExpandableListActivity;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.BaseExpandableListAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.ExpandableListAdapter;
-import android.widget.ExpandableListView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
-import android.widget.SimpleExpandableListAdapter;
 import android.widget.TextView;
-
 
 import com.vuelosDroid.R;
 import com.vuelosDroid.backEnd.behind.AlarmaService;
 import com.vuelosDroid.backEnd.behind.AlarmasSqlAux;
-import com.vuelosDroid.backEnd.scrapper.DatosVuelo;
 
 /**
  * 

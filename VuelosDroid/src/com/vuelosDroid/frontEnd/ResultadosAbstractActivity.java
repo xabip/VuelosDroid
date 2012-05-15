@@ -11,7 +11,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.vuelosDroid.R;
 import com.vuelosDroid.backEnd.scrapper.DatosGroup;
 import com.vuelosDroid.backEnd.scrapper.DatosVuelo;
 import com.vuelosDroid.backEnd.scrapper.MoreFlightsException;

@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.Date;
 
 import com.vuelosDroid.backEnd.scrapper.*;
-import com.vuelosDroid.frontEnd.AbstractActivity;
-import com.vuelosDroid.frontEnd.VueloResultadoActivity;
 
 import android.app.AlarmManager;
 import android.app.Notification;

@@ -23,7 +23,7 @@
         <ImageButton
             style="@style/TitleBarAction"
             android:contentDescription="@string/descripcion_search"
-            android:onClick="onClickActualizar"
+            android:onClick="onClickBorrar"
             android:src="@drawable/title_search" />
     </LinearLayout>
 

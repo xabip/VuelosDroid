@@ -3,7 +3,6 @@ package com.vuelosDroid.frontEnd;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -19,7 +18,6 @@ import kankan.wheel.widget.adapters.ArrayWheelAdapter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import com.viewpagerindicator.TitleProvider;
 import com.vuelosDroid.R;
@@ -78,6 +76,9 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 	int valor2 = 0;
 	ListView miLista;
 	ArrayList<String> dias = new ArrayList<String>();
+	LinearLayout lCod;
+	LinearLayout lSal;
+	LinearLayout lLle;
 
 	public ViewPagerAdapter(Context context){
 		this.context = context;
@@ -88,6 +89,9 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		return titulos[position];
 	}
 
+	public void onClickBorrar(View v){
+
+	}
 
 	public void getBusquedaReciente(LinearLayout v){
 		BusquedaRecienteSql alarms =  new BusquedaRecienteSql(context); 
@@ -217,12 +221,15 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		if (position == 0) {
 			v = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.columna1, null);
 			setLayoutCodigo(v);
+			lCod = v;
 		} else if (position == 1) {
 			v = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.columna2, null);
 			setLayoutsSalidas(v);
+			lSal =  (LinearLayout) LayoutInflater.from(context).inflate(R.layout.columna2, null);
 		} else {
 			v = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.columna3, null);
 			setLayoutLlegadas(v);
+			lLle =  (LinearLayout) LayoutInflater.from(context).inflate(R.layout.columna3, null);
 		}    
 		((ViewPager) pager).addView(v, 0);
 		InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -589,60 +596,89 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		String cod = in.substring((in.indexOf("(")+1), in.indexOf(")"));
 		Log.v(TAG, "setAdapter " +cod);
 
-		String s=""; 
-/*		InputStream inp = context.getResources().openRawResource(R.raw.origendestinos); 
-*/		String jsonContentType = "";
-		int indice = 0;
-		try { 
-			InputStreamReader inp = new InputStreamReader(context.openFileInput("origendestinos.txt"));
-			BufferedReader entrada = null; 
+		String s="";
+		/*		InputStream inp = context.getResources().openRawResource(R.raw.origendestinos); 
+		 */		String jsonContentType = "";
+		 int indice = 0;
+		 try { 
+			 InputStreamReader inp = new InputStreamReader(context.openFileInput("origendestinos.txt"));
+			 BufferedReader entrada = null; 
 
-			/*entrada = new BufferedReader(new InputStreamReader(inp));*/ 
-			entrada = new BufferedReader(inp);
-			//entrada = new BufferedReader(new InputStreamReader(inp)); 
-			Log.v(TAG, "setAdapter " +entrada.toString());
-			s = entrada.readLine();
-			Log.v(TAG, "setAdapter " +s);
+			 /*entrada = new BufferedReader(new InputStreamReader(inp));*/ 
+			 entrada = new BufferedReader(inp);
+			 //entrada = new BufferedReader(new InputStreamReader(inp)); 
+			 Log.v(TAG, "setAdapter " +entrada.toString());
+			 s = entrada.readLine();
+			 Log.v(TAG, "setAdapter " +s);
 
-		} catch (FileNotFoundException e) { 
-			Log.e(TAG, "Fallo al leer el fichero: " +e.getMessage());
-		} catch (IOException e) { 
-		} 
+		 } catch (FileNotFoundException e) { 
+			 Log.e(TAG, "Fallo al leer el fichero: " +e.getMessage());
+		 } catch (IOException e) { 
+		 } 
 
-		try {
-			JSONArray jsonContent = new JSONArray(s);
-			while (!jsonContentType.equals(cod)){
-				JSONObject item = jsonContent.getJSONObject(indice);
-				jsonContentType = item.getString("cod");
-				Log.v(TAG, "getAeropuertosDeDestino: " +jsonContentType);
-				indice++;
-			}
-			indice--;
-			JSONObject item = jsonContent.getJSONObject(indice);
-			Log.d(TAG,item.toString());
-			jsonContentType = item.getString("destinos");
-			Log.d(TAG, jsonContentType);
-			boolean salir = false;
-			int ind = 0;
-			jsonContent = new JSONArray(jsonContentType);
-			while(!salir){
-				item = jsonContent.getJSONObject(ind);
-				jsonContentType = item.getString("nombre");
-				Log.d(TAG, "Json "+jsonContentType);
-				if(item.equals(null)){
-					salir = true;
-				}else {
-					ind++;
-					destinosArray.add(jsonContentType);
-				}
-			}
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		//Poner el adaptador al Autocomplete.
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.list_item, destinosArray);
-		autoOrigen.setAdapter(adapter);   	 
+		 try {
+			 JSONArray jsonContent = new JSONArray(s);
+			 while (!jsonContentType.equals(cod)){
+				 JSONObject item = jsonContent.getJSONObject(indice);
+				 jsonContentType = item.getString("cod");
+				 Log.v(TAG, "getAeropuertosDeDestino: " +jsonContentType);
+				 indice++;
+			 }
+			 indice--;
+			 JSONObject item = jsonContent.getJSONObject(indice);
+			 Log.d(TAG,item.toString());
+			 jsonContentType = item.getString("destinos");
+			 Log.d(TAG, jsonContentType);
+			 boolean salir = false;
+			 int ind = 0;
+			 jsonContent = new JSONArray(jsonContentType);
+			 while(!salir){
+				 item = jsonContent.getJSONObject(ind);
+				 jsonContentType = item.getString("nombre");
+				 Log.d(TAG, "Json "+jsonContentType);
+				 if(item.equals(null)){
+					 salir = true;
+				 }else {
+					 ind++;
+					 destinosArray.add(jsonContentType);
+				 }
+			 }
+		 } catch (JSONException e) {
+			 // TODO Auto-generated catch block
+			 e.printStackTrace();
+		 }
+		 //Poner el adaptador al Autocomplete.
+		 ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.list_item, destinosArray);
+		 autoOrigen.setAdapter(adapter);   	 
+	}
+
+	/**
+	 * Reinicializa la interfaz
+	 * @param pCod  Layout del codigo
+	 * @param pSalidas  Layout de salidas
+	 * @param pLlegadas Layout de llegadas
+	 */
+	public void borrarCampos(){ 
+		LinearLayout lCod = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.columna1, null);
+		LinearLayout lSal = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.columna2, null);
+		LinearLayout lLle = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.columna3, null);
+
+		EditText edit = (EditText)lCod.findViewById(R.id.edittext_codigo);
+		Button botonLlegadas = (Button) lSal.findViewById(R.id.btn_llegadas);
+		AutoCompleteTextView autoOrigen = (AutoCompleteTextView) lSal.findViewById(R.id.autocomplete_origen_llegadas);
+		AutoCompleteTextView autoDestinos= (AutoCompleteTextView) lSal.findViewById(R.id.autocomplete_destino_llegadas);
+		AutoCompleteTextView autoOrigenLlegadas = (AutoCompleteTextView) lLle.findViewById(R.id.autocomplete_origen);
+		AutoCompleteTextView autoDestinoLlegadas = (AutoCompleteTextView) lLle.findViewById(R.id.autocomplete_destino);
+		Button botonSalidas = (Button)lLle.findViewById(R.id.btn_salidas);
+
+		edit.setText("");
+		//botonLlegadas.setEnabled(true);
+		//autoOrigen.setText("");
+		//autoDestinos.setText("");
+		//autoOrigenLlegadas.setText("");
+		//autoDestinoLlegadas.setText("");
+		//botonSalidas.setEnabled(false);
+
 	}
 
 	@Override
