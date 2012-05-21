@@ -1,3 +1,19 @@
+/*
+ Copyright 2012 Xabier Pena & Urko Guinea
+ 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+   limitations under the License.
+ */
+
 package com.vuelosDroid.frontEnd;
 
 import java.io.BufferedReader;
@@ -38,6 +54,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -123,12 +140,16 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 			} while(c.moveToNext());
 		}
 		db.close();
-		if (!datos.isEmpty()){
-			setListaReciente(v);
+		setListaReciente(v);
+
+		/*if (!datos.isEmpty()){
 		}else{
+			DatosVuelo dats = new DatosVuelo();
+			dats.setNombreVuelo("NoHayAntiguas"); 
+			datos.add(dats);
 			TextView text = (TextView)v.findViewById(R.id.text_columna1_sin_resultados);
 			text.setText("No hay busquedas recientes");
-		}
+		}*/
 	}
 
 	public void setListaReciente(LinearLayout v){
@@ -149,6 +170,7 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 			DatosVuelo dats = new DatosVuelo();
 			dats.setAeropuertoOrigen("NoHay");
 			datos.add(dats);
+			dias.add("No");
 		}
 		miLista.setAdapter(new miAdapter(context, datos, dias));
 		final Intent intent = new Intent(context, VueloResultadoActivity.class);
@@ -246,6 +268,8 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(edit.getWindowToken(), 0);
 		getBusquedaReciente(v);
+		
+		
 
 		//Listeners
 		boton.setOnClickListener(new OnClickListener() {
@@ -282,6 +306,15 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 				}
 			}
 		});
+		
+		edit.setOnLongClickListener(new OnLongClickListener() {
+			
+			public boolean onLongClick(View v) {
+				edit.setText("");
+				edit.refreshDrawableState();
+				return false;
+			}
+		});
 	}
 
 	public void setLayoutLlegadas(LinearLayout v){
@@ -302,7 +335,6 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		final AutoCompleteTextView autoOrigen = (AutoCompleteTextView) v.findViewById(R.id.autocomplete_origen_llegadas);
 		autoOrigen.setEnabled(false);
 		autoOrigen.setThreshold(1);
-		imm.hideSoftInputFromWindow(autoOrigen.getWindowToken(), 0);
 
 		String[] horarios = v.getResources().getStringArray(R.array.horario_array);
 		for (int i = 0; i < horarios.length; i++) {
@@ -362,6 +394,17 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 			}
 		});
 
+		autoDestinos.setOnLongClickListener(new OnLongClickListener() {
+			
+			public boolean onLongClick(View v) {
+				autoDestinos.setText("");
+				autoOrigen.setText("");
+				autoDestinos.refreshDrawableState();
+				autoOrigen.refreshDrawableState();
+				return false;
+			}
+		});
+		
 		autoOrigen.setOnItemClickListener( new OnItemClickListener(){
 
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
@@ -370,7 +413,15 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 				InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.hideSoftInputFromWindow(autoOrigen.getWindowToken(), 0);
 
-
+			}
+		});
+		
+		autoOrigen.setOnLongClickListener(new OnLongClickListener() {
+			
+			public boolean onLongClick(View v) {
+				autoOrigen.setText("");
+				autoOrigen.refreshDrawableState();
+				return false;
 			}
 		});
 
@@ -484,6 +535,17 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 			}
 		});
 
+		autoOrigen.setOnLongClickListener(new OnLongClickListener() {
+			
+			public boolean onLongClick(View v) {
+				autoOrigen.setText("");
+				autoDestino.setText("");
+				autoOrigen.refreshDrawableState();
+				autoDestino.refreshDrawableState();
+				return false;
+			}
+		});
+		
 		autoDestino.setOnItemClickListener(new OnItemClickListener(){
 
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
@@ -496,6 +558,15 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 			}
 		});
 
+		autoDestino.setOnLongClickListener(new OnLongClickListener() {
+			
+			public boolean onLongClick(View v) {
+				autoDestino.setText("");
+				autoDestino.refreshDrawableState();
+				return false;
+			}
+		});
+		
 		//<-- Boton -->
 		botonSalidas.setOnClickListener( new OnClickListener(){
 			public void onClick(View arg0) {
@@ -750,9 +821,9 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 			textCodigo = (TextView) convertView.findViewById(R.id.text_item_reciente_codigo);
 			textHora = (TextView) convertView.findViewById(R.id.text_item_reciente_hora);
 			//	radioDia =(RadioGroup) convertView.findViewById(R.id.grupo_reciente);
-			radioRecienteHoy = (RadioButton) convertView.findViewById(R.id.radio_reciente_hoy);
+/*			radioRecienteHoy = (RadioButton) convertView.findViewById(R.id.radio_reciente_hoy);
 			radioRecienteMnn = (RadioButton) convertView.findViewById(R.id.radio_reciente_manana);
-			if(dias.get(position).contains("ho")){
+*/			/*			if(dias.get(position).contains("ho")){
 				radioRecienteHoy.setChecked(true);
 				radioRecienteMnn.setChecked(false);
 				Log.i("VuelosAndroid", "hoy");
@@ -761,6 +832,12 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 				radioRecienteMnn.setChecked(true);
 				Log.i("VuelosAndroid", "mañana");
 
+			}*/
+			if(datosVuelos.get(position).getAeropuertoOrigen().equals("NoHay")){
+				textNombre.setText("No has realizado ninguna búsqueda");
+				textCodigo.setVisibility(View.GONE);
+				textHora.setVisibility(View.GONE);
+				return convertView;
 			}
 			String text = datosVuelos.get(position).getAeropuertoOrigen().
 					substring(0, datosVuelos.get(position).getAeropuertoOrigen().indexOf("(")-1);
@@ -773,13 +850,10 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 			if(text.contains("Origen:")){
 				text = text.replace("Origen: ", "");
 			}	
-			if(text.equals("NoHay")){
-				textNombre.setText("No has realizado ninguna búsqueda");
-			}else{
-				textNombre.setText(text + " - " + text2);
-				textCodigo.setText(datosVuelos.get(position).getNombreVuelo());
-				textHora.setText(datosVuelos.get(position).getHoraOrigen());
-			}
+			textNombre.setText(text + " - " + text2);
+			textCodigo.setText(datosVuelos.get(position).getNombreVuelo());
+			textHora.setText(datosVuelos.get(position).getHoraOrigen());
+
 
 
 			//text2.setText(datosVuelos.get(position).getNombreCompany());

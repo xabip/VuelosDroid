@@ -1,8 +1,27 @@
+/*
+ Copyright 2012 Xabier Pena & Urko Guinea
+ 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+   limitations under the License.
+ */
+
 package com.vuelosDroid.backEnd.behind;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
+import com.vuelosDroid.R;
 import com.vuelosDroid.backEnd.scrapper.*;
 
 import android.app.AlarmManager;
@@ -45,9 +64,9 @@ public class AlarmaService extends Service {
 	private int SIMPLE_NOTFICATION_ID;
 	private Intent pIntent;
 	private static final String TEXTO_CANCELADO = "El vuelo ha sido cancelado";
-	private static final String TEXTO_RETRASADO = "El vuelo ha sido retrasado";
+	/*private static final String TEXTO_RETRASADO = "El vuelo ha sido retrasado";
 	private static final String TEXTO_ATERRIZADO = "El vuelo ha llegado";
-	private static final String TEXTO_SALIDO = "El vuelo ha despegado";
+	private static final String TEXTO_SALIDO = "El vuelo ha despegado";*/
 
 	// Constantes de estado
 	private static final int INICIAL = 0; // No se sabe el estado
@@ -56,7 +75,10 @@ public class AlarmaService extends Service {
 	// llegada prevista
 	private static final int ALTA = 5; // Vuelo a menos de 20 minutos de la
 	// llegada prevista
+	private static final int MEDIAALTA = 8;
 	private static final int MEDIA = 4; // Vuelo despegado
+
+	private static final int BAJAMEDIA = 9; //No ha despegado quedan 15 minutos
 	private static final int BAJA = 3; // Vuelo a falta de 30 minutos para
 	// despegar
 	private static final int MUYBAJA = 2; // Vuelo a falta de más de 30 minutos
@@ -144,14 +166,7 @@ public class AlarmaService extends Service {
 	}
 
 	public boolean tieneRed() {
-		/*		ConnectivityManager cm = (ConnectivityManager) this
-				.getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo netInfo = cm.getActiveNetworkInfo();
-		if (netInfo != null && netInfo.isConnectedOrConnecting()) {
-			return true;
-		}
 
-		return false;*/
 		boolean wifi = false;
 		boolean mobile = false;
 
@@ -174,24 +189,31 @@ public class AlarmaService extends Service {
 		super.onDestroy();
 	}
 
+	/**
+	 * Controla todas las alarmas poniendo sus estados y próximas comprobaciones
+	 * @param pUrl
+	 * @param id
+	 * @param pDatos
+	 */
 	public void controlVuelo(String pUrl, int id, DatosAlarma pDatos) {
 		int sonido = pDatos.getSonido();
 		int despegar = pDatos.getDespegar();
 		int aterrizar = pDatos.getAterrizar();
 		int minutos = pDatos.getMinutos();
 		int cambios = pDatos.getCambios();
+		int estado = pDatos.getEstado();
 
 		Log.d(TAG, "AlarmaService - controlVuelo - estado: " + estado);
 		Log.d(TAG, "AlarmaService - controlVuelo - conectado: " + red);
-		switch (estado) {
+		switch (pDatos.getEstado()) {
+
+		//Nada mas poner la alarma -Establece el estado de cada alarma al principio.
 		case INICIAL:
-			// endTime = System.currentTimeMillis() + 60*10000; //10 minutos de
-			// refresco
 			synchronized (this) {
 				try {
-					Log.d(TAG, "AlarmaService - controlVuelo - red: " + red);
+					Log.i(TAG, "AlarmaService - controlVuelo - estado INICAL");
 
-					// wait(endTime - System.currentTimeMillis());
+					Log.d(TAG, "AlarmaService - controlVuelo - red: " + red);
 					switch (red) {
 					case CONECTADO:
 						Log.d(TAG,
@@ -207,69 +229,58 @@ public class AlarmaService extends Service {
 					case DESCONECTADO:
 						Log.d(TAG,
 								"AlarmaService - controlVuelo - desconectado: " + red);
-
 						break;
 					}
 
 					if (verSiDespegado(datos.getEstadoVueloOrigen(), pDatos)) {
-						ponerEstado(getDiferencia(datos.getEstadoVueloDestino()));
-						// notificar(TEXTO_ATERRIZADO,
-						// datos.getEstadoVueloDestino());
+						ponerEstado(getDiferencia(datos.getEstadoVueloDestino()), pDatos);
 					} else {
 						ponerEstadoAntes(getDiferencia(datos
-								.getEstadoVueloOrigen()));
+								.getEstadoVueloOrigen()), pDatos);
 					}
 					if (verSiAterrizado(datos.getEstadoVueloDestino(), pDatos)) {
+						pDatos.setEstado(TERMINADO);
+					}
+					if(verSiCancelado(datos.getEstadoVueloOrigen(), pDatos)) {
 						estado = TERMINADO;
-						/*notificar(TEXTO_ATERRIZADO,
-								datos.getEstadoVueloDestino(), sonido);*/
+						actualizarBDEstado(pDatos);
+
 					}
-					if (verSiCancelado(datos.getEstadoVueloDestino())) {
-						estado = TERMINADO;
-						notificar(TEXTO_CANCELADO, "", sonido, pDatos);
-					}
-					if (verSiRetrasado(datos.getEstadoVueloDestino())) {
-						/*notificar(TEXTO_RETRASADO,
-								datos.getEstadoVueloDestino(), sonido);*/
-					}
+
 					controlVuelo(pUrl, id, pDatos);
 				} catch (Exception e) {
 				}
 			}
 			break;
 
+			//En caso de que queden menos de 5 minutos para la llegada del vuelo 
+			//(Se actualizara la informacion cada 30 segundos)
 		case MUYALTA:
-			// endTime = System.currentTimeMillis() + 30*100; //30 segundos de
-			// refresco
+			Log.i(TAG, "AlarmaService - controlVuelo - estado MUYALTA");
 
 			synchronized (this) {
 				try {
-
-					// wait(endTime - System.currentTimeMillis());
 					switch (red) {
 					case CONECTADO:
 						getDatos(pUrl, pDatos);
 						break;
 
 					case DESCONECTADO:
-
 						break;
 					}
-					if (verSiCancelado(datos.getEstadoVueloDestino())) {
-						estado = TERMINADO;
-						notificar(TEXTO_CANCELADO, "", sonido, pDatos);
+					if (verSiCancelado(datos.getEstadoVueloOrigen(), pDatos)) {
+						pDatos.setEstado(TERMINADO);
+						actualizarBDEstado(pDatos);
+						controlVuelo(pUrl, id, pDatos);
 					}
-					if (verSiRetrasado(datos.getEstadoVueloDestino())) {
-						/*notificar(TEXTO_RETRASADO,
-								datos.getEstadoVueloDestino(), sonido);*/
-					}
+
 					if (verSiAterrizado(datos.getEstadoVueloDestino(), pDatos)) {
-						estado = TERMINADO;
-						/*notificar(TEXTO_ATERRIZADO,
-								datos.getEstadoVueloDestino(), sonido);*/
+						pDatos.setEstado(TERMINADO);
+						actualizarBDEstado(pDatos);
+						controlVuelo(pUrl, id, pDatos);
 					} else {
 						alarmManager.set(AlarmManager.RTC_WAKEUP,
-								System.currentTimeMillis() + (3 * 1000),
+								System.currentTimeMillis() + (1 * 60000),   //30 segs
 								pendingIntent);
 					}
 				} catch (Exception e) {
@@ -278,38 +289,38 @@ public class AlarmaService extends Service {
 
 			break;
 
+			//En caso de que queden entre 5 y 20 minutos para la llegada del vuelo 
+			//(Se actualizara la informacion cada 3 minutos para posibles retrasos y llegada del vuelo)
 		case ALTA:
-			// endTime = System.currentTimeMillis() + 3*100; //3 minutos de
-			// refresco
+			Log.i(TAG, "AlarmaService - controlVuelo - estado ALTA");
 			synchronized (this) {
 				try {
 
-					// wait(endTime - System.currentTimeMillis());
 					switch (red) {
 					case CONECTADO:
 						getDatos(pUrl, pDatos);
 						break;
 
 					case DESCONECTADO:
-
 						break;
 					}
-					ponerEstado(getDiferencia(datos.getEstadoVueloDestino()));
-					if (verSiCancelado(datos.getEstadoVueloDestino())) {
-						estado = TERMINADO;
-						notificar(TEXTO_CANCELADO, "", sonido, pDatos);
+					ponerEstado(getDiferencia(datos.getEstadoVueloDestino()), pDatos);
+
+					if (verSiCancelado(datos.getEstadoVueloOrigen(), pDatos)) {
+						pDatos.setEstado(TERMINADO);
+						actualizarBDEstado(pDatos);
+						controlVuelo(pUrl, id, pDatos);
+
 					}
-					if (verSiRetrasado(datos.getEstadoVueloDestino())) {
-						/*notificar(TEXTO_RETRASADO,
-								datos.getEstadoVueloDestino(), sonido);*/
-					}
+
 					if (verSiAterrizado(datos.getEstadoVueloDestino(), pDatos)) {
-						estado = TERMINADO;
-						/*notificar(TEXTO_ATERRIZADO,
-								datos.getEstadoVueloDestino(), sonido);*/
+						pDatos.setEstado(TERMINADO);
+						actualizarBDEstado(pDatos);
+						controlVuelo(pUrl, id, pDatos);
+
 					} else {
 						alarmManager.set(AlarmManager.RTC_WAKEUP,
-								System.currentTimeMillis() + (30 * 1000),
+								System.currentTimeMillis() + (3 * 60000),    //3 Mins
 								pendingIntent);
 					}
 
@@ -318,90 +329,183 @@ public class AlarmaService extends Service {
 			}
 			break;
 
-		case MEDIA:
-			// endTime = System.currentTimeMillis() + 20*10000; //20 minutos de
-			// refresco
+			//En caso de que queden entre 25 y 50 minutos para la llegada del vuelo 
+			//(Se actualizara la informacion cada 10 minutos para ver retrasos)
+		case MEDIAALTA:
+			Log.i(TAG, "AlarmaService - controlVuelo - estado MEDIAALTA");
 			synchronized (this) {
 				try {
-					// wait(endTime - System.currentTimeMillis());
 					switch (red) {
 					case CONECTADO:
 						getDatos(pUrl, pDatos);
 						break;
 
 					case DESCONECTADO:
-
 						break;
 					}
-					ponerEstado(getDiferencia(datos.getEstadoVueloDestino()));
-					if (verSiCancelado(datos.getEstadoVueloDestino())) {
-						estado = TERMINADO;
-						notificar(TEXTO_CANCELADO, "", sonido, pDatos);
+
+					ponerEstado(getDiferencia(datos.getEstadoVueloDestino()), pDatos);
+
+					if (verSiCancelado(datos.getEstadoVueloOrigen(), pDatos)) {
+						pDatos.setEstado(TERMINADO);
+						actualizarBDEstado(pDatos);
+						controlVuelo(pUrl, id, pDatos);
 					}
-					if (verSiRetrasado(datos.getEstadoVueloDestino())) {
-						/*notificar(TEXTO_RETRASADO,
-								datos.getEstadoVueloDestino(), sonido);*/
-					}
+
 					if (verSiAterrizado(datos.getEstadoVueloDestino(), pDatos)) {
-						estado = TERMINADO;
-						/*notificar(TEXTO_ATERRIZADO,
-								datos.getEstadoVueloDestino(), sonido);*/
+						pDatos.setEstado(TERMINADO);
+						actualizarBDEstado(pDatos);
+						controlVuelo(pUrl, id, pDatos);
 					} else {
+						alarmManager.set(AlarmManager.RTC_WAKEUP,
+								System.currentTimeMillis() + (15 * 60000),   //15 Mins
+								pendingIntent);
+					}
+				} catch (Exception e) {
+				}
+			}
+			break;
+
+			//En caso de que queden más de 50 minutos para la llegada del vuelo habiendo despegado
+			// (Se actualizara la informacion cada 30 minutos)
+		case MEDIA:
+			Log.i(TAG, "AlarmaService - controlVuelo - estado MEDIA");
+			synchronized (this) {
+				try {
+					switch (red) {
+					case CONECTADO:
+						getDatos(pUrl, pDatos);
+						break;
+
+					case DESCONECTADO:
+						break;
+					}
+
+					ponerEstado(getDiferencia(datos.getEstadoVueloDestino()), pDatos);
+
+					if (verSiCancelado(datos.getEstadoVueloOrigen(), pDatos)) {
+						pDatos.setEstado(TERMINADO);
+						actualizarBDEstado(pDatos);
+						controlVuelo(pUrl, id, pDatos);
+					}
+
+					if (verSiAterrizado(datos.getEstadoVueloDestino(), pDatos)) {
+						pDatos.setEstado(TERMINADO);
+						actualizarBDEstado(pDatos);
+						controlVuelo(pUrl, id, pDatos);
+					} else {
+						alarmManager.set(AlarmManager.RTC_WAKEUP,
+								System.currentTimeMillis() + (30 * 60000),   //30 Mins
+								pendingIntent);
+					}
+				} catch (Exception e) {
+				}
+			}
+			break;
+
+
+
+		case BAJAMEDIA:
+			Log.i(TAG, "AlarmaService - controlVuelo - estado BAJAMEDIA");
+			synchronized (this) {
+				try {
+					switch (red) {
+					case CONECTADO:
+						getDatos(pUrl, pDatos);
+						break;
+
+					case DESCONECTADO:
+						break;
+					}
+
+					if (verSiCancelado(datos.getEstadoVueloOrigen(), pDatos)) {
+						pDatos.setEstado(TERMINADO);
+						actualizarBDEstado(pDatos);
+						controlVuelo(pUrl, id, pDatos);
+					}
+
+					if (verSiDespegado(datos.getEstadoVueloOrigen(), pDatos)) {
+						ponerEstado(getDiferencia(datos.getEstadoVueloDestino()), pDatos);
 						alarmManager.set(AlarmManager.RTC_WAKEUP,
 								System.currentTimeMillis() + (20 * 10000),
 								pendingIntent);
+
+					} else {
+						if(pDatos.getCambios() == SI){
+							Log.i(TAG, "AlarmaService - ControlVuelo - BAJAMEDIA - con cambios");
+							alarmManager.set(AlarmManager.RTC_WAKEUP,
+									System.currentTimeMillis() + (2 * 60000),
+									pendingIntent);
+						}
+						else{
+							Log.i(TAG, "AlarmaService - ControlVuelo - BAJAMEDIA - sin cambios");
+							alarmManager.set(AlarmManager.RTC_WAKEUP,
+									System.currentTimeMillis() + (4 * 60000),
+									pendingIntent);
+						}
+					}
+
+					if (verSiAterrizado(datos.getEstadoVueloDestino(), pDatos)) {
+						pDatos.setEstado(TERMINADO);
+						actualizarBDEstado(pDatos);
+						controlVuelo(pUrl, id, pDatos);
+
 					}
 				} catch (Exception e) {
 				}
+
 			}
 			break;
 
+			//En caso de que queden menos de 50 minutos para el despege del vuelo
+			//(Se actualizara la informacion cada 30 minutos)
 		case BAJA:
-			// endTime = System.currentTimeMillis() + 5*10000; //10 minutos de
-			// refresco
+			Log.i(TAG, "AlarmaService - controlVuelo - estado BAJA");
 			synchronized (this) {
 				try {
-					// wait(endTime - System.currentTimeMillis());
 					switch (red) {
 					case CONECTADO:
 						getDatos(pUrl, pDatos);
 						break;
 
 					case DESCONECTADO:
-
 						break;
 					}
-					if (verSiRetrasado(datos.getEstadoVueloOrigen())) {
-						/*notificar(TEXTO_RETRASADO,
-								datos.getEstadoVueloOrigen(), sonido);*/
-					}
-					if (verSiCancelado(datos.getEstadoVueloOrigen())) {
-						estado = TERMINADO;
-						notificar("El vuelo ha sido cancelado", "", sonido, pDatos);
-					}
-					if (verSiDespegado(datos.getEstadoVueloOrigen(), pDatos)) {
 
-						ponerEstado(getDiferencia(datos.getEstadoVueloDestino()));
-						/*notificar(TEXTO_SALIDO, datos.getEstadoVueloOrigen(),
-								sonido);*/
+					if (verSiCancelado(datos.getEstadoVueloOrigen(), pDatos)) {
+						pDatos.setEstado(TERMINADO);
+						actualizarBDEstado(pDatos);
+						controlVuelo(pUrl, id, pDatos);
+					}
+
+					if (verSiDespegado(datos.getEstadoVueloOrigen(), pDatos)) {
+						ponerEstado(getDiferencia(datos.getEstadoVueloDestino()), pDatos);
+						alarmManager.set(AlarmManager.RTC_WAKEUP,
+								System.currentTimeMillis() + (20 * 10000),
+								pendingIntent);
+
 					} else {
 						if(pDatos.getCambios() == SI){
+							Log.i(TAG, "AlarmaService - ControlVuelo - BAJA - con cambios");
+
 							alarmManager.set(AlarmManager.RTC_WAKEUP,
-									System.currentTimeMillis() + (2 * 10000),
+									System.currentTimeMillis() + (4 * 60000),
 									pendingIntent);
 						}
 						else{
+							Log.i(TAG, "AlarmaService - ControlVuelo - BAJA - sin cambios");
+
 							alarmManager.set(AlarmManager.RTC_WAKEUP,
-									System.currentTimeMillis() + (5 * 10000),
+									System.currentTimeMillis() + (12 * 60000),
 									pendingIntent);
 						}
-
 					}
 
 					if (verSiAterrizado(datos.getEstadoVueloDestino(), pDatos)) {
-						estado = TERMINADO;
-						/*notificar(TEXTO_ATERRIZADO,
-								datos.getEstadoVueloDestino(), sonido);*/
+						pDatos.setEstado(TERMINADO);
+						actualizarBDEstado(pDatos);
+						controlVuelo(pUrl, id, pDatos);
+
 					}
 				} catch (Exception e) {
 				}
@@ -410,86 +514,92 @@ public class AlarmaService extends Service {
 			break;
 
 		case MUYBAJA:
-			// endTime = System.currentTimeMillis() + 60*10000; //60 minutos de
-			// refresco
+			Log.i(TAG, "AlarmaService - controlVuelo - estado MUYBAJA");
 			synchronized (this) {
 				try {
-					// wait(endTime - System.currentTimeMillis());
 					switch (red) {
 					case CONECTADO:
 						getDatos(pUrl, pDatos);
 						break;
 
 					case DESCONECTADO:
-
 						break;
 					}
+
 					if (verSiDespegado(datos.getEstadoVueloOrigen(), pDatos)) {
-						ponerEstado(getDiferencia(datos.getEstadoVueloDestino()));
-						/*notificar(TEXTO_SALIDO, datos.getEstadoVueloOrigen(),
-								sonido);*/
+						ponerEstado(getDiferencia(datos.getEstadoVueloDestino()), pDatos);
+
 						alarmManager.set(AlarmManager.RTC_WAKEUP,
 								System.currentTimeMillis() + (20 * 10000),
 								pendingIntent);
 
 					} else {
 						ponerEstadoAntes(getDiferencia(datos
-								.getEstadoVueloOrigen()));
+								.getEstadoVueloOrigen()), pDatos);
 						if(pDatos.getCambios() == SI){
+							Log.i(TAG, "AlarmaService - ControlVuelo - MUYBAJA - con cambios");
 							alarmManager.set(AlarmManager.RTC_WAKEUP,
-									System.currentTimeMillis() + (20 * 10000),
+									System.currentTimeMillis() + (15 * 10000),
 									pendingIntent);
 						} else {
+							Log.i(TAG, "AlarmaService - ControlVuelo - MUYBAJA - sin cambios");
+
 							alarmManager.set(AlarmManager.RTC_WAKEUP,
-									System.currentTimeMillis() + (60 * 10000),
+									System.currentTimeMillis() + (40 * 10000),
 									pendingIntent);
 						}
 					}
+
 					if (verSiAterrizado(datos.getEstadoVueloDestino(), pDatos)) {
-						estado = TERMINADO;
-						/*notificar(TEXTO_ATERRIZADO,
-								datos.getEstadoVueloDestino(), sonido);*/
+						pDatos.setEstado(TERMINADO);
+						actualizarBDEstado(pDatos);
+						controlVuelo(pUrl, id, pDatos);
+
 					}
+
+					if (verSiCancelado(datos.getEstadoVueloOrigen(), pDatos)) {
+						pDatos.setEstado(TERMINADO);
+						actualizarBDEstado(pDatos);
+						controlVuelo(pUrl, id, pDatos);
+					}
+
 				} catch (Exception e) {
 				}
 			}
 			break;
 
 		case MINIMO:
-			// endTime = System.currentTimeMillis() + 180*10000; //3 horas horas
-			// de refresco
+			Log.i(TAG, "AlarmaService - controlVuelo - estado MINIMO");
 			synchronized (this) {
 				try {
-					// wait(endTime - System.currentTimeMillis());
 					switch (red) {
 					case CONECTADO:
 						getDatos(pUrl, pDatos);
 						break;
 
 					case DESCONECTADO:
-
 						break;
 					}
 
 					if (verSiDespegado(datos.getEstadoVueloOrigen(), pDatos)) {
-						ponerEstado(getDiferencia(datos.getEstadoVueloDestino()));
-						notificar(TEXTO_SALIDO, datos.getEstadoVueloOrigen(),
-								sonido, pDatos);
+						ponerEstado(getDiferencia(datos.getEstadoVueloDestino()), pDatos);
+
 						alarmManager.set(AlarmManager.RTC_WAKEUP,
-								System.currentTimeMillis() + (20 * 10000),
+								System.currentTimeMillis() + (20 * 60000),  //20 Mins
 								pendingIntent);
 					} else {
 						ponerEstadoAntes(getDiferencia(datos
-								.getEstadoVueloOrigen()));
+								.getEstadoVueloOrigen()), pDatos);
 
 						alarmManager.set(AlarmManager.RTC_WAKEUP,
-								System.currentTimeMillis() + (180 * 10000),
+								System.currentTimeMillis() + (180 * 60000),  //3 Horas
 								pendingIntent);
 					}
 					if (verSiAterrizado(datos.getEstadoVueloDestino(), pDatos)) {
-						estado = TERMINADO;
-						/*notificar(TEXTO_ATERRIZADO,
-								datos.getEstadoVueloDestino(), sonido);*/
+						pDatos.setEstado(TERMINADO);
+						actualizarBDEstado(pDatos);
+						controlVuelo(pUrl, id, pDatos);
+
 					}
 				} catch (Exception e) {
 				}
@@ -497,12 +607,10 @@ public class AlarmaService extends Service {
 			break;
 
 		case TERMINADO:
+			Log.i(TAG, "AlarmaService - controlVuelo - estado TERMINADO");
 			try {
 				Log.i(TAG, "AlarmaService - Servicio finalizando");
-				/*notificar(TEXTO_ATERRIZADO, datos.getEstadoVueloDestino(),
-						sonido);*/
-				borrarAlarma(datos.getLinkInfoVuelo(), id, pDatos);
-				// stopService(pIntent);
+				borrarAlarma(datos.getLinkInfoVuelo(), pDatos.getId(), pDatos);
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
@@ -560,15 +668,19 @@ public class AlarmaService extends Service {
 						if(text.contains("Origen:")){
 							text = text.replace("Origen:", "");
 						}
-						notificar(
-								"El vuelo " + text + " - " + text2 + " ha sido modificado.",
-								datos.getEstadoVueloOrigen() + " (" + getDiferenciaEstados(
-										datos.getEstadoVueloOrigen(),
-										datos.getEstadoVueloOrigen()) + " mins)" + "",
-										sonido, pDatos);
+						if(pDatos.getCambios() == SI){
+							notificar(text + " - " + text2,"Modificado: " + datos.getEstadoVueloOrigen() + 
+									" (" + getDiferenciaEstados(datos.getEstadoVueloOrigen(),
+											datos.getEstadoVueloOrigen()) + " mins)" + "",
+											sonido, pDatos, text + " - " + text2 + " ha sido modificado");
+						}
 					}
 
 				} else if (!(pDatos.getDatos().getEstadoVueloDestino()).equals(datos.getEstadoVueloDestino())) {
+					Log.d(TAG, "AlarmaService - getDatos - pDatos.getDatos().getEstadoVueloDestino(): " +
+							pDatos.getDatos().getEstadoVueloDestino());
+					Log.d(TAG, "AlarmaService - getDatos - datos.getEstadoVueloDestino(): " + datos.getEstadoVueloDestino());
+
 					String text = pDatos
 							.getDatos() 
 							.getAeropuertoOrigen()
@@ -593,13 +705,14 @@ public class AlarmaService extends Service {
 						if(text.contains("Origen:")){
 							text = text.replace("Origen:", "");
 						}
-						notificar("El vuelo " + text + " - " + text2 + " ha sido modificado.",
-								datos.getEstadoVueloOrigen() + " (" + getDiferenciaEstados(
-										datos.getEstadoVueloDestino(),
-										datos.getEstadoVueloDestino()) + " mins)" + "",
-										sonido, pDatos);
-					}
 
+						if(pDatos.getCambios() == SI){
+							notificar(text + " - " + text2 , "Modificado: " + datos.getEstadoVueloDestino() + 
+									" (" + getDiferenciaEstados(datos.getEstadoVueloDestino(),
+											datos.getEstadoVueloDestino()) + " mins)" + "",
+											sonido, pDatos, text + " - " + text2 + " ha sido modificado");
+						}
+					}
 				}
 			default:
 				break;
@@ -611,55 +724,82 @@ public class AlarmaService extends Service {
 		} catch (Exception e) {
 			Log.e(TAG, "AlarmaService - getDatos - Excepcion " + e.toString());
 		}
+		//pDatos.setDatos(datos);
 		if (datos.getEstadoVueloDestino().contains("prevista")) {
 			// setEstado();
 		} else {
-			estado = TERMINADO;
+			//estado = TERMINADO;
 		}
 	}
 
-	public void ponerEstado(int pTiempo) {
+	public void ponerEstado(int pTiempo, DatosAlarma pDatos) {
 		if (pTiempo <= 5) {
+			pDatos.setEstado(MUYALTA);
 			estado = MUYALTA;
-		} else if (pTiempo > 5 && pTiempo < 20) {
+
+		} else if (pTiempo > 5 && pTiempo <= 60) {
+			pDatos.setEstado(ALTA);
+			estado = ALTA;
+		} else if (pTiempo > 25 && pTiempo < 60){
+			pDatos.setEstado(MEDIAALTA);
 			estado = ALTA;
 		} else {
+			pDatos.setEstado(MEDIA);
 			estado = MEDIA;
 		}
+		Log.d(TAG, "AlarmaService - ponerEstado - estado: " + estado);
+		actualizarBDEstado(pDatos);
+		//return estado;
 	}
 
-	public void ponerEstadoAntes(int pTiempo) {
-		if (pTiempo < 30) {
+	public void ponerEstadoAntes(int pTiempo, DatosAlarma pDatos) {
+		if (pTiempo <= 15){
+			pDatos.setEstado(BAJAMEDIA);
+			estado = BAJAMEDIA;
+		} else if (pTiempo <= 50 && pTiempo > 15) {
+			pDatos.setEstado(BAJA);
 			estado = BAJA;
-		} else if (pTiempo > 30 && pTiempo < 240) {
+		} else if (pTiempo > 50 && pTiempo < 240) {
+			pDatos.setEstado(MUYBAJA);
 			estado = MUYBAJA;
 		} else {
+			pDatos.setEstado(MINIMO);
 			estado = MINIMO;
 		}
+		Log.d(TAG, "AlarmaService - ponerEstadoAntes - estado: " + estado);
+		actualizarBDEstado(pDatos);
 	}
 
 	public boolean verSiDespegado(String pEstado, DatosAlarma pDatos) {
 		try{
+			String text = pDatos
+					.getDatos()
+					.getAeropuertoOrigen()
+					.substring(
+							pDatos.getDatos().getAeropuertoDestino()
+							.indexOf("ORIGEN") + 1,
+							pDatos.getDatos().getAeropuertoOrigen()
+							.indexOf("(") - 1);
+			String text2 = pDatos
+					.getDatos()
+					.getAeropuertoDestino()
+					.substring(pDatos.getDatos().getAeropuertoDestino()
+							.indexOf("DESTINO") + 1	,
+							pDatos.getDatos().getAeropuertoDestino()
+							.indexOf("(") - 1);
 			switch (red) {
+
+
 			case CONECTADO:
+				if(pEstado.contains("egado") && pDatos.getDatos().getEstadoVueloDestino().equalsIgnoreCase("--")){
+					borrarAlarma(datos.getLinkInfoVuelo(), pDatos.getId(), pDatos);
+				} else if(pEstado.contains("--") && pDatos.getDatos().getEstadoVueloDestino().equalsIgnoreCase("--")) {
+					borrarAlarma(datos.getLinkInfoVuelo(), pDatos.getId(), pDatos);
+				}
 				Log.d(TAG,
 						"AlarmaService - verSiDespegado - despegado: " + pEstado
 						.contains("despegado"));
-				String text = pDatos
-						.getDatos()
-						.getAeropuertoOrigen()
-						.substring(
-								pDatos.getDatos().getAeropuertoDestino()
-								.indexOf("ORIGEN") + 1,
-								pDatos.getDatos().getAeropuertoOrigen()
-								.indexOf("(") - 1);
-				String text2 = pDatos
-						.getDatos()
-						.getAeropuertoDestino()
-						.substring(pDatos.getDatos().getAeropuertoDestino()
-								.indexOf("DESTINO") + 1	,
-								pDatos.getDatos().getAeropuertoDestino()
-								.indexOf("(") - 1);
+
 				if(pDatos.getDespegar() == SI){
 					if(pEstado.contains("pegado") && !(pDatos.getDatos().getEstadoVueloOrigen().contains("pegado"))){
 						actualizarBDRetrasoOrigen(pDatos, pEstado);
@@ -671,30 +811,42 @@ public class AlarmaService extends Service {
 						if(text.contains("Origen:")){
 							text = text.replace("Origen:", "");
 						}
-						notificar("El vuelo " + text + " - " + text2 + " ha despegado.", 
-								"A las: " + getHora(pDatos.getDatos().getEstadoVueloOrigen()),
-								pDatos.getSonido(), pDatos);
+						if (datos.getEstadoVueloDestino().equals("--")){
+							borrarAlarma(datos.getLinkInfoVuelo(), pDatos.getId(), pDatos);
+						} else if (datos.getHoraDestino().equals("--")){
+							borrarAlarma(datos.getLinkInfoVuelo(), pDatos.getId(), pDatos);
+						}
+						notificar(text + " - " + text2, "Despegado: " + datos.getEstadoVueloDestino(),
+								pDatos.getSonido(), pDatos, "El vuelo " + text + " - " + text2 + " ha despegado");
 					}	
 				}
 				return pEstado.contains("despegado");
 
 			case DESCONECTADO:
-				if ((getDiferencia(pEstado) < 0) && (despegadoSin.equals("no"))) {
-					Log.d(TAG,
-							"AlarmaService - verSiDespegado - DESCONECTADO - aterrizado: " + pEstado
-							.contains("aterrizado"));
-					int dif = getDiferencia(pEstado);
-					ponerDespegadoSin(pDatos);
-					Log.d(TAG,
-							"AlarmaService - verSiDespegado - DESCONECTADO - dif: " + dif);
-					if (dif <= 0) {
-						notificar("El vuelo debería haber despegado ",
-								"SIN CONEXION", pDatos.getSonido(), pDatos);
-					}
-					return false;
+				if (pDatos.getDespegadoSin() == 0){
+					if ((getDiferencia(pEstado) < 0) && (despegadoSin.equals("no"))) {
+						Log.d(TAG,
+								"AlarmaService - verSiDespegado - DESCONECTADO - aterrizado: " + pEstado
+								.contains("aterrizado"));
+						int dif = getDiferencia(pEstado);
+						Log.d(TAG,
+								"AlarmaService - verSiDespegado - DESCONECTADO - dif: " + dif);
+						if (text2.contains("esti")){
+							text2 = text2.replace("Destino:", "");
+						}
 
-				} else {
-					return false;
+						if(text.contains("Origen:")){
+							text = text.replace("Origen:", "");
+						}
+						if (dif <= 0 ) {
+							ponerDespegadoSin(pDatos);
+							notificar(text + " - " + text2, "Debería haber despegado (SIN CONEXION)",
+									pDatos.getSonido(), pDatos, text + " - " + text2 + " debería haber despegado (SIN CONEXION)");
+						}
+						return false;
+					} else {
+						return false;
+					}
 				}
 
 			default:
@@ -707,29 +859,19 @@ public class AlarmaService extends Service {
 
 	}
 
-	public boolean verSiCancelado(String pEstado) {
-		return pEstado.contains("cancel");
-	}
-
-	public boolean verSiRetrasado(String pEstado) {
-		return pEstado.contains("retra");
-	}
-
-	public boolean verSiAterrizado(String pEstado, DatosAlarma pDatos) {
+	public boolean verSiCancelado(String pEstado, DatosAlarma pDatos) {
 		try{
-			switch (red) {
-			case CONECTADO:
-				Log.d(TAG,
-						"AlarmaService - verSiAterrizado - CONECTADO -aterrizado:  " + pEstado
-						.contains("aterrizado"));
 
+			switch (red){
+
+			case CONECTADO:
 				String text = pDatos
-						.getDatos()
-						.getAeropuertoOrigen()
-						.substring(
-								0,
-								pDatos.getDatos().getAeropuertoOrigen()
-								.indexOf("(") - 1);
+				.getDatos()
+				.getAeropuertoOrigen()
+				.substring(
+						0,
+						pDatos.getDatos().getAeropuertoOrigen()
+						.indexOf("(") - 1);
 				String text2 = pDatos
 						.getDatos()
 						.getAeropuertoDestino()
@@ -737,43 +879,73 @@ public class AlarmaService extends Service {
 								0,
 								pDatos.getDatos().getAeropuertoDestino()
 								.indexOf("(") - 1);
-				if(pDatos.getDespegar() == SI){
-					if (text2.contains("esti")){
-						text2 = text2.replace("Destino:", "");
-					}
-
-					if(text.contains("Origen:")){
-						text = text.replace("Origen:", "");
-					}
-					if(pEstado.contains("aterrizado")){
-						actualizarBDRetrasoDestino(pDatos, datos.getEstadoVueloDestino());
-						notificar("El vuelo " + text + " - " + text2 + " ha aterrizado.", 
-								"A las: " + getHora(pDatos.getDatos().getEstadoVueloOrigen()),
-								pDatos.getSonido(), pDatos);
-					}
+				if (pEstado.contains("cela")){
+					notificar( text + " - " + text2 , pEstado,
+							pDatos.getSonido(), pDatos, text + " - " + text2 + " ha sido cancelado");
+					//borrarAlarma(datos.getLinkInfoVuelo(), pDatos.getId(), pDatos);
 				}
+			}
+		}catch (Exception e) {
+			Log.e(TAG, "AlarmaService - verSiCancelado - Exception");
+		}
+		return pEstado.contains("cela");
+	}
 
+	public boolean verSiAterrizado(String pEstado, DatosAlarma pDatos) {
+		try{
+			String text = pDatos
+					.getDatos()
+					.getAeropuertoOrigen()
+					.substring(
+							0,
+							pDatos.getDatos().getAeropuertoOrigen()
+							.indexOf("(") - 1);
+			String text2 = pDatos
+					.getDatos()
+					.getAeropuertoDestino()
+					.substring(
+							0,
+							pDatos.getDatos().getAeropuertoDestino()
+							.indexOf("(") - 1);
+			if (text2.contains("esti")){
+				text2 = text2.replace("Destino:", "");
+			}
+			if(text.contains("Origen:")){
+				text = text.replace("Origen:", "");
+			}
+			switch (red) {
+			case CONECTADO:
+				Log.d(TAG,
+						"AlarmaService - verSiAterrizado - CONECTADO - aterrizado:  " + pEstado
+						.contains("aterrizado"));
+
+				if(pEstado.contains("aterrizado")){
+					actualizarBDRetrasoDestino(pDatos, datos.getEstadoVueloDestino());
+					notificar(text + " - " + text2 , pEstado, pDatos.getSonido(), pDatos, 
+							text + " - " + text2 + " ha aterrizado");
+					borrarAlarma(datos.getLinkInfoVuelo(), pDatos.getId(), pDatos);
+				} else if(pEstado.equals("--") && pDatos.getDatos().getEstadoVueloOrigen().equals("--")){
+					borrarAlarma(datos.getLinkInfoVuelo(), pDatos.getId(), pDatos);
+				}
 				return pEstado.contains("aterrizado");
 
 			case DESCONECTADO:
-				if ((getDiferencia(pEstado) < 0) && (aterrizadoSin.equals("no"))) {
-					Log.d(TAG,
-							"AlarmaService - verSiAterrizado - DESCONECTADO - aterrizado: " + pEstado
-							.contains("aterrizado"));
-					int dif = getDiferencia(pEstado);
-					actualizarBDAterrizadoSin(pDatos);
-					Log.d(TAG,
-							"AlarmaService - verSiArerrizado - DESCONECTADO - dif: " + dif);
-					if (dif <= 0) {
-						notificar("El vuelo deberia haber aterrizado ",
-								"SIN CONEXION", pDatos.getSonido(), pDatos);
+				if(pDatos.getAterrizadoSin() == 0){
+					if ((getDiferencia(pEstado) < 0) && (aterrizadoSin.equals("no"))) {
+						Log.d(TAG,
+								"AlarmaService - verSiAterrizado - DESCONECTADO - aterrizado: " + pEstado
+								.contains("aterrizado"));
+						int dif = getDiferencia(pEstado);
+						Log.d(TAG,
+								"AlarmaService - verSiArerrizado - DESCONECTADO - dif: " + dif);
+						if (dif <= 0) {
+							actualizarBDAterrizadoSin(pDatos);
+							notificar(text + " - " + text2, "Debería haber aterrizado (SIN CONEXION)",
+									pDatos.getSonido(), pDatos, text + " - " + text2 + " debería haber aterrizado (SIN CONEXION)");
+						}
 					}
 					return false;
-
-				} else {
-					return false;
 				}
-
 			default:
 				return false;
 			}
@@ -783,11 +955,21 @@ public class AlarmaService extends Service {
 		}
 	}
 
+	private void actualizarBDEstado(DatosAlarma pDatos){
+		AlarmasSqlAux alarms = new AlarmasSqlAux(this);
+		SQLiteDatabase db = alarms.getReadableDatabase();
+		Log.d(TAG, "AlarmaService - actualizarBDEstado - Funciona la llamada");
+		ContentValues editor = new ContentValues();
+		editor.put(AlarmasSqlAux.ESTADO, pDatos.getEstado());
+		String[] args2 = { pDatos.getId() + "" };
+		db.update("alarmas_aux", editor, "id=?", args2);
+		db.close();
+	}
+
 	private void actualizarBDAterrizadoSin(DatosAlarma pDatos) {
 		AlarmasSqlAux alarms = new AlarmasSqlAux(this);
 		SQLiteDatabase db = alarms.getReadableDatabase();
-		Log.d(TAG,
-				"AlarmaService - actualizarBDAterrizadoSin - Funciona la llamada");
+		Log.d(TAG, "AlarmaService - actualizarBDAterrizadoSin - Funciona la llamada");
 		ContentValues editor = new ContentValues();
 		editor.put(AlarmasSqlAux.ATERRIZADOSIN, "si");
 		String[] args2 = { pDatos.getId() + "" };
@@ -798,8 +980,7 @@ public class AlarmaService extends Service {
 	private void actualizarBDRetrasoOrigen(DatosAlarma pDatos, String pOrigen){
 		AlarmasSqlAux alarms = new AlarmasSqlAux(this);
 		SQLiteDatabase db = alarms.getReadableDatabase();
-		Log.d(TAG,
-				"AlarmaService - actualizarBDAterrizadoSin - Funciona la llamada");
+		Log.d(TAG, "AlarmaService - actualizarBDAterrizadoSin - Funciona la llamada");
 		ContentValues editor = new ContentValues();
 		editor.put(AlarmasSqlAux.ESTADOORIGEN, pOrigen);
 		String[] args2 = { pDatos.getId() + "" };
@@ -810,8 +991,7 @@ public class AlarmaService extends Service {
 	private void actualizarBDRetrasoDestino(DatosAlarma pDatos, String pDestino){
 		AlarmasSqlAux alarms = new AlarmasSqlAux(this);
 		SQLiteDatabase db = alarms.getReadableDatabase();
-		Log.d(TAG,
-				"AlarmaService - actualizarBDAterrizadoSin - Funciona la llamada");
+		Log.i(TAG, "AlarmaService - actualizarBDRetrasoDestino - Funciona la llamada");
 		ContentValues editor = new ContentValues();
 		editor.put(AlarmasSqlAux.ESTADODESTINO, pDestino);
 		String[] args2 = { pDatos.getId() + "" };
@@ -822,10 +1002,9 @@ public class AlarmaService extends Service {
 	private void ponerDespegadoSin(DatosAlarma pDatos){
 		AlarmasSqlAux alarms = new AlarmasSqlAux(this);
 		SQLiteDatabase db = alarms.getReadableDatabase();
-		Log.d(TAG,
-				"AlarmaService - ponerDespegadoSin - Funciona la llamada");
+		Log.d(TAG, "AlarmaService - ponerDespegadoSin - Funciona la llamada");
 		ContentValues editor = new ContentValues();
-		editor.put(AlarmasSqlAux.ATERRIZADOSIN, "si");
+		editor.put(AlarmasSqlAux.DESPEGADOSIN, "si");
 		String[] args2 = { pDatos.getId() + "" };
 		db.update("alarmas_aux", editor, "id=?", args2);
 		db.close();
@@ -834,8 +1013,7 @@ public class AlarmaService extends Service {
 	private void ponerSalido(DatosAlarma pDatos){
 		AlarmasSqlAux alarms = new AlarmasSqlAux(this);
 		SQLiteDatabase db = alarms.getReadableDatabase();
-		Log.d(TAG,
-				"AlarmaService - ponerSalido - Funciona la llamada");
+		Log.d(TAG, "AlarmaService - ponerSalido - Funciona la llamada");
 		ContentValues editor = new ContentValues();
 		editor.put(AlarmasSqlAux.SALIDO, "si");
 		String[] args2 = { pDatos.getId() + "" };
@@ -852,7 +1030,11 @@ public class AlarmaService extends Service {
 					datos.getFechaOrigen().indexOf("/"));
 			Log.d(TAG, "AlarmaService - getDiferencia - dia: " + dia);
 			int di = Integer.parseInt(dia);
-			if (!(di == (new Date().getDay()))) {
+			Log.d(TAG, "AlarmaService - getDiferencia - di: " + di);
+
+			if (!(di == (new GregorianCalendar().get(Calendar.DAY_OF_MONTH)))) {
+				Log.d(TAG, "AlarmaService - getDiferencia - new GregorianCalendar().get(Calendar.DAY_OF_MONTH): "
+						+ new GregorianCalendar().get(Calendar.DAY_OF_MONTH));
 				return 300;
 			}
 			minutos += (((Integer.parseInt(horaVuelo[0])) - (new Date().getHours()))) * 60;
@@ -934,22 +1116,12 @@ public class AlarmaService extends Service {
 					.substring(pEstado.indexOf("a las ") + 6));
 			String[] horaVuelo = pEstado.substring(pEstado.indexOf("a las ") + 6)
 					.split(":");
-			// int a =
-			// pEstado.substring(pEstado.indexOf("a las ")+6).split("[0-9]?[0-9]:").length;
 			Log.i(TAG,
 					"AlarmaService - gerHora - " + (Integer.parseInt(horaVuelo[0]) - horaActual
 							.getHours()));
 			Log.i(TAG,
 					"AlarmaService - gerHora - " + (Integer.parseInt(horaVuelo[1]) - horaActual
 							.getMinutes()));
-
-			/*
-			 * for (int i = 0; i <
-			 * pEstado.substring(pEstado.indexOf("a las ")+6).split
-			 * ("[0-9]?[0-9]").length; i++) { Log.i(TAG,
-			 * pEstado.substring(pEstado.indexOf
-			 * ("a las ")+6).split("[0-9]?[0-9]")[i]); }
-			 */
 
 			return pEstado.substring(pEstado.indexOf("a las ") + 6);
 		} catch (Exception e){
@@ -958,12 +1130,12 @@ public class AlarmaService extends Service {
 		}
 	}
 
-	public void notificar(String pMens, String pMens2, int pSonido, DatosAlarma pDatos) {
+	public void notificar(String pMens, String pMens2, int pSonido, DatosAlarma pDatos, String pMarquesina) {
 		Context context = getApplicationContext();
 		String ns = Context.NOTIFICATION_SERVICE;
-		int icono = android.R.drawable.btn_star_big_on;
+		int icono = R.drawable.ic_launcher;
 		CharSequence contentTitle = pMens;
-		CharSequence contentText = pDatos.getDatos().getEstadoVueloDestino();
+		CharSequence contentText = pMens2;
 		long hora = System.currentTimeMillis();
 
 		// Creacion de la notificacion
@@ -981,7 +1153,6 @@ public class AlarmaService extends Service {
 		PendingIntent contIntent = PendingIntent.getActivity(context, 0,
 				notIntent, 0);
 
-
 		mNotificacion.setLatestEventInfo(context, contentTitle, contentText,
 				contIntent);
 
@@ -994,7 +1165,8 @@ public class AlarmaService extends Service {
 		}
 		mNotificacion.defaults |= Notification.DEFAULT_VIBRATE;
 		mNotificacion.defaults |= Notification.DEFAULT_LIGHTS;
-		mNotificationManager.notify(SIMPLE_NOTFICATION_ID, mNotificacion);
+		mNotificacion.tickerText = pMarquesina;
+		mNotificationManager.notify(pDatos.getId(), mNotificacion);
 
 	}
 
@@ -1012,7 +1184,7 @@ public class AlarmaService extends Service {
 				AlarmasSqlAux.CAMBIOS, AlarmasSqlAux.MINUTOS, 
 				AlarmasSqlAux.ESTADOORIGEN, AlarmasSqlAux.ESTADODESTINO,
 				AlarmasSqlAux.AEROPUERTOORIGEN, AlarmasSqlAux.AEROPUERTODESTINO,
-				AlarmasSqlAux.DESPEGADOSIN, AlarmasSqlAux.SALIDO};
+				AlarmasSqlAux.DESPEGADOSIN, AlarmasSqlAux.SALIDO, AlarmasSqlAux.ESTADO};
 
 		Cursor c = db.query("alarmas_aux", args, null, null, null, null, null);
 		// Nos aseguramos de que existe al menos un registro
@@ -1034,8 +1206,17 @@ public class AlarmaService extends Service {
 				datos.setAeropuertoDestino(c.getString(16));
 				aterrizadoSin = c.getString(6);
 				despegadoSin = c.getString(17);
+				int a = 0;
+				int d = 0;
+				if(aterrizadoSin.equalsIgnoreCase("si")){
+					a = 1;
+				}
+				if(despegadoSin.equalsIgnoreCase("si")){
+					d = 1;
+				}
 				salido = c.getString(18);
 				url = datos.getLinkInfoVuelo();
+				//int estado = c.getInt(19);
 				id = c.getInt(7);
 				Log.d(TAG, "AlarmaService - getAlarmas - id: " + id);
 				Log.d(TAG,
@@ -1058,7 +1239,7 @@ public class AlarmaService extends Service {
 						PendingIntent.FLAG_CANCEL_CURRENT);
 				DatosAlarma datosAlarma = new DatosAlarma(datos, id,
 						c.getInt(8), c.getInt(9), c.getInt(10), c.getInt(11),
-						c.getInt(12));
+						c.getInt(12), c.getInt(19), a, d);
 				controlVuelo(url, id, datosAlarma);
 				ponerAlarmaAntelacion(datosAlarma);
 			} while (c.moveToNext());
@@ -1081,7 +1262,7 @@ public class AlarmaService extends Service {
 				AlarmasSqlAux.MINUTOS, AlarmasSqlAux.ESTADOORIGEN,
 				AlarmasSqlAux.ESTADODESTINO, AlarmasSqlAux.AEROPUERTOORIGEN,
 				AlarmasSqlAux.AEROPUERTODESTINO, AlarmasSqlAux.DESPEGADOSIN,
-				AlarmasSqlAux.SALIDO};
+				AlarmasSqlAux.SALIDO, AlarmasSqlAux.ESTADO};
 		String[] args2 = { id + "" };
 		Cursor c = db.query("alarmas_aux", args, "id=?", args2, null, null,
 				null);
@@ -1110,6 +1291,14 @@ public class AlarmaService extends Service {
 
 				aterrizadoSin = c.getString(6);
 				despegadoSin = c.getString(17);
+				int a = 0;
+				int d = 0;
+				if(aterrizadoSin.equalsIgnoreCase("si")){
+					a = 1;
+				}
+				if(despegadoSin.equalsIgnoreCase("si")){
+					d = 1;
+				}
 				salido = c.getString(18);
 				url = datos.getLinkInfoVuelo();
 				id = c.getInt(7);
@@ -1119,7 +1308,7 @@ public class AlarmaService extends Service {
 						PendingIntent.FLAG_CANCEL_CURRENT);
 				DatosAlarma datosAlarma = new DatosAlarma(datos, id,
 						c.getInt(8), c.getInt(9), c.getInt(10), c.getInt(11),
-						c.getInt(12));
+						c.getInt(12), c.getInt(19), a, d);
 				controlVuelo(url, id, datosAlarma);
 				ponerAlarmaAntelacion(datosAlarma);
 			} while (c.moveToNext());
@@ -1154,7 +1343,7 @@ public class AlarmaService extends Service {
 			pendingIntent = PendingIntent.getBroadcast(this, id + 999, intentA,
 					PendingIntent.FLAG_CANCEL_CURRENT);
 			alarmManager.set(AlarmManager.RTC_WAKEUP,
-					System.currentTimeMillis() + (i * 100000), pendingIntent);
+					System.currentTimeMillis() + (i * 60000), pendingIntent);
 		}
 	}
 
@@ -1174,6 +1363,7 @@ public class AlarmaService extends Service {
 		SQLiteDatabase db = alarms.getWritableDatabase();
 
 		ContentValues cv = new ContentValues();
+
 		cv.put(AlarmasSql.URL, datos.getLinkInfoVuelo());
 		cv.put(AlarmasSql.ALARMA, 1);
 		cv.put(AlarmasSql.EMPEZADO, 0);

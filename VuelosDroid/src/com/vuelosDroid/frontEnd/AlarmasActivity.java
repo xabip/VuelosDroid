@@ -1,3 +1,19 @@
+/*
+ Copyright 2012 Xabier Pena & Urko Guinea
+ 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+   limitations under the License.
+ */
+
 package com.vuelosDroid.frontEnd;
 
 import java.io.IOException;
@@ -14,6 +30,7 @@ import com.vuelosDroid.backEnd.scrapper.DatosGroup;
 import com.vuelosDroid.backEnd.scrapper.DatosVuelo;
 import com.vuelosDroid.backEnd.scrapper.VuelosJSoup;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -65,6 +82,7 @@ public class AlarmasActivity extends AbstractActivity {
 	TextView textoNoHayAlarmas;
 	TextView textoNoHaySeguimiento;
 	int idLista;
+	DemoPopupWindow dw;
 
 	ExpandableListView lv;
 	MyExpandableListAdapter mAdapter;
@@ -122,7 +140,7 @@ public class AlarmasActivity extends AbstractActivity {
 
 			} else {
 				layAlarm.setVisibility(View.GONE);
-				controlAlarm();
+				//controlAlarm();
 				laySeg.setVisibility(View.GONE);
 				controlSeg();
 				Toast toast1 = Toast.makeText(getApplicationContext(),
@@ -133,31 +151,50 @@ public class AlarmasActivity extends AbstractActivity {
 		lv = (ExpandableListView)findViewById(R.id.expandable_alarmas);
 		List<DatosVuelo> datosss = new ArrayList<DatosVuelo>();
 
-		if (datosAlarmas.isEmpty()){
-			DatosVuelo data = new DatosVuelo();
-			data.setNombreVuelo("NoHayAlarmas"); 
-			datosss.add(data);
-		} else {
-			DatosVuelo data = new DatosVuelo();
-			data.setNombreVuelo("Cargando"); 
-			datosss.add(data); 
-		}
-		if(datosVuelos.isEmpty()){
-			DatosVuelo data = new DatosVuelo();
-			data.setNombreVuelo("NoHayAntiguas");
-			datosVuelos.add(data); 
- 
-		}else{
-		
-			Collections.reverse(datosVuelos);
-			if(datosVuelos.size()>10){
-				for(int i = 11; i < datosVuelos.size(); i++){
-					datosVuelos.remove(i);
+		if (RED){
+			if (datosAlarmas.isEmpty()){
+				DatosVuelo data = new DatosVuelo();
+				data.setNombreVuelo("NoHayAlarmas"); 
+				datosss.add(data);
+			} else {
+				DatosVuelo data = new DatosVuelo();
+				data.setNombreVuelo("Cargando"); 
+				datosss.add(data); 
+			}
+			if(datosVuelos.isEmpty()){
+				DatosVuelo data = new DatosVuelo();
+				data.setNombreVuelo("NoHayAntiguas");
+				datosVuelos.add(data); 
+			}else{
+				Collections.reverse(datosVuelos);
+				if(datosVuelos.size()>10){
+					for(int i = 11; i < datosVuelos.size(); i++){
+						datosVuelos.remove(i);
+					}
 				}
 			}
-		}
+			mAdapter = new MyExpandableListAdapter(this, datosss, datosVuelos);
 
-		mAdapter = new MyExpandableListAdapter(this, datosss, datosVuelos);
+		} else {
+			if (datosAlarmas.isEmpty()){
+				DatosVuelo data = new DatosVuelo();
+				data.setNombreVuelo("NoHayAlarmas"); 
+				datosVuelosAlarmas.add(data);
+			} 
+			if(datosVuelos.isEmpty()){
+				DatosVuelo data = new DatosVuelo();
+				data.setNombreVuelo("NoHayAntiguas");
+				datosVuelos.add(data); 
+			}else{
+				Collections.reverse(datosVuelos);
+				if(datosVuelos.size()>10){
+					for(int i = 11; i < datosVuelos.size(); i++){
+						datosVuelos.remove(i);
+					}
+				}
+			}
+			mAdapter = new MyExpandableListAdapter(this, datosVuelosAlarmas, datosVuelos);
+		}
 		lv.setAdapter(mAdapter);
 		lv.expandGroup(0);
 		lv.expandGroup(1);
@@ -169,7 +206,7 @@ public class AlarmasActivity extends AbstractActivity {
 					int groupPosition, int childPosition, long id) {
 				if(groupPosition == 0){
 					if (!datosAlarmas.isEmpty()){
-						DemoPopupWindow dw = new DemoPopupWindow(v);
+						dw = new DemoPopupWindow(v);
 						Log.d(TAG, "AlarmasActivity - AlarmasOnClickListener - pos: "
 								+ childPosition);
 						idLista = childPosition;
@@ -203,20 +240,21 @@ public class AlarmasActivity extends AbstractActivity {
 
 	}
 
+
+
 	public List<DatosVuelo> controlAlarm() {
 		if (datosVuelosAlarmas.isEmpty()) {
-			Log.w(TAG,
-					"AlarmasActivity - controlAlarm - La lista de alarmas NO tiene vuelos");
+			Log.w(TAG,	"AlarmasActivity - controlAlarm - La lista de alarmas NO tiene vuelos");
 			textoNoHayAlarmas.setVisibility(View.VISIBLE);
 		} else {
-			Log.w(TAG,
-					"AlarmasActivity - controlAlarm - La lista de alarmas tiene vuelos");
+			Log.w(TAG, "AlarmasActivity - controlAlarm - La lista de alarmas tiene vuelos");
 			/*			miListaAlarmas = (ListView) findViewById(R.id.lista_resultados_alarmas);
 			miListaAlarmas.setAdapter(new miAdapter(this, datosVuelosAlarmas));
-			 */			mAdapter = new MyExpandableListAdapter(this, datosVuelosAlarmas, datosVuelos);
-			 lv.setAdapter(mAdapter);
-			 lv.expandGroup(0);
-			 lv.expandGroup(1);
+			 */			
+			mAdapter = new MyExpandableListAdapter(this, datosVuelosAlarmas, datosVuelos);
+			lv.setAdapter(mAdapter);
+			lv.expandGroup(0);
+			lv.expandGroup(1);
 		}
 		return null;
 	}
@@ -243,6 +281,7 @@ public class AlarmasActivity extends AbstractActivity {
 		} else {
 			startActivity(intent);
 		}
+		dw.dismiss();
 	}
 
 	public void onClickPopupPreferencias(View v) {
@@ -254,27 +293,51 @@ public class AlarmasActivity extends AbstractActivity {
 		bundle.putInt("id", datosAlarmas.get(idLista).getId());
 		i.putExtras(bundle);
 		startActivity(i);
+		dw.dismiss();
 	}
 
 	public void onClickPopupBorrar(View v) {
 		Log.d(TAG, "AlarmasActivity - onClickPopupBorrar - id: "
 				+ datosAlarmas.get(idLista).getId());
 		borrarAlarma(datosAlarmas.get(idLista).getId());
+		ponerSeg(datosAlarmas.get(idLista));
 		onCreate(bun);
+		dw.dismiss();
 	}
 
 	public void controlSeg() {
 		if (datosVuelos.isEmpty()) {
-			Log.w(TAG,
-					"AlarmasActivity - controlSeg - La lista de seguimiento NO tiene vuelos");
+			Log.w(TAG, "AlarmasActivity - controlSeg - La lista de seguimiento NO tiene vuelos");
 			textoNoHaySeguimiento.setVisibility(View.VISIBLE);
 		} else {
-			Log.w(TAG,
-					"AlarmasActivity - controlSeg - La lista de seguimiento tiene vuelos");
-			/*			miLista = (ListView) findViewById(R.id.lista_resultados_seguimiento);
-			miLista.setAdapter(new miAdapter(this, datosVuelos));
-			setListenersSeguimiento();
-			 */		}
+			Log.w(TAG, "AlarmasActivity - controlSeg - La lista de seguimiento tiene vuelos");
+		}
+	}
+
+	public void ponerSeg(DatosAlarma pDatos) {
+		AlarmasSql alarms = new AlarmasSql(this);
+		SQLiteDatabase db = alarms.getWritableDatabase();
+
+		ContentValues cv = new ContentValues();
+
+		cv.put(AlarmasSql.URL, pDatos.getDatos().getLinkInfoVuelo());
+		cv.put(AlarmasSql.ALARMA, 1);
+		cv.put(AlarmasSql.EMPEZADO, 0);
+		cv.put(AlarmasSql.HORAORIGEN, pDatos.getDatos().getHoraOrigen());
+		cv.put(AlarmasSql.NOMBREVUELO, pDatos.getDatos().getNombreVuelo());
+		cv.put(AlarmasSql.FECHAORIGEN, pDatos.getDatos().getFechaOrigen());
+		cv.put(AlarmasSql.NOMBRECOMPANY, pDatos.getDatos().getNombreCompany());
+		cv.put(AlarmasSql.HORAORIGEN, pDatos.getDatos().getHoraOrigen());
+		cv.put(AlarmasSql.ESTADOORIGEN, pDatos.getDatos().getEstadoVueloOrigen());
+		cv.put(AlarmasSql.ESTADODESTINO, pDatos.getDatos().getEstadoVueloDestino());
+		cv.put(AlarmasSql.HORADESTINO, pDatos.getDatos().getHoraDestino());
+		cv.put(AlarmasSql.AEROPUERTOORIGEN, pDatos.getDatos().getAeropuertoOrigen());
+		cv.put(AlarmasSql.AEROPUERTODESTINO, pDatos.getDatos().getAeropuertoDestino());
+
+		db.insert("alarmas", AlarmasSql.URL, cv);
+
+		db.close();
+
 	}
 
 	public void setAdapAlarm() {
@@ -334,7 +397,7 @@ public class AlarmasActivity extends AbstractActivity {
 	public void setListenersAlarma() {
 		miListaAlarmas.setOnItemClickListener(new OnItemClickListener() {
 
-	/*		final Intent intent = new Intent(context,
+			/*		final Intent intent = new Intent(context,
 					VueloResultadoActivity.class);*/
 
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
@@ -420,7 +483,10 @@ public class AlarmasActivity extends AbstractActivity {
 		String[] args = new String[] { AlarmasSqlAux.URL,
 				AlarmasSqlAux.NOMBREVUELO, AlarmasSqlAux.FECHAORIGEN,
 				AlarmasSqlAux.HORAORIGEN, AlarmasSqlAux.NOMBRECOMPANY,
-				AlarmasSqlAux.ID };
+				AlarmasSqlAux.ID, AlarmasSqlAux.AEROPUERTOORIGEN, 
+				AlarmasSqlAux.AEROPUERTOORIGEN, AlarmasSqlAux.ESTADODESTINO, 
+				AlarmasSqlAux.ESTADOORIGEN, AlarmasSqlAux.HORADESTINO,
+				AlarmasSqlAux.HORAORIGEN};
 
 		Cursor c = db.query("alarmas_aux", args, null, null, null, null, null);
 		// Nos aseguramos de que existe al menos un registro
@@ -436,6 +502,12 @@ public class AlarmasActivity extends AbstractActivity {
 				dat.setFechaOrigen(c.getString(2));
 				dat.setHoraOrigen(c.getString(3));
 				dat.setNombreCompany(c.getString(4));
+				dat.setAeropuertoDestino(c.getString(6));
+				dat.setAeropuertoOrigen(c.getString(7));
+				dat.setEstadoVueloDestino(c.getString(8));
+				dat.setEstadoVueloOrigen(c.getString(9));
+				dat.setHoraDestino(c.getString(10));
+				dat.setHoraOrigen(c.getString(11));
 				datosAlarmas.add(new DatosAlarma(dat, c.getInt(5)));
 				datosVuelosAlarmas.add(dat);
 
@@ -558,15 +630,8 @@ public class AlarmasActivity extends AbstractActivity {
 	public boolean tieneRed() {
 		boolean wifi = false;
 		boolean mobile = false;
-
 		ConnectivityManager cm = (ConnectivityManager) this
-				.getSystemService(Context.CONNECTIVITY_SERVICE);
-	/*	NetworkInfo netInfo = cm.getActiveNetworkInfo();
-		if (netInfo != null && netInfo.isConnectedOrConnecting()) {
-			return true;
-		}
-
-		return true;*/		
+				.getSystemService(Context.CONNECTIVITY_SERVICE);	
 		NetworkInfo[] info = cm.getAllNetworkInfo();
 
 		for (NetworkInfo ni : info) {
@@ -602,7 +667,7 @@ public class AlarmasActivity extends AbstractActivity {
 		if(pEstado.contains("celado")){
 			return CANCELED;
 		}
-		if (dif > 10) {
+		if (dif < -10) {
 			return DELAYED;
 		} else {
 			return ONTIME;
@@ -721,36 +786,12 @@ public class AlarmasActivity extends AbstractActivity {
 		}catch (Exception e){
 			return 0;
 		}
-
 	}
 
 	public String getHora(String pEstado) {
-		// Log.i(TAG,
-		// "Servicio "+pEstado.substring(pEstado.indexOf("a las ")+6));
-		Date horaActual = new Date();
 		if (!pEstado.contains("a las ")) {
 			return "Sin informacion";
 		}
-		/*
-		 * Log.i(TAG, "AlarmaAbstract - getHora - horaActual: " +
-		 * horaActual.getHours()+":"+horaActual.getMinutes()); Log.i(TAG,
-		 * "AlarmaAbstract - getHora -  estado: " +
-		 * pEstado.substring(pEstado.indexOf("a las ")+6)); String[] horaVuelo =
-		 * pEstado.substring(pEstado.indexOf("a las ")+6).split(":"); //int a =
-		 * pEstado
-		 * .substring(pEstado.indexOf("a las ")+6).split("[0-9]?[0-9]:").length;
-		 * Log.i(TAG, "AlarmaAbstract - getHora - " +
-		 * (Integer.parseInt(horaVuelo[0]) - horaActual.getHours())); Log.i(TAG,
-		 * "AlarmaAbstract - getHora - " + (Integer.parseInt(horaVuelo[1]) -
-		 * horaActual.getMinutes()));
-		 * 
-		 * for (int i = 0; i <
-		 * pEstado.substring(pEstado.indexOf("a las ")+6).split
-		 * ("[0-9]?[0-9]").length; i++) { Log.i(TAG,
-		 * pEstado.substring(pEstado.indexOf
-		 * ("a las ")+6).split("[0-9]?[0-9]")[i]); }
-		 */
-
 		return pEstado.substring(pEstado.indexOf("a las ") + 6);
 	}
 
@@ -769,10 +810,14 @@ public class AlarmasActivity extends AbstractActivity {
 	}
 
 	protected void onResume(){
+		super.onResume();
+	}
+
+	public void onClickActualizarA(View v){
 		onCreate(bun);
 	}
 
-	
+
 	/*	private class miAdapter extends BaseAdapter {
 
 		private LayoutInflater mInflater;
@@ -864,8 +909,7 @@ public class AlarmasActivity extends AbstractActivity {
 			return position;
 		}
 
-	}
-	 */
+	} */
 
 	private static class DemoPopupWindow extends MenuContextual {
 		public DemoPopupWindow(View anchor) {
@@ -874,7 +918,6 @@ public class AlarmasActivity extends AbstractActivity {
 
 		@Override
 		protected void onCreate() {
-			// inflate layout
 			Log.i(TAG, "AlarmasActivity - Popup - onCreate");
 
 			LayoutInflater inflater = (LayoutInflater) this.anchor.getContext()
@@ -883,7 +926,6 @@ public class AlarmasActivity extends AbstractActivity {
 			ViewGroup root = (ViewGroup) inflater.inflate(
 					R.layout.popup_grid_layout, null);
 
-			// setup button events
 			for (int i = 0, icount = root.getChildCount(); i < icount; i++) {
 				View v = root.getChildAt(i);
 
@@ -900,20 +942,10 @@ public class AlarmasActivity extends AbstractActivity {
 				}
 			}
 
-			// set the inflated view as what we want to display
 			this.setContentView(root);
 		}
 
-		/*
-		 * public void onClick(View v) { // we'll just display a simple toast on
-		 * a button click Log.i(TAG, "AlarmasActivity - Popup - onClick");
-		 * Button b = (Button) v; if(b.getId() == R.id.btn_popup_opciones){
-		 * Log.d(TAG, "AlarmasActivity - Popup - onClick"+b.getId());
-		 * context.startActivity (new Intent(context,
-		 * PreferenciasActivity.class)); }
-		 * Toast.makeText(this.anchor.getContext(), b.getText(),
-		 * Toast.LENGTH_SHORT).show(); this.dismiss(); }
-		 */
+
 		public void onClickPopupResumen(View v) {
 			Log.d(TAG, "AlarmasActivity - Popup - onClickPopupResumen");
 		}
@@ -1007,7 +1039,7 @@ public class AlarmasActivity extends AbstractActivity {
 				textHoraLlegada.setVisibility(View.VISIBLE);
 				textHoraSalida.setVisibility(View.VISIBLE);
 				textEstado.setVisibility(View.VISIBLE);
-				
+
 				prog.setVisibility(View.GONE);
 				textNombre.setTextSize(17);
 				textNombre.setTextColor(Color.DKGRAY);
@@ -1043,29 +1075,42 @@ public class AlarmasActivity extends AbstractActivity {
 				}
 
 				int estado;
-				
+				int pMins = 0;
+
 				if (verSiDespegado(children.get(groupPosition).get(childPosition).getEstadoVueloOrigen())){
+
 					estado = controlEstado(getHora(children.get(groupPosition).get(childPosition)
 							.getEstadoVueloDestino()), children.get(groupPosition).get(childPosition).getHoraDestino());
+					pMins = getDiferencia(getHora(children.get(groupPosition).get(childPosition).getEstadoVueloDestino()), 
+							children.get(groupPosition).get(childPosition).getHoraDestino());
+
 				}else{
 					estado = controlEstado(getHora(children.get(groupPosition).get(childPosition)
 							.getEstadoVueloOrigen()), children.get(groupPosition).get(childPosition).getHoraOrigen());
+					pMins = getDiferencia(getHora(children.get(groupPosition).get(childPosition).getEstadoVueloOrigen()), 
+							children.get(groupPosition).get(childPosition).getHoraOrigen());
 				}
-				
+
 				if(groupPosition==0){
 					if (estado == ONTIME){
-						textEstado.setText("En Hora");
+						if(pMins > 0){
+							textEstado.setText("En Hora (" + (-1)*pMins + " minutos)");
+						} else {
+							textEstado.setText("En Hora ");
+						}
 						textEstado.setTextColor(Color.argb(255, 00, 150, 33));
 						textEstado.setTextSize(17);
 					} else if(estado == DELAYED){
-						textEstado.setText("Retrasado");
+						textEstado.setText("Retrasado (" + (-1)*pMins + " minutos)");
 						textEstado.setTextColor(Color.argb(255, 255, 99, 33));
+						textEstado.setTextSize(17);
+
 
 					} else if (estado == CANCELED){
 						textEstado.setText("Cancelado");
 						textEstado.setTextColor(Color.RED);
 					}
-					
+
 
 					Log.d(TAG, "AlarmasActivity - ExpandableAdapter - getChildView - nombreVuelo: " + children.get(groupPosition).get(childPosition).getNombreVuelo());
 
@@ -1073,11 +1118,23 @@ public class AlarmasActivity extends AbstractActivity {
 					textCodigo.setText(children.get(groupPosition).get(childPosition).getNombreVuelo() + "  -  "
 							+ children.get(groupPosition).get(childPosition).getNombreCompany());
 					textFecha.setText("Fecha de salida: " + children.get(groupPosition).get(childPosition).getFechaOrigen());
-					textHoraSalida.setText("Sale a las: "
-							+ getHora(children.get(groupPosition).get(childPosition).getEstadoVueloOrigen())
-							+ " ("
-							+ controlDepegado(children.get(groupPosition).get(childPosition)
-									.getEstadoVueloOrigen()) + ")");
+					if(groupPosition == 0){
+						if(verSiDespegado(children.get(groupPosition).get(childPosition).getEstadoVueloOrigen())){
+							textHoraSalida.setText("Salió a las: "
+									+ getHora(children.get(groupPosition).get(childPosition).getEstadoVueloOrigen())
+									+ " ("
+									+ controlDepegado(children.get(groupPosition).get(childPosition)
+											.getEstadoVueloOrigen()) + ")");
+						}
+						else {
+							textHoraSalida.setText("Sale a las: "
+									+ getHora(children.get(groupPosition).get(childPosition).getEstadoVueloOrigen())
+									+ " ("
+									+ controlDepegado(children.get(groupPosition).get(childPosition)
+											.getEstadoVueloOrigen()) + ")");
+						} 
+					}
+
 					textHoraLlegada.setText("Llega a las: "
 							+ getHora(children.get(groupPosition).get(childPosition).getEstadoVueloDestino())
 							+ " ("
