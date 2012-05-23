@@ -1,6 +1,6 @@
 /*
  Copyright 2012 Xabier Pena & Urko Guinea
- 
+
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -18,61 +18,71 @@ package com.vuelosDroid.backEnd.scrapper;
 
 import org.jsoup.select.Elements;
 
+import android.util.Log;
+
 /**
  * 
- * @author Urko Guinea
+ * @author Urko Guinea & Xabier Pena
  *
  */
 public class DatosVuelo {
 
-	
+
 	/** The nombre vuelo. */
 	String nombreVuelo = "--";
-	
+
 	/** The nombre company. */
 	String nombreCompany = "--";
 
 	/** The aeropuerto origen. */
 	String aeropuertoOrigen = "--";
-	
+
 	/** The fecha origen. */
 	String fechaOrigen = "--";
-	
+
 	/** The hora origen. */
 	String horaOrigen = "--";
-	
+
 	/** The terminal origen. */
 	String terminalOrigen = "--";
-	
+
 	/** The puerta origen. */
 	String puertaOrigen = "--";
-	
+
 	/** The estado vuelo origen. */
 	String estadoVueloOrigen = "--";
-	
+
 	/** The link info vuelo. */
 	String linkInfoVuelo = "--";
 
 	/** The fecha destino. */
 	String fechaDestino = "--";
-	
+
 	/** The hora destino. */
 	String horaDestino = "--";
-	
+
 	/** The terminal destino. */
 	String terminalDestino = "--";
-	
+
 	/** The sala destino. */
 	String salaDestino = "--";
-	
+
 	/** The cinta destino. */
 	String cintaDestino = "--";
-	
+
 	/** The estado vuelo destino. */
 	String estadoVueloDestino = "--";
-	
+
 	/** The aeropuerto destino. */
 	String aeropuertoDestino = "--";
+
+	/** Estado aeropuerto intermedio **/
+	String aeropuertoIntermedio = "--";
+
+	/** Escala */
+	Boolean escala = false;
+
+
 
 	/**
 	 * Instantiates a new datos vuelo.
@@ -91,19 +101,8 @@ public class DatosVuelo {
 			}
 		} catch (IndexOutOfBoundsException ex) {
 			System.out.println("ERROR, Celda sin datos");
-		}try {
-			if (!origenDestino.get(0).text().equals("")) {
-				this.setAeropuertoOrigen(origenDestino.get(0).text());
-			}
-		} catch (IndexOutOfBoundsException ex1) {
-			System.out.println("ERROR, Celda sin datos"); }
-			try {
-			if (!origenDestino.get(1).text().equals("")) {
-				this.setAeropuertoDestino(origenDestino.get(1).text());
-			}
-		} catch (IndexOutOfBoundsException ex2) {
-			System.out.println("ERROR, Celda sin datos");
 		}
+		
 		try {
 			if (!nombreVuelo.equals("")) {
 				this.setNombreVuelo(nombreVuelo);
@@ -111,85 +110,139 @@ public class DatosVuelo {
 		} catch (IndexOutOfBoundsException ex3) {
 			System.out.println("ERROR, Celda sin datos");
 		}
-		try {
-			if (!tablaDatosVuelo.get(0).text().equals("")) {
-				this.setFechaOrigen(tablaDatosVuelo.get(0).text());
-			}
-		} catch (IndexOutOfBoundsException ex4) {
-			System.out.println("ERROR, Celda sin datos");
+		
+		int t = tablaDatosVuelo.size();
+		String estadoA = "--";
+		String estadoB = "--";
+		if(comprueba(tablaDatosVuelo, 5)){
+			estadoA = tablaDatosVuelo.get(5).text();
 		}
-		try {
-			if (!tablaDatosVuelo.get(1).text().equals("")) {
-				this.setHoraOrigen(tablaDatosVuelo.get(1).text());
-			}
-		} catch (IndexOutOfBoundsException ex5) {
-			System.out.println("ERROR, Celda sin datos");
+		
+		if (comprueba(tablaDatosVuelo, t - 1)){
+			estadoB = tablaDatosVuelo.get(t - 1).text();
 		}
-		try {
-			if (!tablaDatosVuelo.get(2).text().equals("")) {
-				this.setTerminalOrigen(tablaDatosVuelo.get(2).text());
+		Log.w("VuelosDroid", "DatosVuelo - Constructor - estadoA: " + estadoA);
+		Log.w("VuelosDroid", "DatosVuelo - Constructor - estadoB: " + estadoB);
+		
+		//Tiene escalas
+		if(origenDestino.size()>2){
+			escala = true;
+			if(comprueba(origenDestino, origenDestino.size()-1)){
+				this.setAeropuertoDestino(origenDestino.get(origenDestino.size()-1).text());
 			}
-		} catch (IndexOutOfBoundsException ex6) {
-			System.out.println("ERROR, Celda sin datos");
-		}
-		try {
-			if (!tablaDatosVuelo.get(4).text().equals("")) {
-				this.setPuertaOrigen(tablaDatosVuelo.get(4).text());
+			if(comprueba(origenDestino, origenDestino.size()-2)){
+				this.setAeropuertoOrigen(origenDestino.get(origenDestino.size()-2).text());
 			}
-		} catch (IndexOutOfBoundsException ex7) {
-			System.out.println("ERROR, Celda sin datos");
-		}
-		try {
-			if (!tablaDatosVuelo.get(5).text().equals("")) {
-				this.setEstadoVueloOrigen(tablaDatosVuelo.get(5).text());
+			if(comprueba(origenDestino, origenDestino.size()-4)){
+				this.setAeropuertoIntermedio(origenDestino.get(origenDestino.size()-4).text());
 			}
-		} catch (IndexOutOfBoundsException ex8) {
-			System.out.println("ERROR, Celda sin datos");
-		}
-		try {
-			if (!tablaDatosVuelo.get(6).text().equals("")) {
-				this.setFechaDestino(tablaDatosVuelo.get(6).text());
-			}
-		} catch (IndexOutOfBoundsException ex9) {
-			System.out.println("ERROR, Celda sin datos");
-		}
-		try {
-			if (!tablaDatosVuelo.get(7).text().equals("")) {
-				this.setHoraDestino(tablaDatosVuelo.get(7).text());
-			}
-		} catch (IndexOutOfBoundsException ex10) {
-			System.out.println("ERROR, Celda sin datos");
-		}
-		try {
-			if (!tablaDatosVuelo.get(8).text().equals("")) {
-				this.setTerminalDestino(tablaDatosVuelo.get(8).text());
-			}
-		} catch (IndexOutOfBoundsException ex11) {
-			System.out.println("ERROR, Celda sin datos");
-		}
-		try {
-			if (!tablaDatosVuelo.get(9).text().equals(" ")) {
-				this.setSalaDestino(tablaDatosVuelo.get(9).text());
-			}
-		} catch (IndexOutOfBoundsException ex12) {
-			System.out.println("ERROR, Celda sin datos");
-		}
-		try {
-			if (!tablaDatosVuelo.get(10).text().equals("")) {
-				this.setCintaDestino(tablaDatosVuelo.get(10).text());
-			}
-		} catch (IndexOutOfBoundsException ex14) {
-			System.out.println("ERROR, Celda sin datos");
-		}
-		try {
-			if (!tablaDatosVuelo.get(11).text().equals("")) {
-				this.setEstadoVueloDestino(tablaDatosVuelo.get(11).text());
-			}
-		} catch (IndexOutOfBoundsException ex26) {
-			System.out.println("ERROR, Celda sin datos");
+			
+			// Si es de origen español
+			if(estadoA.contains("spegado") || estadoA.contains("alida") || estadoA.contains("celado")){
+				if (comprueba(origenDestino, 0)){
+					this.setAeropuertoOrigen(origenDestino.get(0).text());
+				}
+				if (comprueba(origenDestino, origenDestino.size()-1)){
+					this.setAeropuertoDestino(origenDestino.get(origenDestino.size()-1).text());
+				}
+				if (comprueba(origenDestino, origenDestino.size()-2)){
+					this.setAeropuertoIntermedio(origenDestino.get(origenDestino.size()-2).text());
+				}
+				if(comprueba(tablaDatosVuelo, 0)){
+					this.setFechaOrigen(tablaDatosVuelo.get(0).text());
+					this.setFechaDestino(tablaDatosVuelo.get(0).text());
+				}
+				if(comprueba(tablaDatosVuelo, 1)){
+					this.setHoraOrigen(tablaDatosVuelo.get(1).text());
+				}
+				if(comprueba(tablaDatosVuelo, 2)){
+					this.setTerminalOrigen(tablaDatosVuelo.get(2).text());
+				}
+				if(comprueba(tablaDatosVuelo, 4)){
+					this.setPuertaOrigen(tablaDatosVuelo.get(4).text());
+				}
+				if(comprueba(tablaDatosVuelo, 5)){
+					this.setEstadoVueloOrigen(tablaDatosVuelo.get(5).text());
+				}
 
+				// Si es de destino español
+			} if (estadoB.contains("legada") || estadoB.contains("aterrizado") || estadoB.contains("celado")){
+				if(comprueba(tablaDatosVuelo, t - 6)){
+					this.setFechaDestino(tablaDatosVuelo.get(t - 6).text());
+					this.setFechaOrigen(tablaDatosVuelo.get(t - 6).text());
+				}
+				if(comprueba(tablaDatosVuelo, t - 5)){
+					this.setHoraDestino(tablaDatosVuelo.get(t - 5).text());
+				}
+				if(comprueba(tablaDatosVuelo, t - 4)){
+					this.setTerminalDestino(tablaDatosVuelo.get(t - 4).text());
+				}
+				if(comprueba(tablaDatosVuelo, t - 3)){
+					this.setSalaDestino(tablaDatosVuelo.get(t - 3).text());
+				}
+				if(comprueba(tablaDatosVuelo, t - 2)){
+					this.setCintaDestino(tablaDatosVuelo.get(t - 2).text());
+				}
+				if(comprueba(tablaDatosVuelo, t - 1)){
+					this.setEstadoVueloDestino(tablaDatosVuelo.get(t - 1).text());
+				}
+			}
+
+			// No tiene escalas
+		} else {
+			escala = false;
+			if(comprueba(origenDestino, 0)){
+				this.setAeropuertoOrigen(origenDestino.get(0).text());
+			}
+			if(comprueba(origenDestino, 1)){
+				this.setAeropuertoDestino(origenDestino.get(1).text());
+			}
+			
+			//Origen Español
+			if(estadoA.contains("spegado") || estadoA.contains("alida") || estadoA.contains("celado")){
+
+				if(comprueba(tablaDatosVuelo, 0)){
+					this.setFechaOrigen(tablaDatosVuelo.get(0).text());
+					this.setFechaDestino(tablaDatosVuelo.get(0).text());
+				}
+				if(comprueba(tablaDatosVuelo, 1)){
+					this.setHoraOrigen(tablaDatosVuelo.get(1).text());
+				}
+				if(comprueba(tablaDatosVuelo, 2)){
+					this.setTerminalOrigen(tablaDatosVuelo.get(2).text());
+				}
+				if(comprueba(tablaDatosVuelo, 4)){
+					this.setPuertaOrigen(tablaDatosVuelo.get(4).text());
+				}
+				if(comprueba(tablaDatosVuelo, 5)){
+					this.setEstadoVueloOrigen(tablaDatosVuelo.get(5).text());
+				}
+			}
+			//Destino Español
+			if (estadoB.contains("legada") || estadoB.contains("aterrizado") || estadoB.contains("celado")){
+				if(comprueba(tablaDatosVuelo, t - 6)){
+					this.setFechaDestino(tablaDatosVuelo.get(t-6).text());
+					if(comprueba(tablaDatosVuelo, 0)){
+						this.setFechaOrigen(tablaDatosVuelo.get(0).text());
+					}
+				}
+				if(comprueba(tablaDatosVuelo, t - 5)){
+					this.setHoraDestino(tablaDatosVuelo.get(t-5).text());
+				}
+				if(comprueba(tablaDatosVuelo, t - 4)){
+					this.setTerminalDestino(tablaDatosVuelo.get(t-4).text());
+				}
+				if(comprueba(tablaDatosVuelo, t - 3)){
+					this.setSalaDestino(tablaDatosVuelo.get(t-3).text());
+				}
+				if(comprueba(tablaDatosVuelo, t - 2)){
+					this.setCintaDestino(tablaDatosVuelo.get(t-2).text());
+				}
+				if(comprueba(tablaDatosVuelo, t - 1)){
+					this.setEstadoVueloDestino(tablaDatosVuelo.get(t-1).text());
+				}
+			}
 		}
-	
 	}
 
 	/**
@@ -215,7 +268,7 @@ public class DatosVuelo {
 		this.setLinkInfoVuelo(url);
 	}
 
-	
+
 	public DatosVuelo() {
 		super();
 	}
@@ -554,9 +607,34 @@ public class DatosVuelo {
 	public void setLinkInfoVuelo(String linkInfoVuelo) {
 		this.linkInfoVuelo = linkInfoVuelo;
 	}
-	
-	
-	
-	
+
+	public Boolean getEscala() {
+		return escala;
+	}
+
+	public void setEscala(Boolean escala) {
+		this.escala = escala;
+	}
+
+	public String getAeropuertoIntermedio() {
+		return aeropuertoIntermedio;
+	}
+
+	public void setAeropuertoIntermedio(String aeropuertoIntermedio) {
+		this.aeropuertoIntermedio = aeropuertoIntermedio;
+	}
+
+
+	private boolean comprueba (Elements pDatos, int pPos){
+		try {
+			if (!pDatos.get(pPos).text().equals("")) {
+				return true;
+			} 
+			return false;
+		} catch (IndexOutOfBoundsException ex11) {
+			Log.w("VuelosAndroid", "DatosVuelo - Constructor: " + "ERROR, Celda sin datos numero " + pPos);
+			return false;
+		}
+	}
 
 }

@@ -135,10 +135,10 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 			Log.d(TAG, "VueloResultadoActivity - Oncreate - Antes de cambiar url - url: " + url);
 			if(!url.equals(" ")){
 				GregorianCalendar cal = new GregorianCalendar();
-				if (cal.get(Calendar.HOUR_OF_DAY) < 2 && !dia.equals("manana") && or == 1){
+				if (cal.get(Calendar.HOUR_OF_DAY) < 4 && !dia.equals("manana") && or == 1){
 					Log.i(TAG, "VueloResultadoActivity - Oncreate - Antes de cambiar url - diahoy");
 					url = cambiarFechaToUrl(url, "ayer");
-				}else if (cal.get(Calendar.HOUR_OF_DAY) < 2 && dia.equals("manana") && or == 1){
+				}else if (cal.get(Calendar.HOUR_OF_DAY) < 4 && dia.equals("manana") && or == 1){
 					Log.i(TAG, "VueloResultadoActivity - Oncreate - Antes de cambiar url - diamanana");
 					url = cambiarFechaToUrl(url, "hoy");
 				}else{
@@ -321,6 +321,7 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 		ImageButton btnHoy = (ImageButton) findViewById(R.id.boton_resultado_vuelo_manana);
 		favorito = (ImageButton) findViewById(R.id.boton_resultado_favorito);
 		botonAlarma = (ImageButton) findViewById(R.id.boton_resultado_alarma);
+		TextView textEscala = (TextView) findViewById(R.id.text_resultado_escala);
 
 		//Button botonActualizar = (Button) findViewById(R.id.boton_actualizar);
 		//TextView textCod = (TextView) findViewById(R.id.text_resultado_codigo);
@@ -404,13 +405,20 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 			content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
 			String dest = datos.getAeropuertoDestino();
 			String ori = datos.getAeropuertoOrigen();
+			String escala = datos.getAeropuertoIntermedio();
 			if (dest.contains("esti")){
 				dest = dest.replace("Destino:", "");
 			}
 
 			if(ori.contains("Origen:")){
 				ori = ori.replace("Origen:", "");
-			}		
+			}
+			if(escala.contains("esti")){
+				escala = escala.replace("Destino:", "");
+			} else if(escala.contains("rige")){
+				escala = escala.replace("Origen:", "");
+			}
+			
 
 			textCompany.setText(datos.getNombreVuelo() + "  -  " + datos.getNombreCompany());
 			text1.setText(ori);
@@ -424,8 +432,22 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 			textDestinoTerminal.setText("Terminal: " + datos.getTerminalDestino());
 			textDestinoSala.setText("Sala: " + datos.getSalaDestino());
 			textDestinoCinta.setText("Cinta: " + datos.getCintaDestino());
-			Log.i(TAG, "VueloResultadoActivity - setLayout - radAlarma: " + radAlarma.isChecked()+"");
-			Log.i(TAG, "VueloResultadoActivity - setLayout - radMarcador: " + radMarcador.isChecked()+"");
+			if (datos.getEstadoVueloOrigen().equals("--")){
+				text2.setText("No hay datos");
+				text2.setPadding(0, 4, 0, 0);			
+			}
+			if (datos.getEstadoVueloDestino().equals("--")){
+				textDestinoHora.setText("No hay datos");
+				textDestinoHora.setPadding(0, 2, 0, 0);			
+			}
+			if(datos.getEscala()){
+				textEscala.setVisibility(View.VISIBLE);
+				textEscala.setText("Escala: " + escala);
+				/*if(datos.getEstadoVueloOrigen().equals("--")){
+					text2.setText("No hay datos");
+					text2.setPadding(0, 4, 0, 0);
+				}*/
+			}
 		}
 	}
 

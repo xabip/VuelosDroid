@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <!--
  Copyright 2012 Xabier Pena & Urko Guinea
  
@@ -13,8 +12,8 @@ Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
-   limitations under the License.
- -->
+   limitations under the License.
+-->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
@@ -234,7 +233,6 @@ See the License for the specific language governing permissions and
                     android:layout_marginRight="5dp"
                     android:textSize="18dp"
                     android:textStyle="bold" />
-
             </LinearLayout>
 
             <TextView
@@ -276,19 +274,15 @@ See the License for the specific language governing permissions and
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <!--
-             <LinearLayout style="@style/Theme.LayoutResultado" >
-
-            <Button
-                android:id="@+id/btn_actualizar"
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/text_resultado_escala"
+                android:gravity="center_horizontal"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:onClick="onClickActualizar"
-                android:text="Actualizar" 
-                />
-        </LinearLayout>
-            -->
+                android:layout_marginBottom="8dp"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:id="@+id/layout_vuelo_destino"
@@ -345,7 +339,7 @@ See the License for the specific language governing permissions and
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:text="(VLC1423)"
-                android:textStyle="bold" />
+                android:textStyle="bold" />
                 -->
             </LinearLayout>
 
@@ -398,7 +392,7 @@ See the License for the specific language governing permissions and
                 android:onClick="onClickActualizar"
                 android:text="Actualizar" 
                 />
-        </LinearLayout>
+        </LinearLayout>
             -->
 
             <LinearLayout

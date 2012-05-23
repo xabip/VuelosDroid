@@ -820,19 +820,8 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 			textNombre = (TextView) convertView.findViewById(R.id.text_item_reciente_nombre);
 			textCodigo = (TextView) convertView.findViewById(R.id.text_item_reciente_codigo);
 			textHora = (TextView) convertView.findViewById(R.id.text_item_reciente_hora);
-			//	radioDia =(RadioGroup) convertView.findViewById(R.id.grupo_reciente);
-/*			radioRecienteHoy = (RadioButton) convertView.findViewById(R.id.radio_reciente_hoy);
-			radioRecienteMnn = (RadioButton) convertView.findViewById(R.id.radio_reciente_manana);
-*/			/*			if(dias.get(position).contains("ho")){
-				radioRecienteHoy.setChecked(true);
-				radioRecienteMnn.setChecked(false);
-				Log.i("VuelosAndroid", "hoy");
-			}else{
-				radioRecienteHoy.setChecked(false);
-				radioRecienteMnn.setChecked(true);
-				Log.i("VuelosAndroid", "mañana");
-
-			}*/
+	
+			
 			if(datosVuelos.get(position).getAeropuertoOrigen().equals("NoHay")){
 				textNombre.setText("No has realizado ninguna búsqueda");
 				textCodigo.setVisibility(View.GONE);

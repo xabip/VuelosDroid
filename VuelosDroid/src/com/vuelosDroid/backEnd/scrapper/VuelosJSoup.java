@@ -1,6 +1,6 @@
 /*
  Copyright 2012 Xabier Pena & Urko Guinea
- 
+
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -18,6 +18,7 @@ package com.vuelosDroid.backEnd.scrapper;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 
@@ -36,7 +37,7 @@ import java.util.List;
  */
 public class VuelosJSoup {
 
-	
+
 	/** The url. */
 	String url = null;
 
@@ -61,19 +62,19 @@ public class VuelosJSoup {
 	/** The doc. */
 	Document doc;
 
-	
+
 
 	public VuelosJSoup() {
 
 		webAena = new AenaPage();
 	}
-	
+
 	public List<DatosVuelo> getListaVuelosSalidas(/*String pDestino, String pHora,
 			String pOrigen, String pDia, String pCompany*/
 			String pOrigen,String pDestino,
 			String pFecha,String pHora, String pCompany)
-			throws NoHayVueloException, IOException,
-			NoHayMasPaginasDeVuelosException {
+					throws NoHayVueloException, IOException,
+					NoHayMasPaginasDeVuelosException {
 
 		ArrayList<DatosVuelo> listaVuelos = new ArrayList<DatosVuelo>();
 		Elements haySiguientePag;
@@ -97,7 +98,7 @@ public class VuelosJSoup {
 
 			System.out.println("Fetching " + url + "...");
 
-			doc = Jsoup.connect(url).timeout(1000000000).get();
+			doc = Jsoup.connect(url).timeout(60000).get();  //1000000000
 			String ciudadOrigen = doc.getElementsByClass("city").first().text()
 					+ "(" + pOrigen + ")";
 			Elements datosVueloPorDia = webAena.getVuelosPorDia(doc);
@@ -137,8 +138,8 @@ public class VuelosJSoup {
 
 	}
 
-	
-	
+
+
 	public List<DatosVuelo> getListaVuelosOrigen(int limite, String pDestino,
 			String pHora, String pOrigen, String pDia, String pCompany)
 					throws NoHayVueloException, IOException {
@@ -154,7 +155,7 @@ public class VuelosJSoup {
 
 			System.out.println("Fetching " + url + "...");
 
-			doc = Jsoup.connect(url).timeout(1000000000).get();
+			doc = Jsoup.connect(url).timeout(60000).get();  //1000000000
 
 			Elements datosVueloPorDia = webAena.getVuelosPorDia(doc);
 			if (datosVueloPorDia.size() == 0) {
@@ -193,8 +194,8 @@ public class VuelosJSoup {
 		return listaVuelos;
 
 	}
-	
-	
+
+
 	/**
 	 * Obtener todos los vuelos con origen en pOrigen, origen y dia son campos
 	 * obligatorios, los demas optativos
@@ -220,8 +221,8 @@ public class VuelosJSoup {
 	 */
 	public List<DatosVuelo> getListaVuelosLlegadas(/*String pDestino, String pHora,
 			String pOrigen, String pDia, String pCompany*/String pDestino,String pOrigen,String pFecha, String pHora, String pCompany)
-			throws NoHayVueloException, IOException,
-			NoHayMasPaginasDeVuelosException {
+					throws NoHayVueloException, IOException,
+					NoHayMasPaginasDeVuelosException {
 
 		ArrayList<DatosVuelo> listaVuelos = new ArrayList<DatosVuelo>();
 		Elements haySiguientePag;
@@ -244,7 +245,7 @@ public class VuelosJSoup {
 
 			System.out.println("Fetching " + url + "...");
 
-			doc = Jsoup.connect(url).timeout(1000000000).get();
+			doc = Jsoup.connect(url).timeout(60000).get();  //1000000000
 			String ciudadOrigen = doc.getElementsByClass("city").first().text()
 					+ "(" + pOrigen + ")";
 			Elements datosVueloPorDia = webAena.getVuelosPorDia(doc);
@@ -300,12 +301,215 @@ public class VuelosJSoup {
 		url = pUrl;
 		System.out.println("Fetching " + url + "...");
 
-		doc = Jsoup.connect(url).timeout(1000000000).get();
-
+		doc = Jsoup.connect(url).timeout(30000).get();  //1000000000
 		String nombreVuelo = webAena.getNombreVuelo(doc);
 		Elements tablaDatosVuelo = webAena.getTablaDatosVuelo(doc);
+		
+		/*try {
+			if (!tablaDatosVuelo.get(0).text().equals("")) {
+				Log.d("VuelosAndroid", "VuelosJsoup - getDatosvuelo0: " + tablaDatosVuelo.get(0).text());
+			}
+		} catch (IndexOutOfBoundsException ex4) {
+			Log.w("VuelosAndroid", "VuelosJsoup - getDatosvuelo1: " + "ERROR, Celda sin datos");
+		}
+		try {
+			if (!tablaDatosVuelo.get(1).text().equals("")) {
+				Log.d("VuelosAndroid", "VuelosJsoup - getDatosvuelo1: " + tablaDatosVuelo.get(1).text());
+			}
+		} catch (IndexOutOfBoundsException ex5) {
+			Log.w("VuelosAndroid", "VuelosJsoup - getDatosvuelo2: " + "ERROR, Celda sin datos");
+		}
+		try {
+			if (!tablaDatosVuelo.get(2).text().equals("")) {
+				Log.d("VuelosAndroid", "VuelosJsoup - getDatosvuelo2: " + tablaDatosVuelo.get(2).text());
+			}
+		} catch (IndexOutOfBoundsException ex6) {
+			Log.w("VuelosAndroid", "VuelosJsoup - getDatosvuelo3: " + "ERROR, Celda sin datos");
+		}try {
+			if (!tablaDatosVuelo.get(3).text().equals("")) {
+				Log.d("VuelosAndroid", "VuelosJsoup - getDatosvuelo3: " + tablaDatosVuelo.get(3).text());
+			}
+		} catch (IndexOutOfBoundsException ex7) {
+			Log.w("VuelosAndroid", "VuelosJsoup - getDatosvuelo3: " + "ERROR, Celda sin datos");
+		}
+		try {
+			if (!tablaDatosVuelo.get(4).text().equals("")) {
+				Log.d("VuelosAndroid", "VuelosJsoup - getDatosvuelo4: " + tablaDatosVuelo.get(4).text());
+			}
+		} catch (IndexOutOfBoundsException ex7) {
+			Log.w("VuelosAndroid", "VuelosJsoup - getDatosvuelo4: " + "ERROR, Celda sin datos");
+		}
+		try {
+			if (!tablaDatosVuelo.get(5).text().equals("")) {
+				Log.d("VuelosAndroid", "VuelosJsoup - getDatosvuelo5: " + tablaDatosVuelo.get(5).text());
+			}
+		} catch (IndexOutOfBoundsException ex8) {
+			Log.w("VuelosAndroid", "VuelosJsoup - getDatosvuelo5: " + "ERROR, Celda sin datos");
+		}
+		try {
+			if (!tablaDatosVuelo.get(6).text().equals("")) {
+				Log.d("VuelosAndroid", "VuelosJsoup - getDatosvuelo6: " + tablaDatosVuelo.get(6).text());
+			}
+		} catch (IndexOutOfBoundsException ex9) {
+			Log.w("VuelosAndroid", "VuelosJsoup - getDatosvuelo6: " + "ERROR, Celda sin datos");
+		}
+		try {
+			if (!tablaDatosVuelo.get(7).text().equals("")) {
+				Log.d("VuelosAndroid", "VuelosJsoup - getDatosvuelo7: " + tablaDatosVuelo.get(7).text());
+			}
+		} catch (IndexOutOfBoundsException ex10) {
+			Log.w("VuelosAndroid", "VuelosJsoup - getDatosvuelo7: " + "ERROR, Celda sin datos");
+		}
+		try {
+			if (!tablaDatosVuelo.get(8).text().equals("")) {
+				Log.d("VuelosAndroid", "VuelosJsoup - getDatosvuelo8: " + tablaDatosVuelo.get(8).text());
+			}
+		} catch (IndexOutOfBoundsException ex11) {
+			Log.w("VuelosAndroid", "VuelosJsoup - getDatosvuelo8: " + "ERROR, Celda sin datos");
+		}
+		try {
+			if (!tablaDatosVuelo.get(9).text().equals(" ")) {
+				Log.d("VuelosAndroid", "VuelosJsoup - getDatosvuelo9: " + tablaDatosVuelo.get(9).text());
+			}
+		} catch (IndexOutOfBoundsException ex12) {
+			Log.w("VuelosAndroid", "VuelosJsoup - getDatosvuelo9: " + "ERROR, Celda sin datos");
+		}
+		try {
+			if (!tablaDatosVuelo.get(10).text().equals("")) {
+				Log.d("VuelosAndroid", "VuelosJsoup - getDatosvuelo10: " + tablaDatosVuelo.get(10).text());
+			}
+		} catch (IndexOutOfBoundsException ex14) {
+			Log.w("VuelosAndroid", "VuelosJsoup - getDatosvuelo10: " + "ERROR, Celda sin datos");
+		}
+		try {
+			if (!tablaDatosVuelo.get(11).text().equals("")) {
+				Log.d("VuelosAndroid", "VuelosJsoup - getDatosvuelo11: " + tablaDatosVuelo.get(11).text());
+			}
+		} catch (IndexOutOfBoundsException ex26) {
+			Log.w("VuelosAndroid", "VuelosJsoup - getDatosvuelo11: " + "ERROR, Celda sin datos");
+
+		}
+		try {
+			if (!tablaDatosVuelo.get(12).text().equals("")) {
+				Log.d("VuelosAndroid", "VuelosJsoup - getDatosvuelo12: " + tablaDatosVuelo.get(12).text());
+			}
+		} catch (IndexOutOfBoundsException ex26) {
+			Log.w("VuelosAndroid", "VuelosJsoup - getDatosvuelo12: " + "ERROR, Celda sin datos");
+
+		}	
+		try {
+			if (!tablaDatosVuelo.get(13).text().equals("")) {
+				Log.d("VuelosAndroid", "VuelosJsoup - getDatosvuelo13: " + tablaDatosVuelo.get(13).text());
+			}
+		} catch (IndexOutOfBoundsException ex26) {
+			Log.w("VuelosAndroid", "VuelosJsoup - getDatosvuelo13: " + "ERROR, Celda sin datos");
+
+		}		
+		try {
+			if (!tablaDatosVuelo.get(14).text().equals("")) {
+				Log.d("VuelosAndroid", "VuelosJsoup - getDatosvuelo14: " + tablaDatosVuelo.get(15).text());
+			}
+		} catch (IndexOutOfBoundsException ex26) {
+			Log.w("VuelosAndroid", "VuelosJsoup - getDatosvuelo14: " + "ERROR, Celda sin datos");
+
+		}		
+		try {
+			if (!tablaDatosVuelo.get(15).text().equals("")) {
+				Log.d("VuelosAndroid", "VuelosJsoup - getDatosvuelo15: " + tablaDatosVuelo.get(15).text());
+			}
+		} catch (IndexOutOfBoundsException ex26) {
+			Log.w("VuelosAndroid", "VuelosJsoup - getDatosvuelo15: " + "ERROR, Celda sin datos");
+
+		}		try {
+			if (!tablaDatosVuelo.get(16).text().equals("")) {
+				Log.d("VuelosAndroid", "VuelosJsoup - getDatosvuelo16: " + tablaDatosVuelo.get(16).text());
+			}
+		} catch (IndexOutOfBoundsException ex26) {
+			Log.w("VuelosAndroid", "VuelosJsoup - getDatosvuelo16: " + "ERROR, Celda sin datos");
+		}
+		try {
+			if (!tablaDatosVuelo.get(17).text().equals("")) {
+				Log.d("VuelosAndroid", "VuelosJsoup - getDatosvuelo17: " + tablaDatosVuelo.get(17).text());
+			}
+		} catch (IndexOutOfBoundsException ex26) {
+			Log.w("VuelosAndroid", "VuelosJsoup - getDatosvuelo17: " + "ERROR, Celda sin datos");
+
+		}		try {
+			if (!tablaDatosVuelo.get(18).text().equals("")) {
+				Log.d("VuelosAndroid", "VuelosJsoup - getDatosvuelo18: " + tablaDatosVuelo.get(18).text());
+			}
+		} catch (IndexOutOfBoundsException ex26) {
+			Log.w("VuelosAndroid", "VuelosJsoup - getDatosvuelo18: " + "ERROR, Celda sin datos");
+
+		}		try {
+			if (!tablaDatosVuelo.get(19).text().equals("")) {
+				Log.d("VuelosAndroid", "VuelosJsoup - getDatosvuelo19: " + tablaDatosVuelo.get(19).text());
+			}
+		} catch (IndexOutOfBoundsException ex26) {
+			Log.w("VuelosAndroid", "VuelosJsoup - getDatosvuelo19: " + "ERROR, Celda sin datos");
+
+		}		try {
+			if (!tablaDatosVuelo.get(20).text().equals("")) {
+				Log.d("VuelosAndroid", "VuelosJsoup - getDatosvuelo20: " + tablaDatosVuelo.get(20).text());
+			}
+		} catch (IndexOutOfBoundsException ex26) {
+			Log.w("VuelosAndroid", "VuelosJsoup - getDatosvuelo20: " + "ERROR, Celda sin datos");
+
+		}		try {
+			if (!tablaDatosVuelo.get(21).text().equals("")) {
+				Log.d("VuelosAndroid", "VuelosJsoup - getDatosvuelo21: " + tablaDatosVuelo.get(21).text());
+			}
+		} catch (IndexOutOfBoundsException ex26) {
+			Log.w("VuelosAndroid", "VuelosJsoup - getDatosvuelo21: " + "ERROR, Celda sin datos");
+
+		}*/
 		Elements origenDestino = webAena.getOrigenDestino(doc);
+		/*try {
+			if (!origenDestino.get(0).text().equals("")) {
+				Log.d("VuelosAndroid", "VuelosJsoup - Origenes0: " + origenDestino.get(0).text());
+			}
+		} catch (IndexOutOfBoundsException ex1) {
+			Log.w("VuelosAndroid", "VuelosJsoup - Origenes0: " + "ERROR, Celda sin datos"); }
+		try {
+			if (!origenDestino.get(1).text().equals("")) {
+				Log.d("VuelosAndroid", "VuelosJsoup - Origenes1: " + origenDestino.get(1).text());
+			}
+			}catch (IndexOutOfBoundsException ex1) {
+				Log.w("VuelosAndroid", "VuelosJsoup - Origenes1: " + "ERROR, Celda sin datos"); }
+		try {
+				if (!origenDestino.get(2).text().equals("")) {
+					Log.d("VuelosAndroid", "VuelosJsoup - Origenes2: " + origenDestino.get(2).text());
+				}
+			} catch (IndexOutOfBoundsException ex1) {
+				Log.w("VuelosAndroid", "VuelosJsoup - Origenes2: " + "ERROR, Celda sin datos"); }
+		try {
+				if (!origenDestino.get(2).text().equals("")) {
+					Log.d("VuelosAndroid", "VuelosJsoup - Origenes3: " + origenDestino.get(3).text());
+				}
+			} catch (IndexOutOfBoundsException ex1) {
+				Log.w("VuelosAndroid", "VuelosJsoup - Origenes3: " + "ERROR, Celda sin datos"); }
+		try {
+			if (!origenDestino.get(2).text().equals("")) {
+				Log.d("VuelosAndroid", "VuelosJsoup - Origenes4: " + origenDestino.get(4).text());
+			}
+		} catch (IndexOutOfBoundsException ex1) {
+			Log.w("VuelosAndroid", "VuelosJsoup - Origenes4: " + "ERROR, Celda sin datos"); }
+		try {
+			if (!origenDestino.get(2).text().equals("")) {
+				Log.d("VuelosAndroid", "VuelosJsoup - Origenes5: " + origenDestino.get(5).text());
+			}
+		} catch (IndexOutOfBoundsException ex1) {
+			Log.w("VuelosAndroid", "VuelosJsoup - Origenes5: " + "ERROR, Celda sin datos"); }
+		try {
+			if (!origenDestino.get(2).text().equals("")) {
+				Log.d("VuelosAndroid", "VuelosJsoup - Origenes6: " + origenDestino.get(6).text());
+			}
+		} catch (IndexOutOfBoundsException ex1) {
+			Log.w("VuelosAndroid", "VuelosJsoup - Origenes6: " + "ERROR, Celda sin datos"); }*/
 		String company = webAena.getNombreCompany(doc);
+
+		Log.d("VuelosAndroid", "VuelosJsoup - numeroAeropuertos: " + origenDestino.size());
+		Log.d("VuelosAndroid", "VuelosJsoup - numCeldas: " + tablaDatosVuelo.size());
 
 		return new DatosVuelo(nombreVuelo, tablaDatosVuelo, origenDestino,
 				company, pUrl);
@@ -353,7 +557,7 @@ public class VuelosJSoup {
 				company, url); /////////////////////////////////////////////////////////////////////////////////////////////
 	}
 
-	
+
 	/**
 	 * Recorrer multiples vuelos.
 	 * 
@@ -370,31 +574,31 @@ public class VuelosJSoup {
 	public List<DatosVuelo> recorrerMultiplesVuelos(String pCodVuelo, String pDia) throws IOException , NoHayVueloException{
 
 		// System.out.println("Tabla " + doc.select("table").size());
-				Document doc;
-				String url = webAena.getURLVuelo(pCodVuelo, pDia);
-				DatosVuelo vuelo1;
-				DatosVuelo vuelo2;
+		Document doc;
+		String url = webAena.getURLVuelo(pCodVuelo, pDia);
+		DatosVuelo vuelo1;
+		DatosVuelo vuelo2;
 
-				try {
-					doc = Jsoup.connect(url).timeout(1000000000).get();
-					Elements tds = webAena.obtenerDatosCeldaVuelosMultiples(doc);
+		try {
+			doc = Jsoup.connect(url).timeout(1000000000).get();
+			Elements tds = webAena.obtenerDatosCeldaVuelosMultiples(doc);
 
-					vuelo1 = new DatosVuelo(tds, "");
-					
-					vuelo2 = new DatosVuelo(tds, "");
+			vuelo1 = new DatosVuelo(tds, "");
 
-				} catch (IndexOutOfBoundsException ex1) {
-					throw new NoHayVueloException("No existe tal vuelo");
-				}
+			vuelo2 = new DatosVuelo(tds, "");
 
-				List<DatosVuelo> list = new ArrayList<DatosVuelo>();
-				list.add(vuelo1);
-				list.add(vuelo2);
+		} catch (IndexOutOfBoundsException ex1) {
+			throw new NoHayVueloException("No existe tal vuelo");
+		}
+
+		List<DatosVuelo> list = new ArrayList<DatosVuelo>();
+		list.add(vuelo1);
+		list.add(vuelo2);
 
 
 		return list;
 	}
-	
+
 	/**
 	 * Cambiar fecha to url.
 	 * 
@@ -405,18 +609,18 @@ public class VuelosJSoup {
 	 * @return the string
 	 */
 	public String cambiarFechaToUrl(String pUrl, String pFecha) {
-		
+
 		String year =  "20" + pFecha.substring(6);
 		String month= pFecha.substring(3, 5);
 		String day= pFecha.substring(0, 2);
 		String fechaModificada = year+month+day;
-		
+
 		String url2 = pUrl.replaceFirst("\\d{8}", fechaModificada);
-		
+
 		String newDate = year+"-"+month+"-"+day;
 		String url3= url2.replaceFirst("\\d{4}-\\d{2}-\\d{2}", newDate);
-		
-		
+
+
 		return url3;
 	}
 
