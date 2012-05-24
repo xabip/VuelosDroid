@@ -19,3 +19,4 @@
 	"Dimens.xml" && "ids.xml" from a example of the Navigation Bar
     Copyright 2011 Wglxy.com
  
+ 
