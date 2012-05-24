@@ -443,10 +443,6 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 			if(datos.getEscala()){
 				textEscala.setVisibility(View.VISIBLE);
 				textEscala.setText("Escala: " + escala);
-				/*if(datos.getEstadoVueloOrigen().equals("--")){
-					text2.setText("No hay datos");
-					text2.setPadding(0, 4, 0, 0);
-				}*/
 			}
 		}
 	}
@@ -840,26 +836,43 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 			if(datos.getEstadoVueloDestino().equals("--")){
 				noAlarma("El aviso de aterrizaje no funcionará");
 				ponerAlarma(datos, 2);
-			}
-			if(datos.getEstadoVueloOrigen().equals("--")){
+				botonAlarma = (ImageButton) findViewById(R.id.boton_resultado_alarma);
+				botonAlarma.setPressed(true);
+				botonAlarma.setSelected(true);
+				lay.setVisibility(View.GONE);
+				setLayout();
+			} else if(datos.getEstadoVueloOrigen().equals("--")){
 				noAlarma("El aviso de despege no funcionará");
 				ponerAlarma(datos, 1);
-			}
-			if(datos.getEstadoVueloDestino().equals("--") && datos.getEstadoVueloOrigen().equals("--")){
+				botonAlarma = (ImageButton) findViewById(R.id.boton_resultado_alarma);
+				botonAlarma.setPressed(true);
+				botonAlarma.setSelected(true);
+				lay.setVisibility(View.GONE);
+				setLayout();
+			} else if(datos.getEstadoVueloDestino().equals("--") && datos.getEstadoVueloOrigen().equals("--")){
 				noAlarma("No se pueden poner alarma a este vuelo");
 			}else {
 				ponerAlarma(datos, 0);
 				setContentView(R.layout.activity_resultado_vuelo);
-				lay = (LinearLayout) findViewById(R.id.layout_progress_vuelo_resultado);
-				lay2 = (LinearLayout) findViewById(R.id.layout_vuelo_resultado_sup);
-				layAlarmas = (LinearLayout) findViewById(R.id.layout_resultado_alarmas);
-				botonAlarma = (ImageButton) findViewById(R.id.boton_resultado_alarma);
 				botonAlarma.setPressed(true);
 				botonAlarma.setSelected(true);
-				Log.i(TAG, radAlarma.isChecked()+"");
-				lay.setVisibility(View.GONE);
-				setLayout();
+				
 			}
+			lay = (LinearLayout) findViewById(R.id.layout_progress_vuelo_resultado);
+			lay2 = (LinearLayout) findViewById(R.id.layout_vuelo_resultado_sup);
+			layAlarmas = (LinearLayout) findViewById(R.id.layout_resultado_alarmas);
+			botonAlarma = (ImageButton) findViewById(R.id.boton_resultado_alarma);
+			Log.i(TAG, radAlarma.isChecked()+"");
+			lay.setVisibility(View.GONE);
+			dw = new DemoPopupWindow(v);
+			dw.showLikeQuickAction();
+			dw.setOnDismissListener(new OnDismissListener() {
+				public void onDismiss() {
+					setLayout();
+				}
+			});
+			setLayout();
+			
 		}
 
 

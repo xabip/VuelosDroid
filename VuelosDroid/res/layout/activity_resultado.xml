@@ -97,7 +97,7 @@ See the License for the specific language governing permissions and
         android:visibility="gone">
 
         <TextView
-            android:id="@+id/text_resultado_progrees"
+            android:id="@+id/text_resultado_sin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="17dp"

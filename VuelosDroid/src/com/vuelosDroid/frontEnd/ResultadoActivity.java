@@ -16,6 +16,7 @@ See the License for the specific language governing permissions and
 
 package com.vuelosDroid.frontEnd;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -100,12 +101,17 @@ public class ResultadoActivity extends ResultadosAbstractActivity{
 		lay = (LinearLayout) findViewById(R.id.layout_progress_resultado);
 
 		//Coger los codigos
-		if(!origen.equals("")){
-			codOrigen = origen.substring((origen.indexOf("(")+1), origen.indexOf(")"));
-		}
-		if(!destino.equals("")){
-			codDestino = destino.substring((destino.indexOf("(")+1), destino.indexOf(")"));
-		}
+		try {
+			if(!origen.equals("")){
+				codOrigen = origen.substring((origen.indexOf("(")+1), origen.indexOf(")"));
+			}
+			if(!destino.equals("")){
+				codDestino = destino.substring((destino.indexOf("(")+1), destino.indexOf(")"));
+			}} catch (StringIndexOutOfBoundsException e) {
+
+			}
+
+
 		if(dia.equals("Mañana")){
 			dia = "manana";
 		}
@@ -165,9 +171,13 @@ public class ResultadoActivity extends ResultadosAbstractActivity{
 						ponerCargando();
 						Log.e(TAG, ""+	firstVisibleItem+visibleItemCount);
 					}*/
-					if (!cargando && (firstVisibleItem/pag)>15){
-						ponerCargando();
+					Log.d(TAG, "ResultadoActivity - OnScrollListener - OnScroll - pag: " + pag);
 
+					Log.d(TAG, "ResultadoActivity - OnScrollListener - OnScroll - firstVisibleItem/pag: " + firstVisibleItem/pag);
+					Log.d(TAG, "ResultadoActivity - OnScrollListener - OnScroll - (totalItemCount/pag)-10): " + ((totalItemCount/pag)-10));
+
+					if (!cargando && (firstVisibleItem/pag)>(totalItemCount/pag)-10){
+						ponerCargando();
 						loadData(codOrigen, codDestino, horario, dia.toLowerCase(), "", pag);
 						carga = true;
 						cargando = true; 
@@ -231,8 +241,15 @@ public class ResultadoActivity extends ResultadosAbstractActivity{
 							datosVuelos.get(i).setEstadoVueloDestino("NO");
 							tipo = "Cod";
 							TextView text = (TextView) findViewById(R.id.text_busqueda_resultado_vuelo);
-
 							text.setText("Código: " + datosVuelos.get(i).getNombreVuelo());
+						}
+					}
+					if(msg.what == 9){
+						for (int i = 0; i < datosVuelos.size(); i++	) {
+							datosVuelos.get(i).setEstadoVueloDestino("NOA");
+							tipo = "Cod";
+							//TextView text = (TextView) findViewById(R.id.text_busqueda_resultado_vuelo);
+							//text.setText("Código: " + datosVuelos.get(i).getNombreVuelo());
 						}
 					}
 					adapter = new miAdapter(context, datosVuelos);
@@ -244,7 +261,7 @@ public class ResultadoActivity extends ResultadosAbstractActivity{
 					if(!(msg.arg2==9)){
 						Log.d(TAG, "ResultadoActivity - Dentro del Handler - Pagina " + msg.arg1);
 						DatosGroup listaVuelosH;
-						listaVuelosH = (DatosGroup)msg.obj;
+						listaVuelosH = (DatosGroup) msg.obj;
 						quitarCargando(listaVuelosH);
 						Log.d(TAG, "ResultadoActivity - Dentro del Handler - Tamaño - " +listaVuelos.getValues().size());
 						Log.d(TAG, "ResultadoActivity - Dentro del Handler - Pagina " +listaVuelos.getValues().isEmpty()+"");
@@ -261,10 +278,25 @@ public class ResultadoActivity extends ResultadosAbstractActivity{
 				/*				if(!(msg.arg2==9)){
 					//quitarCargando(null);
 				}*/
-				Log.w(TAG, "ResultadoActivity - Dentro del Handler NUll");
-				lay.setVisibility(View.GONE);
-				LinearLayout layNo = (LinearLayout) findViewById(R.id.layout_resultado_sin_resultado);
-				layNo.setVisibility(View.VISIBLE);
+				if(msg.arg2==9){
+					quitarCargando(null);
+					Log.d(TAG, "ResultadoActivity - Dentro del Handler - Tamaño - " +listaVuelos.getValues().size());
+					Log.d(TAG, "ResultadoActivity - Dentro del Handler - Pagina " +listaVuelos.getValues().isEmpty()+"");
+					Log.d(TAG, "ResultadoActivity - Dentro del Handler - Pagina - Final del handler" +listaVuelos.getValues().size());
+					//progressDialog.dismiss();
+					//lay.setVisibility(View.GONE);
+					//adapter.notifyDataSetChanged();
+					cargando = false;
+				} else {
+					Log.w(TAG, "ResultadoActivity - Dentro del Handler NUll");
+					lay.setVisibility(View.GONE);
+					LinearLayout layNo = (LinearLayout) findViewById(R.id.layout_resultado_sin_resultado);
+					layNo.setVisibility(View.VISIBLE);
+					if (msg.what == 9){
+						TextView text = (TextView) findViewById(R.id.text_resultado_sin);
+						text.setText("Fallo al obtener los datos. Prueba a volver a hacer la búsqueda");
+					}
+				}
 			}
 		}
 	};
@@ -277,7 +309,15 @@ public class ResultadoActivity extends ResultadosAbstractActivity{
 				Log.e(TAG, "Dentro del new Thread");
 				Message msg = progressHandler.obtainMessage();
 				try {
+					Log.i(TAG, "ResultadoActivity - loadData - pag: " + pag);
+
 					msg.obj = getInfoVuelos(codOrigen, codDestino, horario, dia, company, tipo);
+					msg.arg1 = pTipo;
+					DatosGroup dats = (DatosGroup)msg.obj;
+					Log.d(TAG, dats.getValues().isEmpty()+"");
+					Log.i(TAG, "ResultadoActivity - loadData - Dentro del LoadData antes de mandar el mensaje");
+					//progressDialog = ProgressDialog.show(cont, "", "Por favor espere mientras se cargan los datos...", true);
+					progressHandler.sendMessage(msg);
 				} catch (NoHayMasPaginasDeVuelosException e) {
 					Log.e(TAG, "ResultadosActivity - loadData - NoHayMasPaginasDeVuelosExteption"+ e.toString());
 					msg.arg2=9;
@@ -287,13 +327,24 @@ public class ResultadoActivity extends ResultadosAbstractActivity{
 					//Log.e(TAG, "Dentro del LoadData antes de mandar el mensaje");
 					//progressDialog = ProgressDialog.show(cont, "", "Por favor espere mientras se cargan los datos...", true);
 					progressHandler.sendMessage(msg);
+					/*msg.arg1 = pTipo;
+					DatosGroup dats = (DatosGroup)msg.obj;
+					Log.d(TAG, dats.getValues().isEmpty()+"");
+					Log.i(TAG, "ResultadoActivity - loadData - Dentro del LoadData antes de mandar el mensaje");
+					//progressDialog = ProgressDialog.show(cont, "", "Por favor espere mientras se cargan los datos...", true);
+					progressHandler.sendMessage(msg);*/
+				} catch (NoHayVueloException e) {
+					Log.e(TAG, "ResultadoActivity - loadData2 - noHayVueloException " + e.getMessage());
+					msg.obj = null;
+					msg.what = 8;
+					progressHandler.sendMessage(msg);
+				} catch (IOException e){
+					Log.e(TAG, "ResultadoActivity - loadData2 - noHayVueloException " + e.getMessage());
+					msg.obj = null;
+					msg.what = 9;
+					progressHandler.sendMessage(msg);
 				}
-				msg.arg1 = pTipo;
-				DatosGroup dats = (DatosGroup)msg.obj;
-				Log.d(TAG, dats.getValues().isEmpty()+"");
-				Log.i(TAG, "ResultadoActivity - loadData - Dentro del LoadData antes de mandar el mensaje");
-				//progressDialog = ProgressDialog.show(cont, "", "Por favor espere mientras se cargan los datos...", true);
-				progressHandler.sendMessage(msg);
+
 
 			}}).start();
 	}
@@ -371,7 +422,7 @@ public class ResultadoActivity extends ResultadosAbstractActivity{
 				text.setText(datosVuelos.get(position).getAeropuertoDestino());
 				textCod.setText(or + "  -  " + de);
 				text3.setText("Hora de salida:   " + datosVuelos.get(position).getHoraOrigen());
-				
+
 				return convertView;
 
 

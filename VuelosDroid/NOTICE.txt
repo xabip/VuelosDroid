@@ -1,0 +1,21 @@
+    Android Wheel Control.
+    http://android-devblog.blogspot.com/2010/05/wheel-ui-contol.html
+    Copyright 2010 Yuri Kanivets 
+    Licensed under the Apache License, Version 2.0
+   
+    Android ViewPagerIndicator
+    http://viewpagerindicator.com/
+    Copyright (C) 2011 Patrik Akerfeldt
+ 	Copyright (C) 2011 Jake Wharton
+ 	Licensed under the Apache License, Version 2.0 (the "License");
+ 	
+	Jsoup 
+	http://jsoup.org/
+	Copyright (c) 2009, 2010, 2011, 2012 Jonathan Hedley <jonathan@hedley.net>
+ 	Licensed under The MIT License
+ 	
+	PopUpWindow by qberticus
+	
+	"Dimens.xml" && "ids.xml" from a example of the Navigation Bar
+    Copyright 2011 Wglxy.com
+ 

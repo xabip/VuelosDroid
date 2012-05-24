@@ -30,22 +30,13 @@ public class StartUpReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-		Log.i(TAG, "Broadcast: Señal de inicio recibida.");
+		Log.i(TAG, "StartUpReceiver - Broadcast: Señal de inicio recibida.");
 		
 		mContext = context;
 		Intent serviceIntent = new Intent();
-		serviceIntent.setAction("com.pack.VuelosAndroid.AlarmaService");
+		serviceIntent.setAction("com.pack.VuelosDroid.backEnd.behind.AlarmaService");
 		context.startService(serviceIntent);
 		
-		/*mContext = context;
-		String action = intent.getAction();
-		if (action.equalsIgnoreCase(BOOT_ACTION)) {
-			Log.i(TAG, "Broadcast: Señal de inicio recibida.");
-
-	        Intent serviceIntent = new Intent();
-	        serviceIntent.setAction("com.packAena.AenaService");
-	        context.startService(serviceIntent);
-		}*/
     }
  
 }

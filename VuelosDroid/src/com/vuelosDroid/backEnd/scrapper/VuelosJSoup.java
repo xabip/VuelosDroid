@@ -75,17 +75,19 @@ public class VuelosJSoup {
 			String pFecha,String pHora, String pCompany)
 					throws NoHayVueloException, IOException,
 					NoHayMasPaginasDeVuelosException {
-
+		Log.i("VuelosAndroid" , "VuelosJsoup - getListaVuelosSalidas - Inicio");
 		ArrayList<DatosVuelo> listaVuelos = new ArrayList<DatosVuelo>();
 		Elements haySiguientePag;
 		int pag = paginaActual;
 
 		if (pOrigen.equals(this.origen) && pDestino.equals(this.destino)) {
 			// es el mismo vuelo,
+			Log.i("VuelosAndroid" , "VuelosJsoup - getListaVuelosSalidas - pOrigen.equals(this.origen) && pDestino.equals(this.destino) true");
 			if (!this.hayMasPaginas) {
 				throw new NoHayMasPaginasDeVuelosException();
 			}
 		} else {
+			Log.i("VuelosAndroid" , "VuelosJsoup - getListaVuelosSalidas - pOrigen.equals(this.origen) && pDestino.equals(this.destino) false");
 			this.origen = pOrigen;
 			this.destino = pDestino;
 			// es un vuelo distinto, inicializo el num de pagina
@@ -93,6 +95,7 @@ public class VuelosJSoup {
 		}
 
 		do {
+			pag = paginaActual;
 			url = webAena.getURLListaVuelos(pDestino, pHora, pOrigen, pFecha,
 					pCompany, pag);
 
@@ -106,9 +109,12 @@ public class VuelosJSoup {
 				throw new NoHayVueloException();
 			}
 			for (int i = 0; i < datosVueloPorDia.size(); i++) {
+				Log.d("VuelosAndroid" , "VuelosJsoup - getListaVuelosSalidas - datosVueloPorDia.size() " + datosVueloPorDia.size());
+				
 				System.out.println(webAena.getDia(datosVueloPorDia.get(i)));// Dia
+				
 				if ((webAena.getDia(datosVueloPorDia.get(i)).equals(pFecha))) {
-
+					Log.i("VuelosAndroid" , "VuelosJsoup - getListaVuelosSalidas - dentro del dia");
 					Elements filaVuelo = webAena
 							.getFilaDatosVuelos(datosVueloPorDia.get(i)); // obtengo
 
@@ -121,26 +127,32 @@ public class VuelosJSoup {
 				}
 			}
 			haySiguientePag = webAena.getSiguientePagina(doc);
+			Log.d("VuelosAndroid" , "VuelosJsoup - getListaVuelosSalidas - haySiguientePah.size() + " + haySiguientePag.size());
 			this.paginaActual++;
+			Log.d("VuelosAndroid" , "VuelosJsoup - getListaVuelosSalidas - paginaActual: + " + paginaActual);
+
 			if (haySiguientePag.size() > 0) {
+				Log.i("VuelosAndroid" , "VuelosJsoup - getListaVuelosSalidas - haysigpag > 0");
 				this.hayMasPaginas = true;
 			} else {
+				Log.i("VuelosAndroid" , "VuelosJsoup - getListaVuelosSalidas - haysigpag > 0");
+
 				this.hayMasPaginas = false;
 			}
-
 			// haya mas paginas
 
 			System.out.println(paginaActual);
 			System.out.println("estoy " + listaVuelos.size() + " "
 					+ hayMasPaginas);
 		} while (listaVuelos.size() < 1 && hayMasPaginas);
+		Log.i("VuelosAndroid" , "VuelosJsoup - getListaVuelosSalidas - Final");
 		return listaVuelos;
 
 	}
 
 
 
-	public List<DatosVuelo> getListaVuelosOrigen(int limite, String pDestino,
+/*	public List<DatosVuelo> getListaVuelosOrigen(int limite, String pDestino,
 			String pHora, String pOrigen, String pDia, String pCompany)
 					throws NoHayVueloException, IOException {
 
@@ -194,7 +206,7 @@ public class VuelosJSoup {
 		return listaVuelos;
 
 	}
-
+*/
 
 	/**
 	 * Obtener todos los vuelos con origen en pOrigen, origen y dia son campos
@@ -240,6 +252,7 @@ public class VuelosJSoup {
 		}
 
 		do {
+			
 			url = webAena.getURLListaVuelosDestino(pDestino, pHora, pOrigen,
 					pFecha, pCompany, paginaActual);
 

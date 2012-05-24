@@ -1,0 +1,27 @@
+# built application files
+*.apk
+*.ap_
+
+# files for the dex VM
+*.dex
+
+# Java class files
+*.class
+
+# generated files
+bin/
+gen/
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Eclipse project files
+.classpath
+.project
+
+src/com/vuelosDroid/backEnd/scrapper/airportsUpdater
+src/com/vuelosDroid/backEnd/scrapper/airportsUpdater/*
+src/com/vuelosDroid/backEnd/behind/AlarmaService
+src/com/vuelosDroid/frontEnd/AlarmasActivity
+*.9.png
+

@@ -175,7 +175,7 @@ public class ResultadosAbstractActivity extends AbstractActivity {
 	}
 
 	public DatosGroup getInfoVuelos(String destino, String origen, String horario, String dia, String compania, String tipo) 
-			throws NoHayMasPaginasDeVuelosException{
+			throws NoHayMasPaginasDeVuelosException, NoHayVueloException, IOException{
 		Log.d(TAG, "ResultadoAbstractActivity - getInfoVuelos  - Todos los vuelos: destino: " + destino + " origen: " + origen + " horario: " + horario + 
 				" dia: " + dia +  " compañia: "+ compania);
 		formatearFecha(dia);
@@ -199,7 +199,14 @@ public class ResultadosAbstractActivity extends AbstractActivity {
 		}catch (NoHayMasPaginasDeVuelosException e){
 			Log.e(TAG, "ResultadosAbstractActivity - getInfoVuelos - NoHayMasPaginasDeVuelosExteption"+ e.getMessage());
 			throw e;
-		}catch (Exception e1) {
+		} catch (NoHayVueloException e){
+			Log.e(TAG, "ResultadosAbstractActivity - getInfoVuelos - NoHayVueloException"+ e.getMessage());
+			throw (e);
+		} catch (IOException e){
+			Log.e(TAG, "ResultadosAbstractActivity - getInfoVuelos - IOException"+ e.getMessage());
+			throw (e);
+		}
+		catch (Exception e1) {
 			Log.e(TAG, "ResultadoAbstractActivity - getInfoVuelos - FalloGeneral " + e1.getMessage());
 			e1.printStackTrace();
 		}

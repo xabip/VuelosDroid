@@ -34,8 +34,11 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.widget.Toast;
+import android.view.WindowManager;
+
 
 
 /**
@@ -65,6 +68,20 @@ public class PrincipalActivity extends AbstractActivity{
 		intent.putExtras(bundle);
 		startService(intent);
 		context = this;
+		Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+		Log.d(TAG, "PrincipalActivity - onCreate - densityDpi: " + getResources().getDisplayMetrics().densityDpi);
+		Log.d(TAG, "PrincipalActivity - onCreate - density: " + getResources().getDisplayMetrics().density); 
+
+		Log.d(TAG, "PrincipalActivity - onCreate - height: " + display.getHeight());
+		Log.d(TAG, "PrincipalActivity - onCreate - Width: " + display.getWidth());
+		Log.d(TAG, "PrincipalActivity - onCreate - PixelFormat: " + display.getPixelFormat());
+		Log.d(TAG, "PrincipalActivity - onCreate - RefreshState: " + display.getRefreshRate());
+		Log.d(TAG, "PrincipalActivity - onCreate - Id: " + display.getDisplayId());
+		Log.d(TAG, "PrincipalActivity - onCreate - Width: " + getResources().getDisplayMetrics().DENSITY_LOW + " " +
+				getResources().getDisplayMetrics().DENSITY_MEDIUM + " " + getResources().getDisplayMetrics().DENSITY_HIGH
+				+ " " + getResources().getDisplayMetrics().DENSITY_DEFAULT);
+
+
 		controlEstado();
 	}
 
