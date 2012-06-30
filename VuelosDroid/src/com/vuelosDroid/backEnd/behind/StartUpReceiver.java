@@ -33,8 +33,8 @@ public class StartUpReceiver extends BroadcastReceiver {
 		Log.i(TAG, "StartUpReceiver - Broadcast: Señal de inicio recibida.");
 		
 		mContext = context;
-		Intent serviceIntent = new Intent();
-		serviceIntent.setAction("com.pack.VuelosDroid.backEnd.behind.AlarmaService");
+		Intent serviceIntent = new Intent(context, AlarmaService.class);
+		serviceIntent.setAction("com.VuelosDroid.backEnd.behind.AlarmaService");
 		context.startService(serviceIntent);
 		
     }

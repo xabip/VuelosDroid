@@ -150,7 +150,7 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 			Log.d(TAG, "VueloResultadoActivity - Oncreate - Despues de cambiar url - url: " + url);
 
 		}
-		Log.e(TAG, "VueloResultadoActivity - onCreate - url: " + url);
+		//Log.e(TAG, "VueloResultadoActivity - onCreate - url: " + url);
 		if(!RED){
 			Toast toast1 = Toast.makeText(getApplicationContext(), "No hay red.", Toast.LENGTH_SHORT);
 			lay.setVisibility(View.GONE);
@@ -171,7 +171,7 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 			if (msg.obj != null) {
 				Log.i(TAG, "VueloResultadoActivity - progressHandler - Dentro del Handler");
 				datos = (DatosVuelo)msg.obj;
-				Log.e(TAG, "Final del handler"+ datos.getAeropuertoDestino());
+				//Log.e(TAG, "Final del handler"+ datos.getAeropuertoDestino());
 				//progressDialog.dismiss();
 				lay.setVisibility(View.GONE);
 				lay2.setVisibility(View.VISIBLE);
@@ -211,7 +211,7 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 			if (msg.obj != null) {
 				Log.i(TAG, "VueloResultadoActivity - progressHandler - Dentro del Handler");
 				datos = (DatosVuelo)msg.obj;
-				Log.e(TAG, "Final del handler"+ datos.getAeropuertoDestino());
+				//Log.e(TAG, "Final del handler"+ datos.getAeropuertoDestino());
 				Log.i(TAG, "VueloResultadoActivity - controlOperaciones - despues de la llamada al codigo");
 				//progressDialog.dismiss();
 				lay.setVisibility(View.GONE);
@@ -379,6 +379,13 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 				botonAlarma.setSelected(true);
 			}
 
+			String escala = datos.getAeropuertoIntermedio();
+			if(escala.contains("esti")){
+				escala = escala.replace("Destino:", "");
+			} else if(escala.contains("rige")){
+				escala = escala.replace("Origen:", "");
+			}
+
 			if (estado == ONTIME){
 				textEstado.setText("En Hora");
 				textEstado.setTextColor(Color.argb(255, 00, 150, 33));
@@ -392,9 +399,15 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 			} else if (estado == CANCELED){
 				textEstado.setText("Cancelado");
 				textEstado.setTextColor(Color.RED);
-				textEstado.setPadding(25, textEstado.getPaddingTop(), textEstado.getPaddingRight(), textEstado.getPaddingBottom());
-
-			}
+				textEstado.setPadding(25, textEstado.getPaddingTop(), 
+						textEstado.getPaddingRight(), textEstado.getPaddingBottom());
+				if (datos.getTipo() == DatosVuelo.ESCALANACIONAL){
+					textEstado.setText("Desviado");
+					textEstado.setTextColor(Color.BLUE);
+					/*text2.setText(" (desviado a: " + escala + ")");
+					text2.setPadding(0, 4, 0, 0);		*/	
+				}
+			} 
 
 			Log.d(TAG, "VueloResultadoActivity - setLayout - diferencia: " + 
 					getDiferencia(datos.getEstadoVueloOrigen(), datos.getHoraOrigen()));
@@ -405,7 +418,6 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 			content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
 			String dest = datos.getAeropuertoDestino();
 			String ori = datos.getAeropuertoOrigen();
-			String escala = datos.getAeropuertoIntermedio();
 			if (dest.contains("esti")){
 				dest = dest.replace("Destino:", "");
 			}
@@ -413,16 +425,13 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 			if(ori.contains("Origen:")){
 				ori = ori.replace("Origen:", "");
 			}
-			if(escala.contains("esti")){
-				escala = escala.replace("Destino:", "");
-			} else if(escala.contains("rige")){
-				escala = escala.replace("Origen:", "");
-			}
-			
+				
 
 			textCompany.setText(datos.getNombreVuelo() + "  -  " + datos.getNombreCompany());
 			text1.setText(ori);
-			text2.setText(datos.getEstadoVueloOrigen());
+			
+				text2.setText(datos.getEstadoVueloOrigen());
+			
 			text3.setText("Terminal: " + datos.getTerminalOrigen());
 			text4.setText("Puerta: " + datos.getPuertaOrigen());
 			textDiaOrigen.setText(datos.getFechaOrigen());
@@ -443,6 +452,9 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 			if(datos.getEscala()){
 				textEscala.setVisibility(View.VISIBLE);
 				textEscala.setText("Escala: " + escala);
+				/*if (datos.getTipo() == DatosVuelo.ESCALANACIONAL){
+					text2.setText(datos.getEstadoVueloOrigen() + " (desviado a: " + escala + ")");
+				}*/
 			}
 		}
 	}
@@ -582,10 +594,15 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 	}
 
 	public void guardarReciente(DatosVuelo pDatos){
+		Log.d(TAG, "VueloResultadoActivity - guardarReciente - inicio" + pDatos.getLinkInfoVuelo());
+
 		if(!pDatos.getAeropuertoDestino().equals("--") && !pDatos.getAeropuertoOrigen().equals("--")){
 			BusquedaRecienteSql alarms =  new BusquedaRecienteSql(this); 
 			SQLiteDatabase db = alarms.getWritableDatabase();
-			pDatos.setLinkInfoVuelo(url);
+			Log.d(TAG, "VueloResultadoActivity - guardarReciente urlIsEmpty" + url + ".");
+			if(!url.equals(" ")){
+				pDatos.setLinkInfoVuelo(url);
+			}
 			ContentValues cv = new ContentValues();
 			cv.put(BusquedaRecienteSql.URL, pDatos.getLinkInfoVuelo());
 			cv.put(BusquedaRecienteSql.CODIGOVUELO, pDatos.getNombreVuelo());
@@ -595,8 +612,8 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 			cv.put(BusquedaRecienteSql.HORADESTINO, pDatos.getHoraDestino());
 			cv.put(BusquedaRecienteSql.AEROPUERTODESTINO, pDatos.getAeropuertoDestino());
 			cv.put(BusquedaRecienteSql.AEROPUERTOORIGEN, pDatos.getAeropuertoOrigen());
-			Log.w(TAG, "VueloResultadoActivity - guardarReciente " + pDatos.getLinkInfoVuelo());
-			Log.w(TAG, "VueloResultadoActivity - guardarReciente " + url);
+			Log.d(TAG, "VueloResultadoActivity - guardarReciente " + pDatos.getLinkInfoVuelo());
+			Log.d(TAG, "VueloResultadoActivity - guardarReciente " + url);
 			//cv.put(BusquedaRecienteSql.ID, 0);
 			//cv.put(BusquedaRecienteSql.CODIGOVUELO, pDatos.getCodigo);
 			cv.put(BusquedaRecienteSql.DIA, "hoy");
@@ -609,6 +626,7 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 		AlarmasSqlAux alarms =  new AlarmasSqlAux(this); 
 		SQLiteDatabase db = alarms.getWritableDatabase();
 		ContentValues cv = new ContentValues();
+		
 		cv.put(AlarmasSqlAux.URL, pDatos.getLinkInfoVuelo());
 		cv.put(AlarmasSqlAux.NOMBREVUELO, pDatos.getNombreVuelo());
 		cv.put(AlarmasSqlAux.ALARMA, 1);
@@ -622,7 +640,8 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 		cv.put(AlarmasSqlAux.SALIDO, "no");
 		cv.put(AlarmasSqlAux.SONIDO, 1);
 		if (pTipo == 1){
-			Log.i(TAG, "VueloResultadoActivity - ponerAlarma - pTipo = 1");
+			Log.i(TAG, "VueloResultadoActivity - poner" +
+					"Alarma - pTipo = 1");
 			cv.put(AlarmasSqlAux.ATERRIZAR, 1);
 			cv.put(AlarmasSqlAux.DESPEGAR, 0);
 		} else if (pTipo == 2){
@@ -641,6 +660,7 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 		cv.put(AlarmasSqlAux.AEROPUERTOORIGEN, pDatos.getAeropuertoOrigen());
 		cv.put(AlarmasSqlAux.AEROPUERTODESTINO, pDatos.getAeropuertoDestino());
 		cv.put(AlarmasSqlAux.ESTADO, 0);
+		cv.put(AlarmasSqlAux.ALARMAVERDAD, 0);
 
 		db.insert("alarmas_aux", AlarmasSqlAux.URL, cv);
 		db.close();
@@ -648,6 +668,7 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 		//Creamos el intent necesario para lanzar el servicio y le metemos el bundle.
 		Intent intent = new Intent(this, AlarmaService.class);
 		startService(intent);
+		getAlarma();
 	}
 
 	public void ponerSeguimiento(DatosVuelo pDatos){
@@ -767,17 +788,12 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 			favorito = (ImageButton) findViewById(R.id.boton_resultado_favorito);
 			radMarcador.setChecked(true);
 			favorito.setPressed(true);
-
 			Log.i(TAG, radMarcador.isChecked()+"");
-
 			lay.setVisibility(View.GONE);
 			lay2.setVisibility(View.VISIBLE);
 			layAlarmas.setVisibility(View.VISIBLE);
-
 			setLayout();
-
 		}
-
 	}
 
 
@@ -849,7 +865,9 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 				botonAlarma.setSelected(true);
 				lay.setVisibility(View.GONE);
 				setLayout();
-			} else if(datos.getEstadoVueloDestino().equals("--") && datos.getEstadoVueloOrigen().equals("--")){
+			} else if(datos.getEstadoVueloDestino().equals("--") && 
+					datos.getEstadoVueloOrigen().equals("--") || 
+					estado == CANCELED){
 				noAlarma("No se pueden poner alarma a este vuelo");
 			}else {
 				ponerAlarma(datos, 0);

@@ -1,6 +1,6 @@
 /*
  Copyright 2012 Xabier Pena & Urko Guinea
- 
+
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -16,51 +16,63 @@ See the License for the specific language governing permissions and
 
 package com.vuelosDroid.backEnd.behind;
 
-import com.vuelosDroid.R;
-
-import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
+
+import com.vuelosDroid.R;
 
 public class MiReceiverAntelacion extends BroadcastReceiver {
 
 	Context mContext;
+	Context mContext2;
+
 	private static final String TAG = "VuelosAndroid";
 	private String origen;
 	private String destino;
 	private String hora;
 	private String url;
+	private int sonido;
 	private int id;
 	private int minutos;
+	public int alarma;
 	private int SIMPLE_NOTFICATION_ID;
 
+	/**
+	 * Constantes de estado
+	 */
+	public static final int SI = 1;
+	public static final int NO = 0;
 
 	@Override
 	public void onReceive(android.content.Context context, android.content.Intent intent) {
 		Log.i("VuelosAndroid", "MiReceiver - onReceive - recibida la alarma");
-		mContext = context;
-		int flags = intent.getFlags();
-		//String action = intent.getAction();
+		mContext2 = context;
+		try {
+			mContext = context.createPackageContext("com.pack.VuelosDroid", 0);
+		} catch (NameNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 		origen = intent.getStringExtra("origen");	
 		destino = intent.getStringExtra("destino");
 		hora = intent.getStringExtra("hora");
 		minutos = intent.getIntExtra("minutos", 0);
 		url = intent.getStringExtra("url");
 		id = intent.getIntExtra("id", 0);
-		Log.d("VuelosAndroid", "MiReceiverAntelacion - onReceive - origen: " + origen);
-		Log.d("VuelosAndroid", "MiReceiverAntelacion - onReceive - destino: " + destino);
-		Log.d("VuelosAndroid", "MiReceiverAntelacion - onReceive - hora: " + hora);
-		Log.d("VuelosAndroid", "MiReceiverAntelacion - onReceive - minutos: " + minutos);
+		alarma = intent.getIntExtra("alarma", 0);
+		sonido = intent.getIntExtra("sonido", 0);
+		Log.d(TAG, "MiReceiverAntelacion - onReceive - origen: " + origen);
+		Log.d(TAG, "MiReceiverAntelacion - onReceive - destino: " + destino);
+		Log.d(TAG, "MiReceiverAntelacion - onReceive - hora: " + hora);
+		Log.d(TAG, "MiReceiverAntelacion - onReceive - minutos: " + minutos);
+		Log.d(TAG, "MiReceiverAntelacion - onReceive - alarma: " + alarma);
 
 		notificar();
 
@@ -78,7 +90,7 @@ public class MiReceiverAntelacion extends BroadcastReceiver {
 				text = text.replace("Origen:", "");
 			}
 
-			final Context context = mContext;
+			final Context context = mContext2;
 			String ns = Context.NOTIFICATION_SERVICE;
 			int icono = R.drawable.ic_launcher;
 			CharSequence contentTitle = text + " -" + text2;
@@ -107,45 +119,59 @@ public class MiReceiverAntelacion extends BroadcastReceiver {
 			mNotificacion.flags |= Notification.FLAG_AUTO_CANCEL;
 
 			//Añadir sonido, vibración y luces
-			mNotificacion.defaults |= Notification.DEFAULT_SOUND;
+			if(sonido == SI){
+				mNotificacion.defaults |= Notification.DEFAULT_SOUND;
+			}
 			mNotificacion.defaults |= Notification.DEFAULT_VIBRATE;
 			mNotificacion.defaults |= Notification.DEFAULT_LIGHTS;
 			mNotificacion.defaults |= Notification.FLAG_INSISTENT;
-			mNotificacion.tickerText = ("El vuelo " +  text + " -" + text2 + " saldrá en: " + minutos + " minutos");
+			mNotificacion.tickerText = ("El vuelo " +  text + " -" + text2 + " saldrá en: " + getMin(minutos));
 			mNotificationManager.notify(id, mNotificacion);
 
-			/*AlertDialog.Builder alertbox = new AlertDialog.Builder(context);
-			alertbox.setMessage("Aviso de vuelo");
-			alertbox.setTitle("El vuelo " +  text + " -" + text2 + " saldrá en: " + minutos + " minutos");
-			alertbox.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface arg0, int arg1) {
-	
+			Bundle bund = new Bundle();
+			bund.putString("hora", this.hora);
+			bund.putString("origen", origen);
+			bund.putString("destino", destino);
+			bund.putInt("minutos", minutos);
+			bund.putString("url", url);
+			bund.putString("dia", "hoy");
+			bun.putInt("id", id);
+			bund.putInt("alarma", alarma);
+			bund.putInt("sonido", sonido);
+
+			if(alarma == SI){
+				Intent serviceIntent = new Intent(context, AntelacionActivity.class);
+				serviceIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				serviceIntent.putExtras(bund);
+				serviceIntent.setAction("com.VuelosDroid.backEnd.behind.AntelacionActivity");
+				context.startActivity(serviceIntent);
+			}
+		}
+	}
+	public String getMin (int pMin){
+		if (pMin == 0){
+			return "0 mins";
+		} else {
+			if (pMin / 60 == 0){
+				if (pMin % 60 == 1){
+					return "1 minuto";
+				} else {
+					return (pMin % 60 + " minuto");
 				}
-			});
-	
-			alertbox.setNegativeButton("Retrasar", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface arg0, int arg1) {
-					Bundle bun = new Bundle();
-					bun.putString("hora", MiReceiverAntelacion.this.hora);
-					bun.putString("origen", origen);
-					bun.putString("destino", destino);
-					bun.putInt("minutos", minutos - 10);
-					bun.putString("url", url);
-					bun.putString("dia", "hoy");
-					Intent intentA = new Intent(context, MiReceiverAntelacion.class);
-					intentA.putExtras(bun);
-					if (minutos > 11) {
-						//intentA.set(getApplicationContext(), com.vuelosDroid.frontEnd.VueloResultadoActivity.class);
-	
-						PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id + 999, intentA,
-								PendingIntent.FLAG_CANCEL_CURRENT);
-						AlarmManager alarmManager = (AlarmManager) context.getSystemService(Activity.ALARM_SERVICE);
-						alarmManager.set(AlarmManager.RTC_WAKEUP,
-								System.currentTimeMillis() + (1 * 100000), pendingIntent);
-					}
+			}
+			else if (pMin / 60 == 1){
+				if (pMin % 60 == 1){
+					return "1 hora y un 1 minuto";
+				} else {
+					return ("1 hora " + pMin % 60 + " minutos");
 				}
-			});
-			alertbox.show();*/
+			} else {
+				if (pMin % 60 == 1){
+					return (pMin/60 + " hora " + " 1 minuto");
+				} else {
+					return (pMin/60 + " hora " + pMin % 60 + " minutos");
+				}
+			}
 		}
 	}
 }

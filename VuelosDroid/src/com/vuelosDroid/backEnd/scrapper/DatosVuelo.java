@@ -82,6 +82,9 @@ public class DatosVuelo {
 	/** Escala */
 	Boolean escala = false;
 
+	/** Tipo de escala */
+	int tipo = 0;
+	public static final int ESCALANACIONAL = 1;
 
 
 	/**
@@ -139,6 +142,31 @@ public class DatosVuelo {
 			
 			// Si es de origen español
 			if(estadoA.contains("spegado") || estadoA.contains("alida") || estadoA.contains("celado")){
+				if(estadoA.contains("celado")){
+					if(comprueba(tablaDatosVuelo, 11)){
+						if(tablaDatosVuelo.get(11).text().contains("rizado") || 
+								(tablaDatosVuelo.get(11).text().contains("legada"))){
+							this.setTipo(ESCALANACIONAL);
+							this.setEstadoVueloDestino(tablaDatosVuelo.get(11).text());
+							if(comprueba(tablaDatosVuelo, 6)){
+								this.setFechaDestino(tablaDatosVuelo.get(6).text());
+								this.setFechaOrigen(tablaDatosVuelo.get(6).text());
+							}
+							if(comprueba(tablaDatosVuelo, 7)){
+								this.setHoraDestino(tablaDatosVuelo.get(7).text());
+							}
+							if(comprueba(tablaDatosVuelo, 8)){
+								this.setTerminalDestino(tablaDatosVuelo.get(8).text());
+							}
+							if(comprueba(tablaDatosVuelo, 9)){
+								this.setSalaDestino(tablaDatosVuelo.get(9).text());
+							}
+							if(comprueba(tablaDatosVuelo, 10)){
+								this.setCintaDestino(tablaDatosVuelo.get(10).text());
+							}
+						}
+					}
+				}
 				if (comprueba(origenDestino, 0)){
 					this.setAeropuertoOrigen(origenDestino.get(0).text());
 				}
@@ -624,6 +652,14 @@ public class DatosVuelo {
 		this.aeropuertoIntermedio = aeropuertoIntermedio;
 	}
 
+
+	public int getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(int tipo) {
+		this.tipo = tipo;
+	}
 
 	private boolean comprueba (Elements pDatos, int pPos){
 		try {

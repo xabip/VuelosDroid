@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <!--
  Copyright 2012 Xabier Pena & Urko Guinea
  
@@ -14,7 +13,7 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
    limitations under the License.
- -->
+-->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
@@ -44,182 +43,230 @@ See the License for the specific language governing permissions and
             android:src="@drawable/title_search" />
     </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/relative_layout_preferencias_alarma_sonido"
+    <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center_vertical"
-        android:orientation="horizontal" >
+        android:layout_height="fill_parent"
+         >
 
-        <TextView
-            style="@style/TextViewt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="Sonido" />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" 
+            android:orientation="vertical">
 
-        <CheckBox
-            android:id="@+id/checkbox_preferencias_alarma_sonido"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true" />
-    </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/relative_layout_preferencias_alarma_sonido"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
 
-    <ImageView style="@style/PreferencesSeparator" />
+                <TextView
+                    style="@style/TextViewt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="Sonido" />
 
-    <RelativeLayout
-        android:id="@+id/relative_layout_preferencias_alarma_antelacion"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal" >
+                <CheckBox
+                    android:id="@+id/checkbox_preferencias_alarma_sonido"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true" />
+            </RelativeLayout>
 
-        <TextView
-            style="@style/TextViewt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="Aviso con antelación" />
+            <ImageView style="@style/PreferencesSeparator" />
 
-        <!--
+            <RelativeLayout
+                android:id="@+id/relative_layout_preferencias_alarma_antelacion"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <TextView
+                    style="@style/TextViewt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="Aviso con antelación" />
+
+                <!--
             <CheckBox
             android:id="@+id/checkbox_preferencias_alarma_antelacion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true" 
             />
-        -->
-    </RelativeLayout>
+                -->
+            </RelativeLayout>
+            
+            
+             <RelativeLayout
+                android:id="@+id/relative_layout_preferencias_alarma_alarma"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
 
-    <RelativeLayout
-        android:id="@+id/relative_layout_preferencias_alarma_antelacion_minutos"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginRight="5dp"
-        android:orientation="vertical" >
+              
+                 <TextView
+                    style="@style/TextViewt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="Modo Alarma"/>
 
-        <TextView
-            android:id="@+id/text_preferencias_alarma_minutos"
-            style="@style/TextViewt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:text="Minutos: " />
+                <CheckBox
+                    android:id="@+id/checkbox_preferencias_alarmas_alarma"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true" />
+            </RelativeLayout>
 
-        <TextView
-            android:id="@+id/text_preferencias_alarma_minutos_numero"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="15dp"
-            android:text="0" />
+            <RelativeLayout
+                android:id="@+id/relative_layout_preferencias_alarma_antelacion_minutos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="5dp"
+                android:orientation="vertical" >
 
-        <SeekBar
-            android:id="@+id/seekBar_preferencias_alarma_minutos"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/text_preferencias_alarma_minutos"
-            android:max="240"
-            android:progress="0" />
-    </RelativeLayout>
+                <TextView
+                    android:id="@+id/text_preferencias_alarma_minutos"
+                    style="@style/TextViewt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:text="Tiempo de antelación: " />
 
-    <ImageView style="@style/PreferencesSeparator" />
+                <TextView
+                    android:id="@+id/text_preferencias_alarma_minutos_numero"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="15dp"
+                    android:text="0" />
 
-    <RelativeLayout
-        android:id="@+id/relative_layout_preferencias_alarma_cambios"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal" >
+                <SeekBar
+                    android:id="@+id/seekBar_preferencias_alarma_minutos"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/text_preferencias_alarma_minutos"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="5dp"
+                    android:paddingRight="5dp"
+                    android:max="240"
+                    android:progress="0" />
+            </RelativeLayout>
 
-        <TextView
-            style="@style/TextViewt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="Cambios en el estado del vuelo" />
-    </RelativeLayout>
+            <ImageView style="@style/PreferencesSeparator" />
 
-    <RelativeLayout
-        android:id="@+id/relative_layout_preferencias_alarma_cambios_despege"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="2dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal" >
+            <RelativeLayout
+                android:id="@+id/relative_layout_preferencias_alarma_cambios"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
 
-        <TextView
-            style="@style/TextViewt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="Aviso al despegar" />
+                <TextView
+                    style="@style/TextViewt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="Cambios en el estado del vuelo" />
+            </RelativeLayout>
 
-        <CheckBox
-            android:id="@+id/checkbox_preferencias_alarmas_cambios_despege"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true" />
-    </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/relative_layout_preferencias_alarma_cambios_despege"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="2dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
 
-    <RelativeLayout
-        android:id="@+id/relative_layout_preferencias_alarma_cambios_aterrizaje"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="2dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal" >
+                <TextView
+                    style="@style/TextViewt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="Aviso al despegar" />
 
-        <TextView
-            style="@style/TextViewt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="Aviso al aterrizar" />
+                <CheckBox
+                    android:id="@+id/checkbox_preferencias_alarmas_cambios_despege"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true" />
+            </RelativeLayout>
 
-        <CheckBox
-            android:id="@+id/checkbox_preferencias_alarma_cambios_aterrizaje"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true" />
-    </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/relative_layout_preferencias_alarma_cambios_aterrizaje"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="2dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
 
-    <RelativeLayout
-        android:id="@+id/relative_layout_preferencias_alarma_cambios_retrasos"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="2dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal" >
+                <TextView
+                    style="@style/TextViewt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="Aviso al aterrizar" />
 
-        <TextView
-            style="@style/TextViewt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="Aviso de retrasos" />
+                <CheckBox
+                    android:id="@+id/checkbox_preferencias_alarma_cambios_aterrizaje"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true" />
+            </RelativeLayout>
 
-        <CheckBox
-            android:id="@+id/checkbox_preferencias_alarma_cambios"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true" />
-    </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/relative_layout_preferencias_alarma_cambios_retrasos"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="2dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <TextView
+                    style="@style/TextViewt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="Aviso de retrasos" />
+
+                <CheckBox
+                    android:id="@+id/checkbox_preferencias_alarma_cambios"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true" />
+            </RelativeLayout>
+            
+        <!--     <Button android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Volver"
+                    android:onClick="onClickGuardar"
+                    android:gravity="center_horizontal"
+                    android:layout_gravity="center_horizontal"/> -->
+            
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

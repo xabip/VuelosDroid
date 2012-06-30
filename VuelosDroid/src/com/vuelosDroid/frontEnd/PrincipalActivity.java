@@ -1,6 +1,6 @@
 /*
  Copyright 2012 Xabier Pena & Urko Guinea
- 
+
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -217,7 +217,8 @@ public class PrincipalActivity extends AbstractActivity{
 	private void actualizarAeropuertos(final boolean pTipo){
 		Log.i(TAG, "PrincipalActivity - actualizarAeropuertos - Dentro de actualizar principio");
 		if (pTipo == ORIGENES){
-			Toast toast = Toast.makeText(context, "Actualizando Aeropuertos.", Toast.LENGTH_SHORT);
+			Toast toast = Toast.makeText(context, "Actualizando Aeropuertos - Fase 1 de 2 " +
+					"Se realizará en segundo plano. ", Toast.LENGTH_LONG);
 			toast.show();
 		}
 		new Thread(new Runnable(){
@@ -275,10 +276,10 @@ public class PrincipalActivity extends AbstractActivity{
 					}
 				} 
 			} else{
-			Log.w(TAG, "Dentro del Handler NUll " + msg.obj);
+				Log.w(TAG, "Dentro del Handler NUll " + msg.obj);
+			}
 		}
-	}
-};
+	};
 
 
 } 

@@ -35,13 +35,15 @@ public class DatosAlarma {
 	private int estado;
 	private int aterrizadoSin;
 	private int despegadoSin;
+	private int alarmaVerdad;
 	
 	public DatosAlarma(DatosVuelo pDatos, int pId){
-		this(pDatos, pId, 0, 0, 0, 0, 0, 0, 0, 0);
+		this(pDatos, pId, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	}
 	
 	public DatosAlarma(DatosVuelo pDatos, int pId, int pSonido, int pAterrizar,
-						int pDespegar, int pCambios,int pMinutos, int pEstado, int pAterrizadoSin, int pDespegadoSin){
+						int pDespegar, int pCambios,int pMinutos, int pEstado, 
+						int pAterrizadoSin, int pDespegadoSin, int pAlarmaVerdad){
 		this.datos = pDatos;
 		this.id = pId;
 		this.sonido = pSonido;
@@ -52,6 +54,7 @@ public class DatosAlarma {
 		this.estado = pEstado;
 		this.setAterrizadoSin(pAterrizadoSin);
 		this.setDespegadoSin(pDespegadoSin);
+		this.alarmaVerdad = pAlarmaVerdad;
 	}
 
 	public DatosVuelo getDatos() {
@@ -132,6 +135,14 @@ public class DatosAlarma {
 
 	public void setDespegadoSin(int despegadoSin) {
 		this.despegadoSin = despegadoSin;
+	}
+
+	public int getAlarmaVerdad() {
+		return alarmaVerdad;
+	}
+
+	public void setAlarmaVerdad(int alarmaVerdad) {
+		this.alarmaVerdad = alarmaVerdad;
 	}
 	
 }

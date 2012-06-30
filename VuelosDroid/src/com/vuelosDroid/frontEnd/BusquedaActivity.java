@@ -69,7 +69,16 @@ public class BusquedaActivity extends AbstractActivity {
 
 		titleIndicator.setTopPadding(3);
 		//titleIndicator.setTitlePadding(1);
-		titleIndicator.setTextSize(16);
+		Log.d(TAG, "PrincipalActivity - onCreate - densityDpi: " + getResources().getDisplayMetrics().densityDpi);
+		if(getResources().getDisplayMetrics().densityDpi < 150 ){
+			titleIndicator.setTextSize(14);
+		} else if (getResources().getDisplayMetrics().densityDpi > 150 && getResources().getDisplayMetrics().densityDpi < 230){
+			titleIndicator.setTextSize(16);
+		} else {
+			titleIndicator.setTextSize(18);
+		}
+
+		//titleIndicator.setTextSize(16);
 		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(titleIndicator.getWindowToken(), 0);
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);

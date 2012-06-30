@@ -103,7 +103,7 @@ See the License for the specific language governing permissions and
             android:textSize="17dp"
             android:gravity="center"
             android:layout_gravity="center"
-            android:text="No hay nigún vuelo que coincida con esos datos" />
+            android:text="No hay nigún vuelo que coincida con los datos introducidos." />
     </LinearLayout>
 
     <ListView

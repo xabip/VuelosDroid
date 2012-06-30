@@ -50,7 +50,8 @@ See the License for the specific language governing permissions and
         android:id="@+id/titulos"
         style="@style/CustomTitlePageIndicator"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content" 
+       />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/columnas"

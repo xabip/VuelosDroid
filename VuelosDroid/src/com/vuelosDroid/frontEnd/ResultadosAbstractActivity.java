@@ -218,7 +218,7 @@ public class ResultadosAbstractActivity extends AbstractActivity {
 		pDia = pDia.toLowerCase();
 		formatearFecha(pDia);
 		Log.d(TAG, "ResultadosAbstractActivity - cambiarFechaToUrl - pDia: " + pDia);
-		Log.e(TAG, "ResultadosAbstractActivity - cambiarFechaToUrl - horaFormat: " + horaFormat);
+		//Log.e(TAG, "ResultadosAbstractActivity - cambiarFechaToUrl - horaFormat: " + horaFormat);
 		return vuelosJsoup.cambiarFechaToUrl(pUrl, horaFormat);
 	}
 
@@ -226,7 +226,7 @@ public class ResultadosAbstractActivity extends AbstractActivity {
 		pDia = pDia.toLowerCase();
 		formatearFecha(pDia);
 		Log.d(TAG, "ResultadosAbstractActivity - cambiarFechaToUrl - pDia: " + pDia);
-		Log.e(TAG, "ResultadosAbstractActivity - cambiarFechaToUrl - horaFormat: " + horaFormat);
+		//Log.e(TAG, "ResultadosAbstractActivity - cambiarFechaToUrl - horaFormat: " + horaFormat);
 		return vuelosJsoup.cambiarFechaToUrl(pUrl, horaFormat);
 	}
 

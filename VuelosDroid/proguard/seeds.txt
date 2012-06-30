@@ -42,6 +42,7 @@ com.viewpagerindicator.TitlePageIndicator$IndicatorStyle: com.viewpagerindicator
 com.viewpagerindicator.TitlePageIndicator$SavedState
 com.viewpagerindicator.TitlePageIndicator$SavedState: android.os.Parcelable$Creator CREATOR
 com.vuelosDroid.backEnd.behind.AlarmaService
+com.vuelosDroid.backEnd.behind.AntelacionActivity
 com.vuelosDroid.backEnd.behind.CargaVuelosService
 com.vuelosDroid.backEnd.behind.InternetReceiver
 com.vuelosDroid.backEnd.behind.MiReceiver
@@ -68,6 +69,7 @@ com.vuelosDroid.frontEnd.BusquedaActivity: void onClickPreferencias(android.view
 com.vuelosDroid.frontEnd.PreferenciasActivity
 com.vuelosDroid.frontEnd.PreferenciasActivity: void onClickActualizar(android.view.View)
 com.vuelosDroid.frontEnd.PreferenciasActivity: void onClickSearch(android.view.View)
+com.vuelosDroid.frontEnd.PreferenciasActivity: void onClickGuardar(android.view.View)
 com.vuelosDroid.frontEnd.PrincipalActivity
 com.vuelosDroid.frontEnd.PrincipalActivity: void onClickActualizarAeropuertos(android.view.View)
 com.vuelosDroid.frontEnd.ResultadoActivity

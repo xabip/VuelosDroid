@@ -34,8 +34,8 @@ public class InternetReceiver extends BroadcastReceiver{
 		mContext = context;
 		if(tieneRed()){
 			Log.i("VuelosAndroid", "InternetReceiver - onReceive - conRed");
-			Intent serviceIntent = new Intent();
-			serviceIntent.setAction("com.pack.VuelosDroid.backEnd.behind.AlarmaService");
+			Intent serviceIntent = new Intent(context, AlarmaService.class);
+			serviceIntent.setAction("com.VuelosDroid.backEnd.behind.AlarmaService");
 			context.startService(serviceIntent);
 		}
 	}

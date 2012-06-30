@@ -890,7 +890,7 @@ com.viewpagerindicator.R$dimen:
 com.viewpagerindicator.R$drawable
 com.viewpagerindicator.R$id
 com.viewpagerindicator.R$integer:
-    646:646:public R$integer()
+    636:636:public R$integer()
 com.viewpagerindicator.R$layout
 com.viewpagerindicator.R$raw
 com.viewpagerindicator.R$string
@@ -931,7 +931,7 @@ com.viewpagerindicator.R$style:
     public static final int Widget_TabPageIndicator
     public static final int Widget_TabPageIndicator_Text
     public static final int autocomplete_style
-    720:720:public R$style()
+    710:710:public R$style()
 com.viewpagerindicator.R$styleable:
     public static final int BlocksLayout_columns
     public static final int CirclePageIndicator_centered
@@ -968,7 +968,7 @@ com.viewpagerindicator.R$styleable:
     public static final int ViewPagerIndicator_vpiTabPageIndicatorStyle
     public static final int ViewPagerIndicator_vpiTabTextStyle
     public static final int ViewPagerIndicator_vpiTitlePageIndicatorStyle
-    760:760:public R$styleable()
+    750:750:public R$styleable()
 com.viewpagerindicator.TabPageIndicator:
     55:56:public TabPageIndicator(android.content.Context)
     129:135:private void addTab(java.lang.String,int)
@@ -1055,6 +1055,7 @@ com.vuelosDroid.backEnd.behind.AlarmasSql:
     public static final java.lang.String AEROPUERTODESTINO
     public static final java.lang.String ESTADOORIGEN
     public static final java.lang.String ESTADODESTINO
+    public static final java.lang.String ID
     public static final java.lang.String ALARMA
     public static final java.lang.String EMPEZADO
     public static final java.lang.String SALIDO
@@ -1085,8 +1086,13 @@ com.vuelosDroid.backEnd.behind.AlarmasSqlAux:
     public static final java.lang.String MINUTOS
     public static final java.lang.String DESPEGADO
     public static final java.lang.String ESTADO
+    public static final java.lang.String ALARMAVERDAD
     public static final java.lang.String TAG
-    64:65:public AlarmasSqlAux(android.content.Context,java.lang.String,android.database.sqlite.SQLiteDatabase$CursorFactory,int)
+    65:66:public AlarmasSqlAux(android.content.Context,java.lang.String,android.database.sqlite.SQLiteDatabase$CursorFactory,int)
+com.vuelosDroid.backEnd.behind.AntelacionActivity:
+    public static final java.lang.String TAG
+    public static final int SI
+    public static final int NO
 com.vuelosDroid.backEnd.behind.BusquedaRecienteSql:
     private static final java.lang.String DATABASE_NAME
     public static final java.lang.String URL
@@ -1120,22 +1126,26 @@ com.vuelosDroid.backEnd.behind.CargaVuelosService:
     private static final int MUYBAJA
     private static final int TERMINADO
 com.vuelosDroid.backEnd.behind.DatosAlarma:
-    62:63:public void setDatos(com.vuelosDroid.backEnd.scrapper.DatosVuelo)
-    70:71:public void setId(int)
-    78:79:public void setSonido(int)
-    86:87:public void setAterrizar(int)
-    94:95:public void setDespegar(int)
-    102:103:public void setCambios(int)
-    110:111:public void setMinutos(int)
+    65:66:public void setDatos(com.vuelosDroid.backEnd.scrapper.DatosVuelo)
+    73:74:public void setId(int)
+    81:82:public void setSonido(int)
+    89:90:public void setAterrizar(int)
+    97:98:public void setDespegar(int)
+    105:106:public void setCambios(int)
+    113:114:public void setMinutos(int)
+    145:146:public void setAlarmaVerdad(int)
 com.vuelosDroid.backEnd.behind.MiReceiver:
     private static final java.lang.String TAG
 com.vuelosDroid.backEnd.behind.MiReceiverAntelacion:
     private static final java.lang.String TAG
     private int SIMPLE_NOTFICATION_ID
+    public static final int SI
+    public static final int NO
 com.vuelosDroid.backEnd.behind.StartUpReceiver:
     private static final java.lang.String TAG
 com.vuelosDroid.backEnd.scrapper.DatosVuelo:
-    616:617:public void setEscala(java.lang.Boolean)
+    public static final int ESCALANACIONAL
+    644:645:public void setEscala(java.lang.Boolean)
 com.vuelosDroid.backEnd.scrapper.NoHayMasPaginasDeVuelosException:
     private static final long serialVersionUID
 com.vuelosDroid.backEnd.scrapper.NoHayVueloException:
@@ -1144,7 +1154,6 @@ com.vuelosDroid.backEnd.scrapper.NoHayVueloException:
     40:42:public NoHayVueloException(java.lang.Throwable)
 com.vuelosDroid.backEnd.scrapper.VuelosJSoup:
     java.lang.String search
-    157:204:public java.util.List getListaVuelosOrigen(int,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String)
 com.vuelosDroid.backEnd.scrapper.airportsUpdater.Aeropuerto:
     38:39:public void setNombre(java.lang.String)
     44:45:public void setCod(java.lang.String)
@@ -1161,19 +1170,18 @@ com.vuelosDroid.frontEnd.AlarmasActivity:
     private static final int DELAYED
     private static final int CANCELED
     protected com.vuelosDroid.backEnd.scrapper.DatosGroup listaVuelos
-    343:343:public void setAdapAlarm()
-    346:391:public void setListenersSeguimiento()
-    394:433:public void setListenersAlarma()
-    516:521:public void borrarSeguimiento(java.lang.String)
-    616:624:public void setRed()
-    653:653:public boolean verSiCancelado(java.lang.String)
-    657:657:public boolean verSiRetrasado(java.lang.String)
-com.vuelosDroid.frontEnd.AlarmasActivity$3
+    391:391:public void setAdapAlarm()
+    394:439:public void setListenersSeguimiento()
+    442:481:public void setListenersAlarma()
+    663:671:public void setRed()
+    700:700:public boolean verSiCancelado(java.lang.String)
+    704:704:public boolean verSiRetrasado(java.lang.String)
 com.vuelosDroid.frontEnd.AlarmasActivity$4
 com.vuelosDroid.frontEnd.AlarmasActivity$5
 com.vuelosDroid.frontEnd.AlarmasActivity$6
+com.vuelosDroid.frontEnd.AlarmasActivity$7
 com.vuelosDroid.frontEnd.AlarmasActivity$DemoPopupWindow:
-    946:947:public void onClickPopupResumen(android.view.View)
+    1011:1012:public void onClickPopupResumen(android.view.View)
 com.vuelosDroid.frontEnd.MenuContextual:
     101:102:public void setBackgroundDrawable(android.graphics.drawable.Drawable)
     121:124:public void setContentView(int)
@@ -1188,8 +1196,8 @@ com.vuelosDroid.frontEnd.ResultadosAbstractActivity:
 com.vuelosDroid.frontEnd.ViewPagerAdapter:
     android.widget.AutoCompleteTextView auto
     android.widget.ArrayAdapter adapter
-    111:111:public void onClickBorrar(android.view.View)
-    733:753:public void borrarCampos()
+    118:118:public void onClickBorrar(android.view.View)
+    771:791:public void borrarCampos()
 com.vuelosDroid.frontEnd.VueloResultadoActivity:
     android.widget.LinearLayout layManana
     private static final int ONTIME
@@ -1197,8 +1205,8 @@ com.vuelosDroid.frontEnd.VueloResultadoActivity:
     private static final int CANCELED
     private static final int DESPEGADO
     private static final int ATERRIZADO
-    489:496:public void setAlarma(java.lang.String)
-    499:519:public boolean getSeguimiento()
+    501:508:public void setAlarma(java.lang.String)
+    511:531:public boolean getSeguimiento()
 kankan.wheel.R:
     10:10:public R()
 kankan.wheel.R$anim
@@ -1210,6 +1218,7 @@ kankan.wheel.R$dimen
 kankan.wheel.R$drawable:
     public static final int aterrizar
     public static final int background_gris
+    public static final int background_gris2
     public static final int background_header
     public static final int background_indicadores
     public static final int background_negro
@@ -1224,6 +1233,7 @@ kankan.wheel.R$drawable:
     public static final int btn_radio
     public static final int btn_radio_off
     public static final int btn_radio_on
+    public static final int dedo3
     public static final int despegar
     public static final int edited_radio
     public static final int footer_alarma
@@ -1231,17 +1241,12 @@ kankan.wheel.R$drawable:
     public static final int footer_favorito
     public static final int footer_hoy
     public static final int ic_launcher
-    public static final int ic_maps_indicator_current_position_anim3
     public static final int ic_maps_indicator_current_position_anim3_
     public static final int ic_maps_indicator_current_position_anim3_ch
     public static final int ic_menu_alarm_a
     public static final int ic_menu_alarm_pressed_a
-    public static final int ic_menu_alarm_unpressed
-    public static final int ic_menu_delete
     public static final int ic_menu_hoy
     public static final int ic_menu_manana
-    public static final int ic_menu_plane_atterrizar_pressed
-    public static final int ic_menu_plane_atterrizar_unpressed
     public static final int ic_menu_plane_despegar_pressed
     public static final int ic_menu_plane_despegar_unpressed
     public static final int ic_menu_preferences
@@ -1261,13 +1266,9 @@ kankan.wheel.R$drawable:
     public static final int ic_tab_ic_prefs_unselected
     public static final int ic_tab_ic_res_selected
     public static final int ic_tab_ic_res_unselected
-    public static final int ic_volume_pressed
-    public static final int ic_volume_unpressed
     public static final int principal_1
     public static final int principal_3
     public static final int sonido
-    public static final int star_big_off
-    public static final int star_big_on1
     public static final int title_button
     public static final int title_home
     public static final int title_home_alt

@@ -1,5 +1,4 @@
 /*
- Copyright 2012 Xabier Pena & Urko Guinea
  
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -505,7 +504,6 @@ public class AlarmaService extends Service {
 						pDatos.setEstado(TERMINADO);
 						actualizarBDEstado(pDatos);
 						controlVuelo(pUrl, id, pDatos);
-
 					}
 				} catch (Exception e) {
 				}
@@ -610,7 +608,9 @@ public class AlarmaService extends Service {
 			Log.i(TAG, "AlarmaService - controlVuelo - estado TERMINADO");
 			try {
 				Log.i(TAG, "AlarmaService - Servicio finalizando");
-				borrarAlarma(datos.getLinkInfoVuelo(), pDatos.getId(), pDatos);
+				if (verSiCancelado(datos.getEstadoVueloOrigen(), pDatos)) {
+					borrarAlarma(datos.getLinkInfoVuelo(), pDatos.getId(), pDatos);
+				}
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
@@ -1184,7 +1184,8 @@ public class AlarmaService extends Service {
 				AlarmasSqlAux.CAMBIOS, AlarmasSqlAux.MINUTOS, 
 				AlarmasSqlAux.ESTADOORIGEN, AlarmasSqlAux.ESTADODESTINO,
 				AlarmasSqlAux.AEROPUERTOORIGEN, AlarmasSqlAux.AEROPUERTODESTINO,
-				AlarmasSqlAux.DESPEGADOSIN, AlarmasSqlAux.SALIDO, AlarmasSqlAux.ESTADO};
+				AlarmasSqlAux.DESPEGADOSIN, AlarmasSqlAux.SALIDO, AlarmasSqlAux.ESTADO,
+				AlarmasSqlAux.ALARMAVERDAD};
 
 		Cursor c = db.query("alarmas_aux", args, null, null, null, null, null);
 		// Nos aseguramos de que existe al menos un registro
@@ -1239,7 +1240,7 @@ public class AlarmaService extends Service {
 						PendingIntent.FLAG_CANCEL_CURRENT);
 				DatosAlarma datosAlarma = new DatosAlarma(datos, id,
 						c.getInt(8), c.getInt(9), c.getInt(10), c.getInt(11),
-						c.getInt(12), c.getInt(19), a, d);
+						c.getInt(12), c.getInt(19), a, d, c.getInt(20));
 				controlVuelo(url, id, datosAlarma);
 				ponerAlarmaAntelacion(datosAlarma);
 			} while (c.moveToNext());
@@ -1262,7 +1263,7 @@ public class AlarmaService extends Service {
 				AlarmasSqlAux.MINUTOS, AlarmasSqlAux.ESTADOORIGEN,
 				AlarmasSqlAux.ESTADODESTINO, AlarmasSqlAux.AEROPUERTOORIGEN,
 				AlarmasSqlAux.AEROPUERTODESTINO, AlarmasSqlAux.DESPEGADOSIN,
-				AlarmasSqlAux.SALIDO, AlarmasSqlAux.ESTADO};
+				AlarmasSqlAux.SALIDO, AlarmasSqlAux.ESTADO, AlarmasSqlAux.ALARMAVERDAD};
 		String[] args2 = { id + "" };
 		Cursor c = db.query("alarmas_aux", args, "id=?", args2, null, null,
 				null);
@@ -1308,7 +1309,7 @@ public class AlarmaService extends Service {
 						PendingIntent.FLAG_CANCEL_CURRENT);
 				DatosAlarma datosAlarma = new DatosAlarma(datos, id,
 						c.getInt(8), c.getInt(9), c.getInt(10), c.getInt(11),
-						c.getInt(12), c.getInt(19), a, d);
+						c.getInt(12), c.getInt(19), a, d, c.getInt(20));
 				controlVuelo(url, id, datosAlarma);
 				ponerAlarmaAntelacion(datosAlarma);
 			} while (c.moveToNext());
@@ -1335,6 +1336,9 @@ public class AlarmaService extends Service {
 		bun.putInt("minutos", pDatos.getMinutos());
 		bun.putString("url", pDatos.getDatos().getLinkInfoVuelo());
 		bun.putString("dia", "hoy");
+		bun.putInt("id", pDatos.getId());
+		bun.putInt("alarma", pDatos.getAlarmaVerdad());
+		bun.putInt("sonido", pDatos.getSonido());
 		Intent intentA = new Intent(this, MiReceiverAntelacion.class);
 		intentA.putExtras(bun);
 		if (i > 0) {
@@ -1372,8 +1376,8 @@ public class AlarmaService extends Service {
 		cv.put(AlarmasSql.FECHAORIGEN, datos.getFechaOrigen());
 		cv.put(AlarmasSql.NOMBRECOMPANY, datos.getNombreCompany());
 		cv.put(AlarmasSql.HORAORIGEN, pDatos.getDatos().getHoraOrigen());
-		cv.put(AlarmasSql.ESTADOORIGEN, pDatos.getDatos().getEstadoVueloOrigen());
-		cv.put(AlarmasSql.ESTADODESTINO, pDatos.getDatos().getEstadoVueloDestino());
+		cv.put(AlarmasSql.ESTADOORIGEN, datos.getEstadoVueloOrigen());
+		cv.put(AlarmasSql.ESTADODESTINO, datos.getEstadoVueloDestino());
 		cv.put(AlarmasSql.HORADESTINO, pDatos.getDatos().getHoraDestino());
 		cv.put(AlarmasSql.AEROPUERTOORIGEN, pDatos.getDatos().getAeropuertoOrigen());
 		cv.put(AlarmasSql.AEROPUERTODESTINO, pDatos.getDatos().getAeropuertoDestino());

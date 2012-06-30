@@ -318,7 +318,7 @@ public class VuelosJSoup {
 		String nombreVuelo = webAena.getNombreVuelo(doc);
 		Elements tablaDatosVuelo = webAena.getTablaDatosVuelo(doc);
 		
-		/*try {
+		try {
 			if (!tablaDatosVuelo.get(0).text().equals("")) {
 				Log.d("VuelosAndroid", "VuelosJsoup - getDatosvuelo0: " + tablaDatosVuelo.get(0).text());
 			}
@@ -475,7 +475,7 @@ public class VuelosJSoup {
 		} catch (IndexOutOfBoundsException ex26) {
 			Log.w("VuelosAndroid", "VuelosJsoup - getDatosvuelo21: " + "ERROR, Celda sin datos");
 
-		}*/
+		}
 		Elements origenDestino = webAena.getOrigenDestino(doc);
 		/*try {
 			if (!origenDestino.get(0).text().equals("")) {

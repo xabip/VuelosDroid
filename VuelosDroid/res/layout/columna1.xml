@@ -118,7 +118,7 @@ See the License for the specific language governing permissions and
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:lines="1"
-            android:text="Últimas Busquedas"
+            android:text="Últimas Búsquedas"
             android:textColor="#FFFFFFFF"
             android:textSize="17dp"
             android:textStyle="bold" />

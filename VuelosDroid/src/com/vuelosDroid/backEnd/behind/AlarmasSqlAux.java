@@ -48,6 +48,7 @@ public class AlarmasSqlAux extends SQLiteOpenHelper{
 	public static final String MINUTOS = "minutos"; 
 	public static final String DESPEGADO = "despegado";  //Si ha despegado
 	public static final String ESTADO = "estado";
+	public static final String ALARMAVERDAD = "alarmaverdad";
 	
 	public static final String TAG = "VuelosAndroid";
 	
@@ -56,7 +57,7 @@ public class AlarmasSqlAux extends SQLiteOpenHelper{
 			"aeropuerto_origen TEXT, fecha_origen TEXT, hora_origen TEXT, aeropuerto_destino TEXT, hora_destino TEXT," +
 			"aterrizado_sin TEXT, alarma INTEGER,  empezado INTEGER, salido INTEGER, aterrizar INTEGER, despegar INTEGER, " +
 			"retrasos INTEGER, sonido INTEGER, minutos INTEGER, estado_origen TEXT, estado_destino TEXT, " +
-			"despegado_sin TEXT, despegado TEXT, estado INTEGER)";
+			"despegado_sin TEXT, despegado TEXT, estado INTEGER, alarmaverdad INTEGER)";
 
 	
 	public AlarmasSqlAux(Context context, String name, CursorFactory factory,

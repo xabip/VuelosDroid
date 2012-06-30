@@ -1,6 +1,6 @@
 /*
  Copyright 2012 Xabier Pena & Urko Guinea
- 
+
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -40,11 +40,15 @@ import com.vuelosDroid.R;
 import com.vuelosDroid.backEnd.behind.BusquedaRecienteSql;
 import com.vuelosDroid.backEnd.scrapper.DatosVuelo;
 
+import android.R.style;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.graphics.Paint.Style;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -52,11 +56,13 @@ import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -65,6 +71,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -80,7 +87,7 @@ import android.widget.Toast;
  */
 public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 
-	public String TAG = "VUELOS ANDROID";
+	public String TAG = "VuelosAndroid";
 	private final Context context;
 	AutoCompleteTextView auto;
 	ArrayAdapter<String> adapter;
@@ -131,8 +138,10 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 				dat.setAeropuertoDestino(c.getString(2));
 				dat.setAeropuertoOrigen(c.getString(3));
 				dat.setLinkInfoVuelo(c.getString(5));
+				Log.d(TAG, "ViewPagerAdapter - url " + c.getString(5));
+
 				dat.setFechaOrigen(c.getString(6));
-				Log.e(TAG, dat.getFechaOrigen());
+			//	Log.e(TAG, dat.getFechaOrigen());
 				dias.add(c.getString(4));
 
 				datos.add(dat);
@@ -182,7 +191,7 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 				Bundle extras = new Bundle();
 				Log.w(TAG, datos.get(arg2).getLinkInfoVuelo());
 				extras.putString("url", datos.get(arg2).getLinkInfoVuelo());
-				Log.w("VuelosAndroid2", "ViewPager - setListaReciente" + datos.get(arg2).getLinkInfoVuelo());
+				Log.w("VuelosAndroid", "ViewPager - setListaReciente" + datos.get(arg2).getLinkInfoVuelo());
 
 				extras.putString("codigo", "");
 				extras.putString("dia", "hoy");
@@ -212,6 +221,21 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 				}	
 			}
 		});
+		SharedPreferences prefer = context.getSharedPreferences("MisPreferencias", Context.MODE_PRIVATE);
+		int prefers = prefer.getInt("primera", 0);
+		if(prefers == 0){
+			mostrarAyuda(1);
+			SharedPreferences.Editor editor = prefer.edit();
+			editor.putInt("primera", 1);
+			editor.commit();
+		} else if (prefers == 1){
+			mostrarAyuda(2);
+			SharedPreferences.Editor editor = prefer.edit();
+			editor.putInt("primera", 2);
+			editor.commit();
+		}
+		
+
 		//datosVuelos = (List<DatosVuelo>) listaVuelos.getValues();
 	}
 
@@ -268,8 +292,8 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(edit.getWindowToken(), 0);
 		getBusquedaReciente(v);
-		
-		
+
+
 
 		//Listeners
 		boton.setOnClickListener(new OnClickListener() {
@@ -290,7 +314,7 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 					Intent intent = new Intent(context, VueloResultadoActivity.class);
 					Bundle extras = new Bundle();
 					extras.putString("url", " ");
-					Log.e(TAG, text);
+			//		Log.e(TAG, text);
 					extras.putString("codigo", text);
 					//RadioButton rad = (RadioButton)(radioDia.findViewById(radioDia.getCheckedRadioButtonId()));
 					extras.putString("dia", "hoy");
@@ -306,9 +330,9 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 				}
 			}
 		});
-		
+
 		edit.setOnLongClickListener(new OnLongClickListener() {
-			
+
 			public boolean onLongClick(View v) {
 				edit.setText("");
 				edit.refreshDrawableState();
@@ -338,7 +362,7 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 
 		String[] horarios = v.getResources().getStringArray(R.array.horario_array);
 		for (int i = 0; i < horarios.length; i++) {
-			Log.e(TAG, horarios[i]);
+			//Log.e(TAG, horarios[i]);
 		}
 		Log.d(TAG, "1");
 		WheelView horarioLlegada = (WheelView) v.findViewById(R.id.wheel_horario_llegadas);
@@ -353,7 +377,14 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		Log.d(TAG, "5");
 		horarioLlegada.setViewAdapter(ampmAdapter);
 		horarioLlegada.setVisibleItems(3);
-		horarioLlegada.setMinimumWidth(170);
+		if(context.getResources().getDisplayMetrics().densityDpi < 150 ){
+			horarioLlegada.setMinimumWidth(170);
+		} else if (context.getResources().getDisplayMetrics().densityDpi > 150 && context.getResources().getDisplayMetrics().densityDpi < 230){
+			horarioLlegada.setMinimumWidth(180);
+		} else {
+			horarioLlegada.setMinimumWidth(280);
+		}
+		//horarioLlegada.setMinimumWidth(170);
 		horarioLlegada.setBackgroundColor(0xFFFFFF);
 		Log.d(TAG, "6");
 		OnWheelChangedListener wheelListener = new OnWheelChangedListener() {
@@ -395,7 +426,7 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		});
 
 		autoDestinos.setOnLongClickListener(new OnLongClickListener() {
-			
+
 			public boolean onLongClick(View v) {
 				autoDestinos.setText("");
 				autoOrigen.setText("");
@@ -404,7 +435,7 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 				return false;
 			}
 		});
-		
+
 		autoOrigen.setOnItemClickListener( new OnItemClickListener(){
 
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
@@ -415,9 +446,9 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 
 			}
 		});
-		
+
 		autoOrigen.setOnLongClickListener(new OnLongClickListener() {
-			
+
 			public boolean onLongClick(View v) {
 				autoOrigen.setText("");
 				autoOrigen.refreshDrawableState();
@@ -481,7 +512,7 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		//<-- Wheel Horario -->
 		String[] horarios = v.getResources().getStringArray(R.array.horario_array);
 		for (int i = 0; i < horarios.length; i++) {
-			Log.e(TAG, horarios[i]);
+			//Log.e(TAG, horarios[i]);
 		}
 		Log.d(TAG, "1");
 		WheelView horarioLlegada = (WheelView) v.findViewById(R.id.wheel_horario_salidas);
@@ -498,7 +529,14 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		Log.d(TAG, "5");
 		horarioLlegada.setViewAdapter(ampmAdapter);
 		horarioLlegada.setVisibleItems(3);
-		horarioLlegada.setMinimumWidth(185);
+		if(context.getResources().getDisplayMetrics().densityDpi < 150 ){
+			horarioLlegada.setMinimumWidth(170);
+		} else if (context.getResources().getDisplayMetrics().densityDpi > 150 && context.getResources().getDisplayMetrics().densityDpi < 230){
+			horarioLlegada.setMinimumWidth(180);
+		} else {
+			horarioLlegada.setMinimumWidth(280);
+		}
+		//horarioLlegada.setMinimumWidth(185);
 		horarioLlegada.setBackgroundColor(0xFFFFFF);
 		Log.d(TAG, "6");
 		OnWheelChangedListener wheelListener = new OnWheelChangedListener() {
@@ -536,7 +574,7 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		});
 
 		autoOrigen.setOnLongClickListener(new OnLongClickListener() {
-			
+
 			public boolean onLongClick(View v) {
 				autoOrigen.setText("");
 				autoDestino.setText("");
@@ -545,7 +583,7 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 				return false;
 			}
 		});
-		
+
 		autoDestino.setOnItemClickListener(new OnItemClickListener(){
 
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
@@ -559,14 +597,14 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		});
 
 		autoDestino.setOnLongClickListener(new OnLongClickListener() {
-			
+
 			public boolean onLongClick(View v) {
 				autoDestino.setText("");
 				autoDestino.refreshDrawableState();
 				return false;
 			}
 		});
-		
+
 		//<-- Boton -->
 		botonSalidas.setOnClickListener( new OnClickListener(){
 			public void onClick(View arg0) {
@@ -752,6 +790,44 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 
 	}
 
+	public void mostrarAyuda(int pTipo){
+		Toast ImageToast = new Toast(context);
+		LinearLayout toastLayout = new LinearLayout(context);
+		toastLayout.setOrientation(LinearLayout.HORIZONTAL);
+		ImageView image = new ImageView(context);
+		TextView text = new TextView(context);
+		text.setBackgroundColor(R.drawable.background_gris);
+		image.setImageResource(R.drawable.dedo3);
+		text.setText("Arrastra el dedo para cambiar la pantalla");
+		if(context.getResources().getDisplayMetrics().densityDpi < 150 ){
+			text.setTextSize(15);
+		} else if (context.getResources().getDisplayMetrics().densityDpi > 150
+				&& context.getResources().getDisplayMetrics().densityDpi < 230){
+			text.setTextSize(18);
+		} else {
+			text.setTextSize(20);
+		}
+		
+		text.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+		text.setGravity(Gravity.CENTER);
+		text.setTypeface(null, Typeface.BOLD);
+		text.setTextColor(Color.WHITE);
+		text.setPadding(0, 0, 0, 0);
+		image.setPadding(0, 25, 0, 0);
+		toastLayout.setOrientation(LinearLayout.VERTICAL);
+		toastLayout.addView(text);
+		toastLayout.addView(image);
+		ImageToast.setView(toastLayout);
+		ImageToast.setGravity(Gravity.CENTER, 0, 0);
+		if (pTipo == 1){
+			ImageToast.setDuration(Toast.LENGTH_LONG);
+		} else {
+			ImageToast.setDuration(Toast.LENGTH_SHORT);
+		}
+		ImageToast.show();
+
+	}
+
 	@Override
 	public void destroyItem(View collection, int position, Object view) {
 		//( (ViewPager) collection ).removeView( (ListView) view );
@@ -795,7 +871,7 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 			mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			//listaVuelos = getInfoVuelos("", "BIO", "8", "hoy", "");
 			Log.w("VuelosAndroid", "LLega al adapter"); 
-			Log.e("VuelosAndroid", "LLega al adapter");
+			//Log.e("VuelosAndroid", "LLega al adapter");
 			Log.d("VuelosAndroid", "LLega al adapter"); 
 			Log.i("VuelosAndroid", "LLega al adapter");
 			Log.i("VuelosAndroid", datos.isEmpty()+"");
@@ -820,8 +896,8 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 			textNombre = (TextView) convertView.findViewById(R.id.text_item_reciente_nombre);
 			textCodigo = (TextView) convertView.findViewById(R.id.text_item_reciente_codigo);
 			textHora = (TextView) convertView.findViewById(R.id.text_item_reciente_hora);
-	
-			
+
+
 			if(datosVuelos.get(position).getAeropuertoOrigen().equals("NoHay")){
 				textNombre.setText("No has realizado ninguna búsqueda");
 				textCodigo.setVisibility(View.GONE);

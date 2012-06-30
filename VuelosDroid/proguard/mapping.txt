@@ -1450,11 +1450,11 @@ com.viewpagerindicator.TitlePageIndicator -> com.viewpagerindicator.TitlePageInd
     float getFooterIndicatorPadding() -> a
     void setFooterIndicatorPadding$133aeb() -> b
     float getTextSize() -> c
-    void setTextSize$133aeb() -> d
-    float getTitlePadding() -> e
-    float getTopPadding() -> f
-    void setTopPadding$133aeb() -> g
-    float getClipPadding() -> h
+    void setTextSize(float) -> a
+    float getTitlePadding() -> d
+    float getTopPadding() -> e
+    void setTopPadding$133aeb() -> f
+    float getClipPadding() -> g
     void onDraw(android.graphics.Canvas) -> onDraw
     boolean onTouchEvent(android.view.MotionEvent) -> onTouchEvent
     void clipViewOnTheRight(android.graphics.RectF,float,int) -> a
@@ -1466,7 +1466,7 @@ com.viewpagerindicator.TitlePageIndicator -> com.viewpagerindicator.TitlePageInd
     void onMeasure(int,int) -> onMeasure
     void onRestoreInstanceState(android.os.Parcelable) -> onRestoreInstanceState
     android.os.Parcelable onSaveInstanceState() -> onSaveInstanceState
-    int[] $SWITCH_TABLE$com$viewpagerindicator$TitlePageIndicator$IndicatorStyle() -> i
+    int[] $SWITCH_TABLE$com$viewpagerindicator$TitlePageIndicator$IndicatorStyle() -> h
 com.viewpagerindicator.TitlePageIndicator$IndicatorStyle -> com.viewpagerindicator.m:
     com.viewpagerindicator.TitlePageIndicator$IndicatorStyle None -> a
     com.viewpagerindicator.TitlePageIndicator$IndicatorStyle Triangle -> b
@@ -1531,7 +1531,47 @@ com.vuelosDroid.backEnd.behind.AlarmasSqlAux -> com.vuelosDroid.backEnd.behind.b
     java.lang.String sqlCreate -> a
     void onCreate(android.database.sqlite.SQLiteDatabase) -> onCreate
     void onUpgrade(android.database.sqlite.SQLiteDatabase,int,int) -> onUpgrade
-com.vuelosDroid.backEnd.behind.BusquedaRecienteSql -> com.vuelosDroid.backEnd.behind.c:
+com.vuelosDroid.backEnd.behind.AntelacionActivity -> com.vuelosDroid.backEnd.behind.AntelacionActivity:
+    java.lang.String origen -> a
+    java.lang.String destino -> b
+    java.lang.String hora -> c
+    java.lang.String url -> d
+    int id -> e
+    int minutos -> f
+    int alarma -> g
+    int sonido -> h
+    android.app.Activity act -> i
+    void onCreate(android.os.Bundle) -> onCreate
+    void notificar() -> a
+    void cambiarAlarma() -> b
+    void cambiarAlarma2() -> c
+    void access$0(com.vuelosDroid.backEnd.behind.AntelacionActivity,int) -> a
+    android.app.Activity access$1(com.vuelosDroid.backEnd.behind.AntelacionActivity) -> a
+    java.lang.String access$2(com.vuelosDroid.backEnd.behind.AntelacionActivity) -> b
+    java.lang.String access$3(com.vuelosDroid.backEnd.behind.AntelacionActivity) -> c
+    java.lang.String access$4(com.vuelosDroid.backEnd.behind.AntelacionActivity) -> d
+    int access$5(com.vuelosDroid.backEnd.behind.AntelacionActivity) -> e
+    int access$6(com.vuelosDroid.backEnd.behind.AntelacionActivity) -> f
+    java.lang.String access$7(com.vuelosDroid.backEnd.behind.AntelacionActivity) -> g
+    int access$8(com.vuelosDroid.backEnd.behind.AntelacionActivity) -> h
+    int access$9(com.vuelosDroid.backEnd.behind.AntelacionActivity) -> i
+com.vuelosDroid.backEnd.behind.AntelacionActivity$1 -> com.vuelosDroid.backEnd.behind.c:
+    com.vuelosDroid.backEnd.behind.AntelacionActivity this$0 -> a
+    android.media.MediaPlayer val$mp -> b
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.vuelosDroid.backEnd.behind.AntelacionActivity$2 -> com.vuelosDroid.backEnd.behind.d:
+    com.vuelosDroid.backEnd.behind.AntelacionActivity this$0 -> a
+    android.media.MediaPlayer val$mp -> b
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.vuelosDroid.backEnd.behind.AntelacionActivity$3 -> com.vuelosDroid.backEnd.behind.e:
+    com.vuelosDroid.backEnd.behind.AntelacionActivity this$0 -> a
+    android.media.MediaPlayer val$mp -> b
+    void onCancel(android.content.DialogInterface) -> onCancel
+com.vuelosDroid.backEnd.behind.AntelacionActivity$4 -> com.vuelosDroid.backEnd.behind.f:
+    com.vuelosDroid.backEnd.behind.AntelacionActivity this$0 -> a
+    android.media.MediaPlayer val$mp -> b
+    boolean onKey(android.content.DialogInterface,int,android.view.KeyEvent) -> onKey
+com.vuelosDroid.backEnd.behind.BusquedaRecienteSql -> com.vuelosDroid.backEnd.behind.g:
     java.lang.String sqlCreate -> a
     void onCreate(android.database.sqlite.SQLiteDatabase) -> onCreate
     void onUpgrade(android.database.sqlite.SQLiteDatabase,int,int) -> onUpgrade
@@ -1543,7 +1583,7 @@ com.vuelosDroid.backEnd.behind.CargaVuelosService -> com.vuelosDroid.backEnd.beh
     void onCreate() -> onCreate
     int onStartCommand(android.content.Intent,int,int) -> onStartCommand
     void onDestroy() -> onDestroy
-com.vuelosDroid.backEnd.behind.DatosAlarma -> com.vuelosDroid.backEnd.behind.d:
+com.vuelosDroid.backEnd.behind.DatosAlarma -> com.vuelosDroid.backEnd.behind.h:
     com.vuelosDroid.backEnd.scrapper.DatosVuelo datos -> a
     int id -> b
     int sonido -> c
@@ -1554,6 +1594,7 @@ com.vuelosDroid.backEnd.behind.DatosAlarma -> com.vuelosDroid.backEnd.behind.d:
     int estado -> h
     int aterrizadoSin -> i
     int despegadoSin -> j
+    int alarmaVerdad -> k
     com.vuelosDroid.backEnd.scrapper.DatosVuelo getDatos() -> a
     int getId() -> b
     int getSonido() -> c
@@ -1565,6 +1606,7 @@ com.vuelosDroid.backEnd.behind.DatosAlarma -> com.vuelosDroid.backEnd.behind.d:
     void setEstado(int) -> a
     int getAterrizadoSin() -> i
     int getDespegadoSin() -> j
+    int getAlarmaVerdad() -> k
 com.vuelosDroid.backEnd.behind.InternetReceiver -> com.vuelosDroid.backEnd.behind.InternetReceiver:
     android.content.Context mContext -> a
     void onReceive(android.content.Context,android.content.Intent) -> onReceive
@@ -1573,12 +1615,15 @@ com.vuelosDroid.backEnd.behind.MiReceiver -> com.vuelosDroid.backEnd.behind.MiRe
     void onReceive(android.content.Context,android.content.Intent) -> onReceive
 com.vuelosDroid.backEnd.behind.MiReceiverAntelacion -> com.vuelosDroid.backEnd.behind.MiReceiverAntelacion:
     android.content.Context mContext -> a
-    java.lang.String origen -> b
-    java.lang.String destino -> c
-    java.lang.String hora -> d
-    java.lang.String url -> e
-    int id -> f
-    int minutos -> g
+    android.content.Context mContext2 -> b
+    java.lang.String origen -> d
+    java.lang.String destino -> e
+    java.lang.String hora -> f
+    java.lang.String url -> g
+    int sonido -> h
+    int id -> i
+    int minutos -> j
+    int alarma -> c
     void onReceive(android.content.Context,android.content.Intent) -> onReceive
 com.vuelosDroid.backEnd.behind.StartUpReceiver -> com.vuelosDroid.backEnd.behind.StartUpReceiver:
     android.content.Context mContext -> a
@@ -1612,6 +1657,7 @@ com.vuelosDroid.backEnd.scrapper.DatosVuelo -> com.vuelosDroid.backEnd.a.c:
     java.lang.String aeropuertoDestino -> p
     java.lang.String aeropuertoIntermedio -> q
     java.lang.Boolean escala -> r
+    int tipo -> s
     java.lang.String getNombreVuelo() -> a
     void setNombreVuelo(java.lang.String) -> a
     java.lang.String getAeropuertoOrigen() -> b
@@ -1640,6 +1686,7 @@ com.vuelosDroid.backEnd.scrapper.DatosVuelo -> com.vuelosDroid.backEnd.a.c:
     void setLinkInfoVuelo(java.lang.String) -> j
     java.lang.Boolean getEscala() -> q
     java.lang.String getAeropuertoIntermedio() -> r
+    int getTipo() -> s
     boolean comprueba(org.jsoup.select.Elements,int) -> a
 com.vuelosDroid.backEnd.scrapper.MoreFlightsException -> com.vuelosDroid.backEnd.a.d:
 com.vuelosDroid.backEnd.scrapper.NoHayMasPaginasDeVuelosException -> com.vuelosDroid.backEnd.a.e:
@@ -1695,13 +1742,14 @@ com.vuelosDroid.frontEnd.AlarmasActivity -> com.vuelosDroid.frontEnd.AlarmasActi
     android.widget.TextView textoNoHaySeguimiento -> l
     int idLista -> m
     com.vuelosDroid.frontEnd.AlarmasActivity$DemoPopupWindow dw -> n
-    android.widget.ExpandableListView lv -> o
-    com.vuelosDroid.frontEnd.AlarmasActivity$MyExpandableListAdapter mAdapter -> p
-    int prefs -> q
-    int DINAMICO -> r
-    int ESTATICO -> s
-    int red -> t
-    android.os.Handler progressHandler -> u
+    int estado -> o
+    android.widget.ExpandableListView lv -> p
+    com.vuelosDroid.frontEnd.AlarmasActivity$MyExpandableListAdapter mAdapter -> q
+    int prefs -> r
+    int DINAMICO -> s
+    int ESTATICO -> t
+    int red -> u
+    android.os.Handler progressHandler -> v
     void onCreate(android.os.Bundle) -> onCreate
     java.util.List controlAlarm() -> b
     void onClickPopupResumen(android.view.View) -> onClickPopupResumen
@@ -1710,16 +1758,17 @@ com.vuelosDroid.frontEnd.AlarmasActivity -> com.vuelosDroid.frontEnd.AlarmasActi
     void controlSeg() -> c
     void getSeguimiento() -> d
     void getAlarma() -> e
+    void borrarSeguimiento(java.lang.String) -> a
     void onClickActualizar(android.view.View) -> onClickActualizar
     void onClickSearch(android.view.View) -> onClickSearch
     boolean tieneRed() -> a
-    boolean verSiDespegado(java.lang.String) -> a
+    boolean verSiDespegado(java.lang.String) -> b
     int controlEstado(java.lang.String,java.lang.String) -> a
-    java.lang.String controlDepegado(java.lang.String) -> b
-    java.lang.String controlAterrizado(java.lang.String) -> c
-    int getDiferencia(java.lang.String) -> e
+    java.lang.String controlDepegado(java.lang.String,com.vuelosDroid.backEnd.scrapper.DatosVuelo) -> a
+    java.lang.String controlAterrizado(java.lang.String,com.vuelosDroid.backEnd.scrapper.DatosVuelo) -> b
+    int getDiferencia(java.lang.String,com.vuelosDroid.backEnd.scrapper.DatosVuelo) -> c
     int getDiferencia(java.lang.String,java.lang.String) -> b
-    java.lang.String getHora(java.lang.String) -> d
+    java.lang.String getHora(java.lang.String) -> c
     void onClickBusqueda(android.view.View) -> onClickBusqueda
     void onClickHome(android.view.View) -> onClickHome
     void onResume() -> onResume
@@ -1732,14 +1781,17 @@ com.vuelosDroid.frontEnd.AlarmasActivity$2 -> com.vuelosDroid.frontEnd.b:
     com.vuelosDroid.frontEnd.AlarmasActivity this$0 -> a
     android.content.Intent val$intent -> b
     boolean onChildClick(android.widget.ExpandableListView,android.view.View,int,int,long) -> onChildClick
-com.vuelosDroid.frontEnd.AlarmasActivity$7 -> com.vuelosDroid.frontEnd.c:
+com.vuelosDroid.frontEnd.AlarmasActivity$3 -> com.vuelosDroid.frontEnd.c:
+    com.vuelosDroid.frontEnd.AlarmasActivity this$0 -> a
+    boolean onItemLongClick(android.widget.AdapterView,android.view.View,int,long) -> onItemLongClick
+com.vuelosDroid.frontEnd.AlarmasActivity$8 -> com.vuelosDroid.frontEnd.d:
     com.vuelosDroid.frontEnd.AlarmasActivity this$0 -> a
     java.util.List val$pLista -> b
     int val$pTipo -> c
     void run() -> run
-com.vuelosDroid.frontEnd.AlarmasActivity$DemoPopupWindow -> com.vuelosDroid.frontEnd.d:
+com.vuelosDroid.frontEnd.AlarmasActivity$DemoPopupWindow -> com.vuelosDroid.frontEnd.e:
     void onCreate() -> a
-com.vuelosDroid.frontEnd.AlarmasActivity$MyExpandableListAdapter -> com.vuelosDroid.frontEnd.e:
+com.vuelosDroid.frontEnd.AlarmasActivity$MyExpandableListAdapter -> com.vuelosDroid.frontEnd.f:
     java.lang.String[] groups -> b
     java.util.List children -> c
     android.view.LayoutInflater mInflater -> d
@@ -1762,7 +1814,7 @@ com.vuelosDroid.frontEnd.BusquedaActivity -> com.vuelosDroid.frontEnd.BusquedaAc
     void onClickBorrar(android.view.View) -> onClickBorrar
     void onClickActualizar(android.view.View) -> onClickActualizar
     void onClickPreferencias(android.view.View) -> onClickPreferencias
-com.vuelosDroid.frontEnd.MenuContextual -> com.vuelosDroid.frontEnd.f:
+com.vuelosDroid.frontEnd.MenuContextual -> com.vuelosDroid.frontEnd.g:
     android.view.View anchor -> a
     android.widget.PopupWindow window -> b
     android.view.View root -> c
@@ -1776,7 +1828,7 @@ com.vuelosDroid.frontEnd.MenuContextual -> com.vuelosDroid.frontEnd.f:
     void showLikeQuickAction() -> c
     void dismiss() -> d
     android.widget.PopupWindow access$0(com.vuelosDroid.frontEnd.MenuContextual) -> a
-com.vuelosDroid.frontEnd.MenuContextual$1 -> com.vuelosDroid.frontEnd.g:
+com.vuelosDroid.frontEnd.MenuContextual$1 -> com.vuelosDroid.frontEnd.h:
     com.vuelosDroid.frontEnd.MenuContextual this$0 -> a
     boolean onTouch(android.view.View,android.view.MotionEvent) -> onTouch
 com.vuelosDroid.frontEnd.PreferenciasActivity -> com.vuelosDroid.frontEnd.PreferenciasActivity:
@@ -1784,19 +1836,26 @@ com.vuelosDroid.frontEnd.PreferenciasActivity -> com.vuelosDroid.frontEnd.Prefer
     android.widget.CheckBox checkBoxDespegar -> c
     android.widget.CheckBox checkBoxAterrizar -> d
     android.widget.CheckBox checkBoxCambios -> e
-    android.widget.SeekBar seek -> f
-    android.widget.TextView textSeek -> g
-    int id -> h
-    int sonido -> i
-    int cambios -> j
-    int aterrizar -> k
-    int despegar -> l
-    int minutos -> m
-    android.os.Bundle bundle -> n
-    android.os.Bundle bun -> o
+    android.widget.CheckBox checkBoxAlarma -> f
+    android.widget.SeekBar seek -> g
+    android.widget.TextView textSeek -> h
+    int id -> i
+    int sonido -> j
+    int cambios -> k
+    int aterrizar -> l
+    int despegar -> m
+    int minutos -> n
+    int alarma -> o
+    android.os.Bundle bundle -> p
+    android.os.Bundle bun -> q
     void onCreate(android.os.Bundle) -> onCreate
+    void getAlarmasId() -> b
+    void setLayout() -> c
     void onClickActualizar(android.view.View) -> onClickActualizar
+    java.lang.String getMin(int) -> a
     void onClickSearch(android.view.View) -> onClickSearch
+    void onResume() -> onResume
+    void onClickGuardar(android.view.View) -> onClickGuardar
     void access$0(com.vuelosDroid.frontEnd.PreferenciasActivity,int) -> a
     void access$1(com.vuelosDroid.frontEnd.PreferenciasActivity) -> a
     android.widget.TextView access$2(com.vuelosDroid.frontEnd.PreferenciasActivity) -> b
@@ -1804,21 +1863,25 @@ com.vuelosDroid.frontEnd.PreferenciasActivity -> com.vuelosDroid.frontEnd.Prefer
     void access$4(com.vuelosDroid.frontEnd.PreferenciasActivity,int) -> c
     void access$5(com.vuelosDroid.frontEnd.PreferenciasActivity,int) -> d
     void access$6(com.vuelosDroid.frontEnd.PreferenciasActivity,int) -> e
-com.vuelosDroid.frontEnd.PreferenciasActivity$1 -> com.vuelosDroid.frontEnd.h:
+    void access$7(com.vuelosDroid.frontEnd.PreferenciasActivity,int) -> f
+com.vuelosDroid.frontEnd.PreferenciasActivity$1 -> com.vuelosDroid.frontEnd.i:
     com.vuelosDroid.frontEnd.PreferenciasActivity this$0 -> a
     void onStopTrackingTouch(android.widget.SeekBar) -> onStopTrackingTouch
     void onStartTrackingTouch(android.widget.SeekBar) -> onStartTrackingTouch
     void onProgressChanged(android.widget.SeekBar,int,boolean) -> onProgressChanged
-com.vuelosDroid.frontEnd.PreferenciasActivity$2 -> com.vuelosDroid.frontEnd.i:
+com.vuelosDroid.frontEnd.PreferenciasActivity$2 -> com.vuelosDroid.frontEnd.j:
     com.vuelosDroid.frontEnd.PreferenciasActivity this$0 -> a
     void onCheckedChanged(android.widget.CompoundButton,boolean) -> onCheckedChanged
-com.vuelosDroid.frontEnd.PreferenciasActivity$3 -> com.vuelosDroid.frontEnd.j:
+com.vuelosDroid.frontEnd.PreferenciasActivity$3 -> com.vuelosDroid.frontEnd.k:
     com.vuelosDroid.frontEnd.PreferenciasActivity this$0 -> a
     void onCheckedChanged(android.widget.CompoundButton,boolean) -> onCheckedChanged
-com.vuelosDroid.frontEnd.PreferenciasActivity$4 -> com.vuelosDroid.frontEnd.k:
+com.vuelosDroid.frontEnd.PreferenciasActivity$4 -> com.vuelosDroid.frontEnd.l:
     com.vuelosDroid.frontEnd.PreferenciasActivity this$0 -> a
     void onCheckedChanged(android.widget.CompoundButton,boolean) -> onCheckedChanged
-com.vuelosDroid.frontEnd.PreferenciasActivity$5 -> com.vuelosDroid.frontEnd.l:
+com.vuelosDroid.frontEnd.PreferenciasActivity$5 -> com.vuelosDroid.frontEnd.m:
+    com.vuelosDroid.frontEnd.PreferenciasActivity this$0 -> a
+    void onCheckedChanged(android.widget.CompoundButton,boolean) -> onCheckedChanged
+com.vuelosDroid.frontEnd.PreferenciasActivity$6 -> com.vuelosDroid.frontEnd.n:
     com.vuelosDroid.frontEnd.PreferenciasActivity this$0 -> a
     void onCheckedChanged(android.widget.CompoundButton,boolean) -> onCheckedChanged
 com.vuelosDroid.frontEnd.PrincipalActivity -> com.vuelosDroid.frontEnd.PrincipalActivity:
@@ -1832,16 +1895,16 @@ com.vuelosDroid.frontEnd.PrincipalActivity -> com.vuelosDroid.frontEnd.Principal
     void onClickActualizarAeropuertos(android.view.View) -> onClickActualizarAeropuertos
     void access$0(com.vuelosDroid.frontEnd.PrincipalActivity,boolean) -> a
     android.os.Handler access$1(com.vuelosDroid.frontEnd.PrincipalActivity) -> a
-com.vuelosDroid.frontEnd.PrincipalActivity$1 -> com.vuelosDroid.frontEnd.m:
+com.vuelosDroid.frontEnd.PrincipalActivity$1 -> com.vuelosDroid.frontEnd.o:
     com.vuelosDroid.frontEnd.PrincipalActivity this$0 -> a
     void handleMessage(android.os.Message) -> handleMessage
-com.vuelosDroid.frontEnd.PrincipalActivity$2 -> com.vuelosDroid.frontEnd.n:
+com.vuelosDroid.frontEnd.PrincipalActivity$2 -> com.vuelosDroid.frontEnd.p:
     com.vuelosDroid.frontEnd.PrincipalActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.vuelosDroid.frontEnd.PrincipalActivity$3 -> com.vuelosDroid.frontEnd.o:
+com.vuelosDroid.frontEnd.PrincipalActivity$3 -> com.vuelosDroid.frontEnd.q:
     com.vuelosDroid.frontEnd.PrincipalActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.vuelosDroid.frontEnd.PrincipalActivity$4 -> com.vuelosDroid.frontEnd.p:
+com.vuelosDroid.frontEnd.PrincipalActivity$4 -> com.vuelosDroid.frontEnd.r:
     com.vuelosDroid.frontEnd.PrincipalActivity this$0 -> a
     boolean val$pTipo -> b
     void run() -> run
@@ -1868,22 +1931,23 @@ com.vuelosDroid.frontEnd.ResultadoActivity -> com.vuelosDroid.frontEnd.Resultado
     void onCreate(android.os.Bundle) -> onCreate
     void onClickActualizar(android.view.View) -> onClickActualizar
     void loadData(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,int) -> a
+    boolean onKeyUp(int,android.view.KeyEvent) -> onKeyUp
     void access$0(com.vuelosDroid.frontEnd.ResultadoActivity,com.vuelosDroid.backEnd.scrapper.DatosGroup) -> a
     void access$1(com.vuelosDroid.frontEnd.ResultadoActivity) -> a
     void access$2(com.vuelosDroid.frontEnd.ResultadoActivity,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,int) -> a
     android.os.Handler access$3(com.vuelosDroid.frontEnd.ResultadoActivity) -> b
-com.vuelosDroid.frontEnd.ResultadoActivity$1 -> com.vuelosDroid.frontEnd.q:
+com.vuelosDroid.frontEnd.ResultadoActivity$1 -> com.vuelosDroid.frontEnd.s:
     com.vuelosDroid.frontEnd.ResultadoActivity this$0 -> a
     void handleMessage(android.os.Message) -> handleMessage
-com.vuelosDroid.frontEnd.ResultadoActivity$2 -> com.vuelosDroid.frontEnd.r:
+com.vuelosDroid.frontEnd.ResultadoActivity$2 -> com.vuelosDroid.frontEnd.t:
     com.vuelosDroid.frontEnd.ResultadoActivity this$0 -> a
     android.content.Intent val$intent -> b
     void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
-com.vuelosDroid.frontEnd.ResultadoActivity$3 -> com.vuelosDroid.frontEnd.s:
+com.vuelosDroid.frontEnd.ResultadoActivity$3 -> com.vuelosDroid.frontEnd.u:
     com.vuelosDroid.frontEnd.ResultadoActivity this$0 -> a
     void onScrollStateChanged(android.widget.AbsListView,int) -> onScrollStateChanged
     void onScroll(android.widget.AbsListView,int,int,int) -> onScroll
-com.vuelosDroid.frontEnd.ResultadoActivity$4 -> com.vuelosDroid.frontEnd.t:
+com.vuelosDroid.frontEnd.ResultadoActivity$4 -> com.vuelosDroid.frontEnd.v:
     com.vuelosDroid.frontEnd.ResultadoActivity this$0 -> a
     java.lang.String val$codOrigen -> b
     java.lang.String val$codDestino -> c
@@ -1892,12 +1956,12 @@ com.vuelosDroid.frontEnd.ResultadoActivity$4 -> com.vuelosDroid.frontEnd.t:
     java.lang.String val$company -> f
     int val$pTipo -> g
     void run() -> run
-com.vuelosDroid.frontEnd.ResultadoActivity$5 -> com.vuelosDroid.frontEnd.u:
+com.vuelosDroid.frontEnd.ResultadoActivity$5 -> com.vuelosDroid.frontEnd.w:
     com.vuelosDroid.frontEnd.ResultadoActivity this$0 -> a
     java.lang.String val$pCod -> b
     java.lang.String val$pDia -> c
     void run() -> run
-com.vuelosDroid.frontEnd.ResultadoActivity$miAdapter -> com.vuelosDroid.frontEnd.v:
+com.vuelosDroid.frontEnd.ResultadoActivity$miAdapter -> com.vuelosDroid.frontEnd.x:
     android.view.LayoutInflater mInflater -> a
     java.util.List datosVuelos -> b
     android.view.View getView(int,android.view.View,android.view.ViewGroup) -> getView
@@ -1920,7 +1984,7 @@ com.vuelosDroid.frontEnd.ResultadosAbstractActivity -> com.vuelosDroid.frontEnd.
     com.vuelosDroid.backEnd.scrapper.DatosGroup getInfoMasVuelos(java.lang.String,java.lang.String) -> b
     com.vuelosDroid.backEnd.scrapper.DatosGroup getInfoVuelos(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String) -> a
     java.lang.String cambiarFechaToUrl(java.lang.String,java.lang.String) -> c
-com.vuelosDroid.frontEnd.ViewPagerAdapter -> com.vuelosDroid.frontEnd.w:
+com.vuelosDroid.frontEnd.ViewPagerAdapter -> com.vuelosDroid.frontEnd.y:
     java.lang.String TAG -> a
     android.content.Context context -> k
     java.util.ArrayList destinosArray -> b
@@ -1935,85 +1999,85 @@ com.vuelosDroid.frontEnd.ViewPagerAdapter -> com.vuelosDroid.frontEnd.w:
     android.widget.LinearLayout lSal -> i
     android.widget.LinearLayout lLle -> j
     java.lang.String getTitle(int) -> a
+    void setListaReciente(android.widget.LinearLayout) -> a
     boolean tieneRed() -> b
     int getCount() -> a
     java.lang.Object instantiateItem(android.view.View,int) -> a
-    void setLayoutLlegadas(android.widget.LinearLayout) -> a
-    void setLayoutsSalidas(android.widget.LinearLayout) -> b
     void setOrigenes(android.widget.AutoCompleteTextView,java.lang.String) -> a
     void setDestinos(android.widget.AutoCompleteTextView,java.lang.String) -> b
+    void mostrarAyuda(int) -> b
     void destroyItem(android.view.View,int,java.lang.Object) -> a
     boolean isViewFromObject(android.view.View,java.lang.Object) -> a
     android.content.Context access$0(com.vuelosDroid.frontEnd.ViewPagerAdapter) -> a
     java.lang.String[] access$1(com.vuelosDroid.frontEnd.ViewPagerAdapter) -> b
-com.vuelosDroid.frontEnd.ViewPagerAdapter$1 -> com.vuelosDroid.frontEnd.x:
+com.vuelosDroid.frontEnd.ViewPagerAdapter$1 -> com.vuelosDroid.frontEnd.z:
     com.vuelosDroid.frontEnd.ViewPagerAdapter this$0 -> a
     android.content.Intent val$intent -> b
     void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
-com.vuelosDroid.frontEnd.ViewPagerAdapter$10 -> com.vuelosDroid.frontEnd.y:
+com.vuelosDroid.frontEnd.ViewPagerAdapter$10 -> com.vuelosDroid.frontEnd.aa:
     com.vuelosDroid.frontEnd.ViewPagerAdapter this$0 -> a
     void onChanged$38d22c4c(int) -> a
-com.vuelosDroid.frontEnd.ViewPagerAdapter$11 -> com.vuelosDroid.frontEnd.z:
+com.vuelosDroid.frontEnd.ViewPagerAdapter$11 -> com.vuelosDroid.frontEnd.ab:
     com.vuelosDroid.frontEnd.ViewPagerAdapter this$0 -> a
     android.widget.AutoCompleteTextView val$autoDestino -> b
     android.widget.Button val$botonSalidas -> c
     android.widget.AutoCompleteTextView val$autoOrigen -> d
     void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
-com.vuelosDroid.frontEnd.ViewPagerAdapter$12 -> com.vuelosDroid.frontEnd.aa:
+com.vuelosDroid.frontEnd.ViewPagerAdapter$12 -> com.vuelosDroid.frontEnd.ac:
     com.vuelosDroid.frontEnd.ViewPagerAdapter this$0 -> a
     android.widget.AutoCompleteTextView val$autoOrigen -> b
     android.widget.AutoCompleteTextView val$autoDestino -> c
     boolean onLongClick(android.view.View) -> onLongClick
-com.vuelosDroid.frontEnd.ViewPagerAdapter$13 -> com.vuelosDroid.frontEnd.ab:
+com.vuelosDroid.frontEnd.ViewPagerAdapter$13 -> com.vuelosDroid.frontEnd.ad:
     com.vuelosDroid.frontEnd.ViewPagerAdapter this$0 -> a
     android.widget.AutoCompleteTextView val$autoOrigen -> b
     void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
-com.vuelosDroid.frontEnd.ViewPagerAdapter$14 -> com.vuelosDroid.frontEnd.ac:
+com.vuelosDroid.frontEnd.ViewPagerAdapter$14 -> com.vuelosDroid.frontEnd.ae:
     com.vuelosDroid.frontEnd.ViewPagerAdapter this$0 -> a
     android.widget.AutoCompleteTextView val$autoDestino -> b
     boolean onLongClick(android.view.View) -> onLongClick
-com.vuelosDroid.frontEnd.ViewPagerAdapter$15 -> com.vuelosDroid.frontEnd.ad:
+com.vuelosDroid.frontEnd.ViewPagerAdapter$15 -> com.vuelosDroid.frontEnd.af:
     com.vuelosDroid.frontEnd.ViewPagerAdapter this$0 -> a
     android.widget.AutoCompleteTextView val$autoOrigen -> b
     android.widget.AutoCompleteTextView val$autoDestino -> c
     android.widget.RadioGroup val$radioDia -> d
     void onClick(android.view.View) -> onClick
-com.vuelosDroid.frontEnd.ViewPagerAdapter$2 -> com.vuelosDroid.frontEnd.ae:
+com.vuelosDroid.frontEnd.ViewPagerAdapter$2 -> com.vuelosDroid.frontEnd.ag:
     com.vuelosDroid.frontEnd.ViewPagerAdapter this$0 -> a
     android.widget.EditText val$edit -> b
     void onClick(android.view.View) -> onClick
-com.vuelosDroid.frontEnd.ViewPagerAdapter$3 -> com.vuelosDroid.frontEnd.af:
+com.vuelosDroid.frontEnd.ViewPagerAdapter$3 -> com.vuelosDroid.frontEnd.ah:
     com.vuelosDroid.frontEnd.ViewPagerAdapter this$0 -> a
     android.widget.EditText val$edit -> b
     boolean onLongClick(android.view.View) -> onLongClick
-com.vuelosDroid.frontEnd.ViewPagerAdapter$4 -> com.vuelosDroid.frontEnd.ag:
+com.vuelosDroid.frontEnd.ViewPagerAdapter$4 -> com.vuelosDroid.frontEnd.ai:
     com.vuelosDroid.frontEnd.ViewPagerAdapter this$0 -> a
     void onChanged$38d22c4c(int) -> a
-com.vuelosDroid.frontEnd.ViewPagerAdapter$5 -> com.vuelosDroid.frontEnd.ah:
+com.vuelosDroid.frontEnd.ViewPagerAdapter$5 -> com.vuelosDroid.frontEnd.aj:
     com.vuelosDroid.frontEnd.ViewPagerAdapter this$0 -> a
     android.widget.AutoCompleteTextView val$autoOrigen -> b
     android.widget.Button val$botonLlegadas -> c
     void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
-com.vuelosDroid.frontEnd.ViewPagerAdapter$6 -> com.vuelosDroid.frontEnd.ai:
+com.vuelosDroid.frontEnd.ViewPagerAdapter$6 -> com.vuelosDroid.frontEnd.ak:
     com.vuelosDroid.frontEnd.ViewPagerAdapter this$0 -> a
     android.widget.AutoCompleteTextView val$autoDestinos -> b
     android.widget.AutoCompleteTextView val$autoOrigen -> c
     boolean onLongClick(android.view.View) -> onLongClick
-com.vuelosDroid.frontEnd.ViewPagerAdapter$7 -> com.vuelosDroid.frontEnd.aj:
+com.vuelosDroid.frontEnd.ViewPagerAdapter$7 -> com.vuelosDroid.frontEnd.al:
     com.vuelosDroid.frontEnd.ViewPagerAdapter this$0 -> a
     android.widget.AutoCompleteTextView val$autoOrigen -> b
     void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
-com.vuelosDroid.frontEnd.ViewPagerAdapter$8 -> com.vuelosDroid.frontEnd.ak:
+com.vuelosDroid.frontEnd.ViewPagerAdapter$8 -> com.vuelosDroid.frontEnd.am:
     com.vuelosDroid.frontEnd.ViewPagerAdapter this$0 -> a
     android.widget.AutoCompleteTextView val$autoOrigen -> b
     boolean onLongClick(android.view.View) -> onLongClick
-com.vuelosDroid.frontEnd.ViewPagerAdapter$9 -> com.vuelosDroid.frontEnd.al:
+com.vuelosDroid.frontEnd.ViewPagerAdapter$9 -> com.vuelosDroid.frontEnd.an:
     com.vuelosDroid.frontEnd.ViewPagerAdapter this$0 -> a
     android.widget.AutoCompleteTextView val$autoDestinos -> b
     android.widget.AutoCompleteTextView val$autoOrigen -> c
     android.widget.RadioGroup val$radioDia -> d
     void onClick(android.view.View) -> onClick
-com.vuelosDroid.frontEnd.ViewPagerAdapter$miAdapter -> com.vuelosDroid.frontEnd.am:
+com.vuelosDroid.frontEnd.ViewPagerAdapter$miAdapter -> com.vuelosDroid.frontEnd.ao:
     android.view.LayoutInflater mInflater -> b
     java.util.List datosVuelos -> c
     java.util.ArrayList dias -> a
@@ -2074,23 +2138,26 @@ com.vuelosDroid.frontEnd.VueloResultadoActivity -> com.vuelosDroid.frontEnd.Vuel
     void onResume() -> onResume
     android.os.Handler access$0(com.vuelosDroid.frontEnd.VueloResultadoActivity) -> a
     android.os.Handler access$1(com.vuelosDroid.frontEnd.VueloResultadoActivity) -> b
-com.vuelosDroid.frontEnd.VueloResultadoActivity$1 -> com.vuelosDroid.frontEnd.an:
+com.vuelosDroid.frontEnd.VueloResultadoActivity$1 -> com.vuelosDroid.frontEnd.ap:
     com.vuelosDroid.frontEnd.VueloResultadoActivity this$0 -> a
     void handleMessage(android.os.Message) -> handleMessage
-com.vuelosDroid.frontEnd.VueloResultadoActivity$2 -> com.vuelosDroid.frontEnd.ao:
+com.vuelosDroid.frontEnd.VueloResultadoActivity$2 -> com.vuelosDroid.frontEnd.aq:
     com.vuelosDroid.frontEnd.VueloResultadoActivity this$0 -> a
     void handleMessage(android.os.Message) -> handleMessage
-com.vuelosDroid.frontEnd.VueloResultadoActivity$3 -> com.vuelosDroid.frontEnd.ap:
+com.vuelosDroid.frontEnd.VueloResultadoActivity$3 -> com.vuelosDroid.frontEnd.ar:
     com.vuelosDroid.frontEnd.VueloResultadoActivity this$0 -> a
     java.lang.String val$pUrl -> b
     void run() -> run
-com.vuelosDroid.frontEnd.VueloResultadoActivity$4 -> com.vuelosDroid.frontEnd.aq:
+com.vuelosDroid.frontEnd.VueloResultadoActivity$4 -> com.vuelosDroid.frontEnd.as:
     com.vuelosDroid.frontEnd.VueloResultadoActivity this$0 -> a
     void run() -> run
-com.vuelosDroid.frontEnd.VueloResultadoActivity$5 -> com.vuelosDroid.frontEnd.ar:
+com.vuelosDroid.frontEnd.VueloResultadoActivity$5 -> com.vuelosDroid.frontEnd.at:
     com.vuelosDroid.frontEnd.VueloResultadoActivity this$0 -> a
     void onDismiss() -> onDismiss
-com.vuelosDroid.frontEnd.VueloResultadoActivity$DemoPopupWindow -> com.vuelosDroid.frontEnd.as:
+com.vuelosDroid.frontEnd.VueloResultadoActivity$6 -> com.vuelosDroid.frontEnd.au:
+    com.vuelosDroid.frontEnd.VueloResultadoActivity this$0 -> a
+    void onDismiss() -> onDismiss
+com.vuelosDroid.frontEnd.VueloResultadoActivity$DemoPopupWindow -> com.vuelosDroid.frontEnd.av:
     void onCreate() -> a
 kankan.wheel.R -> kankan.wheel.a:
 kankan.wheel.R$drawable -> kankan.wheel.b:

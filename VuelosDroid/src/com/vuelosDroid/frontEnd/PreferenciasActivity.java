@@ -1,6 +1,6 @@
 /*
  Copyright 2012 Xabier Pena & Urko Guinea
- 
+
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -16,6 +16,17 @@ See the License for the specific language governing permissions and
 
 package com.vuelosDroid.frontEnd;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -23,6 +34,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -54,6 +67,7 @@ public class PreferenciasActivity extends AbstractActivity  {
 	CheckBox checkBoxDespegar;
 	CheckBox checkBoxAterrizar;
 	CheckBox checkBoxCambios;
+	CheckBox checkBoxAlarma;
 	private SeekBar seek;
 	private TextView textSeek;
 	private int id;
@@ -66,6 +80,7 @@ public class PreferenciasActivity extends AbstractActivity  {
 	private int aterrizar;
 	private int despegar;
 	private int minutos;
+	private int alarma;
 	private Bundle bundle;
 	private Bundle bun;
 
@@ -89,7 +104,7 @@ public class PreferenciasActivity extends AbstractActivity  {
 		String[] args = new String[] { AlarmasSqlAux.ID,
 				AlarmasSqlAux.ATERRIZAR, AlarmasSqlAux.CAMBIOS,
 				AlarmasSqlAux.DESPEGAR, AlarmasSqlAux.MINUTOS,
-				AlarmasSqlAux.SONIDO };
+				AlarmasSqlAux.SONIDO, AlarmasSqlAux.ALARMAVERDAD };
 		String[] args2 = { id + "" };
 		Cursor c = db.query("alarmas_aux", args, "id=?", args2, null, null,
 				null);
@@ -119,6 +134,7 @@ public class PreferenciasActivity extends AbstractActivity  {
 			despegar = c.getInt(3);
 			minutos = c.getInt(4);
 			sonido = c.getInt(5);
+			alarma = c.getInt(6);
 		}
 		db.close();
 	}
@@ -137,14 +153,16 @@ public class PreferenciasActivity extends AbstractActivity  {
 		editor.put(AlarmasSqlAux.DESPEGAR, despegar);
 		editor.put(AlarmasSqlAux.MINUTOS, minutos);
 		editor.put(AlarmasSqlAux.SONIDO, sonido);
+		editor.put(AlarmasSqlAux.ALARMAVERDAD, alarma);
+		//editor.put(AlarmasSqlAux.ALARMAVERDAD, alarma);
 		String[] args2 = { id + "" };
 		db.update("alarmas_aux", editor, "id=?", args2);
 		db.close();
 		Intent intent = new Intent(this, AlarmaService.class);
 		intent.putExtra("id", id);
 		startService(intent);
-
-		onCreate(bun);
+		getAlarmasId();
+		setLayout();
 	}
 
 	/**
@@ -155,6 +173,7 @@ public class PreferenciasActivity extends AbstractActivity  {
 		checkBoxDespegar = (CheckBox) findViewById(R.id.checkbox_preferencias_alarmas_cambios_despege);
 		checkBoxAterrizar = (CheckBox) findViewById(R.id.checkbox_preferencias_alarma_cambios_aterrizaje);
 		checkBoxCambios = (CheckBox) findViewById(R.id.checkbox_preferencias_alarma_cambios);
+		checkBoxAlarma = (CheckBox) findViewById(R.id.checkbox_preferencias_alarmas_alarma);
 		seek = (SeekBar) findViewById(R.id.seekBar_preferencias_alarma_minutos);
 		textSeek = (TextView) findViewById(R.id.text_preferencias_alarma_minutos_numero);
 
@@ -170,11 +189,15 @@ public class PreferenciasActivity extends AbstractActivity  {
 		if (aterrizar == SI) {
 			checkBoxAterrizar.setChecked(true);
 		}
-		if (minutos == 0) {
-		} else {
-			seek.setProgress(minutos);
-			textSeek.setText(minutos + "");
+		if (sonido == SI){
+			checkBoxAterrizar.setChecked(true);
 		}
+		if (alarma == SI){
+			checkBoxAlarma.setChecked(true);
+		}
+		seek.setProgress(minutos);
+		textSeek.setText(getMin(minutos));
+
 	}
 
 	public void setOnClicks() {
@@ -195,7 +218,7 @@ public class PreferenciasActivity extends AbstractActivity  {
 					boolean fromUser) {
 				Log.i(TAG,
 						"PreferenciasActivity - setOnclicks - onProgressChanged");
-				textSeek.setText("" + progress);
+				textSeek.setText("" + getMin(progress));
 			}
 		});
 
@@ -263,13 +286,66 @@ public class PreferenciasActivity extends AbstractActivity  {
 			}
 		});
 
+		checkBoxAlarma
+		.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				Log.i(TAG,
+						"PreferenciasActivity - setListeners - checkBoxAlarma - onCheckedChanged");
+				if (isChecked) {
+					alarma = SI;
+				} else {
+					alarma = NO;
+				}
+				guardarCambios();
+			}
+		});
 	}
 
 	public void onClickActualizar(View v) {
+	}
+
+	public String getMin (int pMin){
+		if (pMin == 0){
+			return "0 mins";
+		} else {
+			if (pMin / 60 == 0){
+				if (pMin % 60 == 1){
+					return "1 min";
+				} else {
+					return (pMin % 60 + " mins");
+				}
+			}
+			else if (pMin / 60 == 1){
+				if (pMin % 60 == 1){
+					return "1 h 1 min";
+				} else {
+					return ("1 h " + pMin % 60 + " mins");
+				}
+			} else {
+				if (pMin % 60 == 1){
+					return (pMin/60 + " h " + " 1 min");
+				} else {
+					return (pMin/60 + " h " + pMin % 60 + " mins");
+				}
+			}
+		}
 	}
 
 	public void onClickSearch(View v) {
 		startActivity(new Intent(getApplicationContext(),
 				BusquedaActivity.class));
 	}
+	
+	protected void onResume(){
+		onCreate(bun);
+	}
+	
+	public void onClickGuardar(View v){
+		finish();
+	}
+	
+	
 }
+

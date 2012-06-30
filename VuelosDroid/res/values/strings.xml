@@ -18,7 +18,7 @@ See the License for the specific language governing permissions and
 
 <resources>
 
-    <string name="app_name">VuelosDroid</string>
+    <string name="app_name">Vuelos Droid</string>
     <string name="descripcion_logo">Vuelos Droid</string>
     <string name="descripcion_about">About</string>
     <string name="descripcion_home">Home</string>
@@ -53,7 +53,7 @@ See the License for the specific language governing permissions and
     <string name="horario">Horario</string>
     <string name="boton">Buscar Vuelo</string>
     <string name="boton1">Buscar Vuelos</string>
-    <string name="codigo">Introduce el codigo del vuelo</string>
+    <string name="codigo">Introduce el código del vuelo</string>
     <string name="codigo_ejemplo">EJ: IBE0449</string>
     <string name="lista_resultados">Resultados Obtenidos</string>
     <string name="sub_info">Resumen</string>
