@@ -59,14 +59,15 @@ public class ResultadosAbstractActivity extends AbstractActivity {
 	}
 
 
-	public void formatearFecha(String dia){
+	public void formatearFecha(String pDia){
+		
 		GregorianCalendar calen = new GregorianCalendar();
 		horaActual = new Date();
-		if (dia.equals("hoy")){
+		if (pDia.contains("h")){
 			horaFormat = (dias[cal.get(Calendar.DAY_OF_MONTH)]+"/"+
 					(meses[cal.get(Calendar.MONTH)])+"/"+
 					(cal.get(Calendar.YEAR)-2000));
-		}else if (dia.equals("manana")){
+		}else if (pDia.contains("an")){
 			cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)+1);
 			if(cal.get(Calendar.DAY_OF_MONTH) == 1){
 				cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH)+1);
@@ -74,8 +75,10 @@ public class ResultadosAbstractActivity extends AbstractActivity {
 				horaFormat = (dias[cal.get(Calendar.DAY_OF_MONTH)]+"/"+
 						(meses[cal.get(Calendar.MONTH)])+"/"+
 						(cal.get(Calendar.YEAR)-2000));
-			}
-		}else if (dia.equals("ayer")){
+			}horaFormat = (dias[cal.get(Calendar.DAY_OF_MONTH)]+"/"+
+					(meses[cal.get(Calendar.MONTH)])+"/"+
+					(cal.get(Calendar.YEAR)-2000));
+		}else if (pDia.contains("ye")){
 			cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)-1);
 			if(cal.get(Calendar.DAY_OF_MONTH) == 0){
 				cal.set(calen.get(Calendar.YEAR), calen.get(Calendar.MONTH), calen.get(Calendar.DAY_OF_MONTH));
@@ -85,6 +88,9 @@ public class ResultadosAbstractActivity extends AbstractActivity {
 					(cal.get(Calendar.YEAR)-2000));
 
 		}
+		
+		Log.d(TAG, "ResultadoAbstractActivity - formatearFecha: horaFormat=" + horaFormat);
+
 	}
 
 	public void formatearFecha2(String dia){
@@ -217,6 +223,8 @@ public class ResultadosAbstractActivity extends AbstractActivity {
 	public String cambiarFechaToUrl(String pUrl, String pDia){
 		pDia = pDia.toLowerCase();
 		formatearFecha(pDia);
+		Log.d(TAG, "ResultadosAbstractActivity - cambiarFechaToUrl - url: " + pUrl);
+
 		Log.d(TAG, "ResultadosAbstractActivity - cambiarFechaToUrl - pDia: " + pDia);
 		//Log.e(TAG, "ResultadosAbstractActivity - cambiarFechaToUrl - horaFormat: " + horaFormat);
 		return vuelosJsoup.cambiarFechaToUrl(pUrl, horaFormat);
@@ -225,7 +233,9 @@ public class ResultadosAbstractActivity extends AbstractActivity {
 	public String cambiarFechaToUrl(String pUrl, String pDia, int hora){
 		pDia = pDia.toLowerCase();
 		formatearFecha(pDia);
-		Log.d(TAG, "ResultadosAbstractActivity - cambiarFechaToUrl - pDia: " + pDia);
+		Log.d(TAG, "ResultadosAbstractActivity - cambiarFechaToUrlIn - url: " + pUrl);
+
+		Log.d(TAG, "ResultadosAbstractActivity - cambiarFechaToUrlIn - pDia: " + pDia);
 		//Log.e(TAG, "ResultadosAbstractActivity - cambiarFechaToUrl - horaFormat: " + horaFormat);
 		return vuelosJsoup.cambiarFechaToUrl(pUrl, horaFormat);
 	}

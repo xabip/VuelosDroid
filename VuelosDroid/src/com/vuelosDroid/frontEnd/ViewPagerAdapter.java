@@ -81,7 +81,7 @@ import android.widget.Toast;
 
 
 /**
- * 
+ * Gestina las tres columnas de la interfaz de busqueda
  * @author Xabi
  *
  */
@@ -93,6 +93,7 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 	ArrayAdapter<String> adapter;
 	ArrayList<String> destinosArray = new ArrayList<String>();
 	private String[] titulos ;
+	//Array con los horarios de aena
 	private String[] horariosNum = {"-1", "10", "11", "12", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
 	ArrayList<DatosVuelo> datos = new ArrayList<DatosVuelo>();
 	//private static final int DIALOGO = 1;
@@ -117,7 +118,12 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 
 	}
 
+	/**
+	 * Rellena la lista de la busqueda reciente
+	 * @param v
+	 */
 	public void getBusquedaReciente(LinearLayout v){
+		//Coge de la bd las ultimas busquedas
 		BusquedaRecienteSql alarms =  new BusquedaRecienteSql(context); 
 		SQLiteDatabase db = alarms.getReadableDatabase();
 		Log.w(TAG, "Funciona la lectura de busqueda reciente");
@@ -161,8 +167,13 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		}*/
 	}
 
+	/**
+	 * Pone en la lista lo obtenido antes
+	 * @param v
+	 */
 	public void setListaReciente(LinearLayout v){
 		miLista = (ListView) v.findViewById(R.id.lista_resultados_reciente);
+		// da la vuelta a los datos obtenidos
 		Collections.reverse(datos);
 		if(datos.size()>10){
 			for(int i = 11; i < datos.size(); i++){
@@ -184,6 +195,9 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		miLista.setAdapter(new miAdapter(context, datos, dias));
 		final Intent intent = new Intent(context, VueloResultadoActivity.class);
 
+		/**
+		 * On click de la lista de la busqueda reciente
+		 */
 		miLista.setOnItemClickListener(new OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
@@ -221,6 +235,8 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 				}	
 			}
 		});
+		
+		// En deshuso
 		SharedPreferences prefer = context.getSharedPreferences("MisPreferencias", Context.MODE_PRIVATE);
 		int prefers = prefer.getInt("primera", 0);
 		if(prefers == 0){
@@ -261,6 +277,9 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		return titulos.length;
 	}
 
+	/**
+	 * Instancia el viewpager y sus columnas 
+	 */
 	@Override
 	public Object instantiateItem(View pager, int position) {
 		LinearLayout v = null;
@@ -284,6 +303,10 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		return v;
 	}
 
+	/**
+	 * Crea la columna del codigo con todos sus listeners
+	 * @param v
+	 */
 	public void setLayoutCodigo(LinearLayout v){
 		final EditText edit = (EditText)v.findViewById(R.id.edittext_codigo);
 		TextView text = (TextView)v.findViewById(R.id.text_columna1_codigo);
@@ -341,6 +364,10 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		});
 	}
 
+	/**
+	 * Crea el layout de las llegadas con todos los listeners
+	 * @param v
+	 */
 	public void setLayoutLlegadas(LinearLayout v){
 		//Seleccion de llegadas.
 		//Inicializar los Autocomplete   <--Autocomplete Aeropuerto Origen-->
@@ -486,6 +513,11 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		//Menus Contextuales.
 		autoDestinos.setOnLongClickListener(null);
 	}
+	
+	/**
+	 * Crea el layout de las salidas con todos los listeners
+	 * @param v
+	 */
 	public void setLayoutsSalidas(LinearLayout v){
 
 		//Seleccion de llegadas.
@@ -636,6 +668,11 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		autoOrigen.setOnLongClickListener(null);
 	}
 
+	/**
+	 * Pone los origenes en el textview para el autocomplete
+	 * @param autoDestino
+	 * @param in
+	 */
 	public void setOrigenes(AutoCompleteTextView autoDestino, String in){
 		if(destinosArray.size()>0){
 			destinosArray = new ArrayList<String>();
@@ -698,6 +735,11 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		autoDestino.setAdapter(adapter);   	 
 	}
 
+	/**
+	 * Pone los destinos en el textview para el autocomplete
+	 * @param autoOrigen
+	 * @param in
+	 */
 	public void setDestinos(AutoCompleteTextView autoOrigen, String in){
 		if(destinosArray.size()>0){
 			destinosArray = new ArrayList<String>();
@@ -790,6 +832,10 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 
 	}
 
+	/**
+	 * Muestra la ayuda inicial
+	 * @param pTipo
+	 */
 	public void mostrarAyuda(int pTipo){
 		Toast ImageToast = new Toast(context);
 		LinearLayout toastLayout = new LinearLayout(context);
@@ -861,6 +907,11 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 	}
 
 
+	/**
+	 * Adapter de la lista recientes
+	 * @author Xabi
+	 *
+	 */
 	private static class miAdapter extends BaseAdapter {
 
 		private LayoutInflater mInflater;

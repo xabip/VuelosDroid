@@ -21,6 +21,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
  
+/**
+ * Receiver para gestionar las alarmas al encender el smartphone
+ * @author Xabi
+ *
+ */
 public class StartUpReceiver extends BroadcastReceiver {
  
 	private static final String TAG = "VuelosAndroid";

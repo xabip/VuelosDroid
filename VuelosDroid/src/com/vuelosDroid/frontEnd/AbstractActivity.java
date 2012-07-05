@@ -53,16 +53,27 @@ public abstract class AbstractActivity extends Activity{
 		super.onPause();
 	}
 
-
+/**
+ * onClick del boton de preferencias (En deshuso)
+ * @param v
+ */
 	public void onClickPreferencias(View v){
 		Intent intent = new Intent(getApplicationContext(), PreferenciasActivity.class);
 		startActivity(intent);
 	}
 
+	/**
+	 * onClick del botón de búsqueda
+	 * @param v
+	 */
 	public void onClickBusqueda(View v){
 		startActivity (new Intent(getApplicationContext(), BusquedaActivity.class));
 	}
 
+	/**
+	 * onClick del botón "home"
+	 * @param v
+	 */
 	public void onClickHome(View v){
 		final Intent intent = new Intent(this, PrincipalActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

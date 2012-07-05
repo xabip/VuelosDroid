@@ -33,6 +33,7 @@ public class MiReceiver extends BroadcastReceiver {
 		int flags = intent.getFlags();
 		//String action = intent.getAction();
 		Intent serviceIntent = new Intent();
+		// Recibe el id para buscar en la base de datos e inicia AlarmaService
 		serviceIntent.putExtra("id", intent.getIntExtra("id", 0));	
 		Log.d("VuelosAndroid", "MiReceiver - onReceive - id: " + intent.getIntExtra("id", 0));
 		serviceIntent.setAction("com.vuelosDroid.backEnd.behind.AlarmaService");

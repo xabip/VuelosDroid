@@ -637,5 +637,4 @@ public class VuelosJSoup {
 		return url3;
 	}
 
-
 }

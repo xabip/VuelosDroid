@@ -39,6 +39,12 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
+
+/**
+ * Service que gestiona todas las alarmas
+ * @author Xabi
+ *
+ */
 public class AlarmaService extends Service {
 
 	private static final String TAG = "VuelosAndroid";
@@ -62,8 +68,8 @@ public class AlarmaService extends Service {
 	private NotificationManager mNotificationManager;
 	private int SIMPLE_NOTFICATION_ID;
 	private Intent pIntent;
-	private static final String TEXTO_CANCELADO = "El vuelo ha sido cancelado";
-	/*private static final String TEXTO_RETRASADO = "El vuelo ha sido retrasado";
+	/*private static final String TEXTO_CANCELADO = "El vuelo ha sido cancelado";
+	private static final String TEXTO_RETRASADO = "El vuelo ha sido retrasado";
 	private static final String TEXTO_ATERRIZADO = "El vuelo ha llegado";
 	private static final String TEXTO_SALIDO = "El vuelo ha despegado";*/
 
@@ -103,6 +109,10 @@ public class AlarmaService extends Service {
 		// Toast.makeText(this, "Service Created", Toast.LENGTH_LONG).show();
 	}
 
+	/**
+	 * Metodo al que se llama al iniciar el service.
+	 * Gestiona todo el funcionamiento
+	 */
 	@Override public void onStart(Intent intent, final int startId) {
 		super.onStart(intent, startId);
 		Log.d(TAG, "AlarmaService - onStart - started");
@@ -113,6 +123,7 @@ public class AlarmaService extends Service {
 		Log.d(TAG, "AlarmaService - onStart - id: " + id);
 		setRed();
 
+		// Si la id es 999999999 es que no se ha gestinado todavia
 		if (id == 999999999) {
 			pendingIntent = PendingIntent.getBroadcast(this, 0, intent,
 					PendingIntent.FLAG_CANCEL_CURRENT);
@@ -131,6 +142,7 @@ public class AlarmaService extends Service {
 				Log.i(TAG, "AlarmaService - No hay alarmas");
 				stopService(pIntent);
 			}
+			// Ya ha sido gestinada con anterioridad
 		} else {
 			Log.d(TAG, "AlarmaService - onStart - dentro de id con id: " + id);
 			pendingIntent = PendingIntent.getBroadcast(this, id, intent,
@@ -618,6 +630,12 @@ public class AlarmaService extends Service {
 		}
 	}
 
+	
+	/**
+	 * Actualiza los datos de una alarma y notifica en caso de retrasos
+	 * @param pUrl
+	 * @param pDatos
+	 */
 	public void getDatos(String pUrl, DatosAlarma pDatos) {
 		int sonido = pDatos.getSonido();
 		try {
@@ -732,6 +750,11 @@ public class AlarmaService extends Service {
 		}
 	}
 
+	/**
+	 * Pone el estado en el que se encuentra el vuelo
+	 * @param pTiempo
+	 * @param pDatos
+	 */
 	public void ponerEstado(int pTiempo, DatosAlarma pDatos) {
 		if (pTiempo <= 5) {
 			pDatos.setEstado(MUYALTA);
@@ -752,6 +775,11 @@ public class AlarmaService extends Service {
 		//return estado;
 	}
 
+	/**
+	 * Pone el estado si el vuelo no ha despegado
+	 * @param pTiempo
+	 * @param pDatos
+	 */
 	public void ponerEstadoAntes(int pTiempo, DatosAlarma pDatos) {
 		if (pTiempo <= 15){
 			pDatos.setEstado(BAJAMEDIA);
@@ -770,6 +798,12 @@ public class AlarmaService extends Service {
 		actualizarBDEstado(pDatos);
 	}
 
+	/**
+	 * Comprueba si un vuelo ha despegado y manda el aviso en caso de que se requiera
+	 * @param pEstado
+	 * @param pDatos
+	 * @return
+	 */
 	public boolean verSiDespegado(String pEstado, DatosAlarma pDatos) {
 		try{
 			String text = pDatos
@@ -859,6 +893,12 @@ public class AlarmaService extends Service {
 
 	}
 
+	/**
+	 * Comprueba si un vuelo ha sido cancelado y avisa
+	 * @param pEstado
+	 * @param pDatos
+	 * @return
+	 */
 	public boolean verSiCancelado(String pEstado, DatosAlarma pDatos) {
 		try{
 
@@ -891,6 +931,12 @@ public class AlarmaService extends Service {
 		return pEstado.contains("cela");
 	}
 
+	/**
+	 * Comprueba si un vuelo ha sido cancelado y notifica del aterrizaje
+	 * @param pEstado
+	 * @param pDatos
+	 * @return
+	 */
 	public boolean verSiAterrizado(String pEstado, DatosAlarma pDatos) {
 		try{
 			String text = pDatos
@@ -914,6 +960,7 @@ public class AlarmaService extends Service {
 				text = text.replace("Origen:", "");
 			}
 			switch (red) {
+			//Si tiene red
 			case CONECTADO:
 				Log.d(TAG,
 						"AlarmaService - verSiAterrizado - CONECTADO - aterrizado:  " + pEstado
@@ -929,6 +976,7 @@ public class AlarmaService extends Service {
 				}
 				return pEstado.contains("aterrizado");
 
+				//Si no tiene red puede ser que avise sin red
 			case DESCONECTADO:
 				if(pDatos.getAterrizadoSin() == 0){
 					if ((getDiferencia(pEstado) < 0) && (aterrizadoSin.equals("no"))) {
@@ -955,6 +1003,10 @@ public class AlarmaService extends Service {
 		}
 	}
 
+	/**
+	 * Actualiza el estado del vuelo en la bd
+	 * @param pDatos
+	 */
 	private void actualizarBDEstado(DatosAlarma pDatos){
 		AlarmasSqlAux alarms = new AlarmasSqlAux(this);
 		SQLiteDatabase db = alarms.getReadableDatabase();
@@ -1021,6 +1073,11 @@ public class AlarmaService extends Service {
 		db.close();
 	}
 
+	/**
+	 * Obtiene la diferencia entre dos vuelos para ver retrasos
+	 * @param pEstado
+	 * @return
+	 */
 	public int getDiferencia(String pEstado) {
 		try{
 			String[] horaVuelo = pEstado.substring(pEstado.indexOf("a las ") + 6)
@@ -1072,9 +1129,14 @@ public class AlarmaService extends Service {
 			Log.e(TAG, "AlarmaService - getDiferencia(String pHora, String pHoraAlarma): " + e.getMessage());
 			return 0;
 		}
-
 	}
 
+	/**
+	 * 
+	 * @param pHoraA
+	 * @param pHoraB
+	 * @return
+	 */
 	public int getDiferenciaEstados(String pHoraA, String pHoraB) {
 		Log.d(TAG,
 				"AlarmasActivity - getDiferenciaAntelacion - pHoraA: " + pHoraA);
@@ -1102,6 +1164,12 @@ public class AlarmaService extends Service {
 
 	}
 
+	
+	/**
+	 * Obtiene la hora del estado de un vuelo
+	 * @param pEstado
+	 * @return
+	 */
 	public String getHora(String pEstado) {
 		// Log.i(TAG,
 		// "Servicio "+pEstado.substring(pEstado.indexOf("a las ")+6));
@@ -1130,6 +1198,14 @@ public class AlarmaService extends Service {
 		}
 	}
 
+	/**
+	 * Manda los mensajes segun corresponda y lanza el broadcast en caso de aviso con antelacion
+	 * @param pMens
+	 * @param pMens2
+	 * @param pSonido
+	 * @param pDatos
+	 * @param pMarquesina
+	 */
 	public void notificar(String pMens, String pMens2, int pSonido, DatosAlarma pDatos, String pMarquesina) {
 		Context context = getApplicationContext();
 		String ns = Context.NOTIFICATION_SERVICE;
@@ -1170,6 +1246,10 @@ public class AlarmaService extends Service {
 
 	}
 
+	/**
+	 * Coge todas las alarmas de la lista
+	 * @param intent
+	 */
 	public void getAlarmas(Intent intent) {
 		AlarmasSqlAux alarms = new AlarmasSqlAux(this);
 		SQLiteDatabase db = alarms.getReadableDatabase();
@@ -1250,6 +1330,11 @@ public class AlarmaService extends Service {
 		stopService(pIntent);
 	}
 
+	/**
+	 * Coge una sola alarma de la bd
+	 * @param id
+	 * @param intent
+	 */
 	public void getAlarmasId(int id, Intent intent) {
 		AlarmasSqlAux alarms = new AlarmasSqlAux(this);
 		SQLiteDatabase db = alarms.getReadableDatabase();
@@ -1318,6 +1403,10 @@ public class AlarmaService extends Service {
 		stopService(pIntent);
 	}
 
+	/**
+	 * Pone el aviso con antelacion
+	 * @param pDatos
+	 */
 	private void ponerAlarmaAntelacion(DatosAlarma pDatos) {
 		Date horaActual = new Date();
 		int i = getDiferencia(
@@ -1361,6 +1450,11 @@ public class AlarmaService extends Service {
 		db.close();
 	}
 
+	/**
+	 * Quita la alarma de la lista de alarmas y la pasa a antiguas
+	 * @param pUrl
+	 * @param pDatos
+	 */
 	public void ponerSeg(String pUrl, DatosAlarma pDatos) {
 		getDatos(pUrl, pDatos);
 		AlarmasSql alarms = new AlarmasSql(this);

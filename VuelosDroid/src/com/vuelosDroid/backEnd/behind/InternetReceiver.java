@@ -23,7 +23,13 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
+/**
+ * Receiver para gestionar cuando se conecta a internet el movil.
+ * @author Xabi
+ *
+ */
 public class InternetReceiver extends BroadcastReceiver{
+	
 	
 	Context mContext;
 

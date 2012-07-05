@@ -28,6 +28,12 @@ import android.util.Log;
 
 import com.vuelosDroid.R;
 
+
+/**
+ * Receiver que da el aviso con antelación de un vuelo
+ * @author Xabi
+ *
+ */
 public class MiReceiverAntelacion extends BroadcastReceiver {
 
 	Context mContext;
@@ -60,6 +66,7 @@ public class MiReceiverAntelacion extends BroadcastReceiver {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
+		// Datos para gesinar la notificación y su retraso
 		origen = intent.getStringExtra("origen");	
 		destino = intent.getStringExtra("destino");
 		hora = intent.getStringExtra("hora");

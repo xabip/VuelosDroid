@@ -46,7 +46,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
+/**
+ * Activity que contiene la lista de resultados de la búsqueda
+ * @author Xabi
+ *
+ */
 public class ResultadoActivity extends ResultadosAbstractActivity{
 
 	DatosGroup listaVuelos;
@@ -189,6 +193,9 @@ public class ResultadoActivity extends ResultadosAbstractActivity{
 		});
 	}   
 
+	/**
+	 * Pone el icono de cargar
+	 */
 	private void ponerCargando(){
 		DatosVuelo dat = new DatosVuelo();
 		dat.setAeropuertoOrigen("cargando");
@@ -198,6 +205,10 @@ public class ResultadoActivity extends ResultadosAbstractActivity{
 		adapter.notifyDataSetChanged();
 	}
 
+	/**
+	 * Quita la imagen de cargar
+	 * @param listaVuelosH
+	 */
 	private void quitarCargando(DatosGroup listaVuelosH){
 		try{
 			if(!datosVuelos.isEmpty()){
@@ -233,6 +244,9 @@ public class ResultadoActivity extends ResultadosAbstractActivity{
 		onCreate(bun);
 	}
 
+	/**
+	 * Handler que gestina la comuncacion con el hilo de busqueda
+	 */
 	private final Handler progressHandler = new Handler() {
 		public void handleMessage(Message msg) {
 			//Log.e(TAG, "ResultadoActivity - progressHandler - Dentro del Handler1");
@@ -317,6 +331,15 @@ public class ResultadoActivity extends ResultadosAbstractActivity{
 		}
 	};
 
+	/**
+	 * Metodo que hace la busqueda en segundo plano
+	 * @param codOrigen
+	 * @param codDestino
+	 * @param horario
+	 * @param dia
+	 * @param company
+	 * @param pTipo
+	 */
 	private void loadData(final String codOrigen, final String codDestino, final String horario, 
 			final String dia, final String company, final int pTipo) {
 		//Log.e(TAG, "Dentro del LoadData principio");

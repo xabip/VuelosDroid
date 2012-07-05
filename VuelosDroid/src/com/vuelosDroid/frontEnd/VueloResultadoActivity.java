@@ -55,7 +55,7 @@ import com.vuelosDroid.backEnd.scrapper.MoreFlightsException;
 import com.vuelosDroid.backEnd.scrapper.NoHayVueloException;
 
 /**
- * 
+ * Activity del resultado del vuelo
  * @author Xabi
  *
  */
@@ -163,7 +163,7 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 	}  
 
 	/**
-	 * 
+	 * Gestiona la carga y comunicacion en segundo plano de los vuelos
 	 */
 	private final Handler progressHandler = new Handler() {
 		public void handleMessage(Message msg) {
@@ -192,6 +192,11 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 		}
 	};
 
+	
+	/**
+	 * Busca en segundo plano los datos del vuelo
+	 * @param pUrl
+	 */
 	private void loadData(final String pUrl) {
 		Log.i(TAG, "VueloResultadoActivity - loadData - Dentro del LoadData principio");
 		new Thread(new Runnable(){
@@ -205,6 +210,9 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 			}}).start();
 	}
 
+	/**
+	 * Handler que gestina la busqueda por codigo
+	 */
 	private final Handler codHandler = new Handler() {
 		public void handleMessage(Message msg) {
 			Log.i(TAG, "VueloResultadoActivity - progressHandler - Principio del Handler");
@@ -238,6 +246,11 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 		}
 	};
 
+	/**
+	 * Metodo que hace la busuqda por codigo en segundo plano
+	 * @param pCod
+	 * @param pDia
+	 */
 	private void loadData2(final String pCod, final String pDia) {
 		Log.i(TAG, "VueloResultadoActivity - loadData - Dentro del LoadData principio");
 		new Thread(new Runnable(){
@@ -269,6 +282,9 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 			}}).start();
 	}
 
+	/**
+	 * Controla si viene desde busqueda rapida o desde una url predefinida
+	 */
 	public void controlOperaciones(){
 		if (url.equals(" ")){
 			Log.d(TAG, "VueloResultadoActivity - controlOperaciones - url: " + url);
@@ -290,17 +306,28 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 		}
 	}
 
+	/**
+	 * Controla si esta en alarmas o no
+	 * @param pUrl
+	 */
 	public void controlEstado(String pUrl){
 		alarma = getAlarma();
 		marcador = false;
 		//marcador = getSeguimiento();	
 	}
 
+	/**
+	 * Toast si no se puede poner alarma
+	 * @param pText
+	 */
 	private void noAlarma(String pText){
 		Toast toast1 = Toast.makeText(getApplicationContext(), pText, Toast.LENGTH_SHORT);
 		toast1.show();
 	}
 
+	/**
+	 * Pone el layout general de la activity
+	 */
 	public void setLayout(){
 		TextView text1 = (TextView) findViewById(R.id.text_resultado1);
 		TextView text2 = (TextView) findViewById(R.id.text_resultado2);
@@ -459,6 +486,10 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 		}
 	}
 
+	/**
+	 * onClick del boton de mañana
+	 * @param v
+	 */
 	public void onClickBtnManana(View v){
 		Log.d(TAG, "VueloResultadoActivity - onClickBtnManana ");
 
@@ -495,7 +526,10 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 		ponerSeguimiento(datos);
 	}
 
-
+	/**
+	 * Pone la alarma en la base de datos y la inicializa
+	 * @param pUrl
+	 */
 	public void setAlarma(String pUrl){
 		//Creamos el bundle para poder pasar parametros al servicio.
 		Bundle bundle = new Bundle();
@@ -507,6 +541,10 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 
 	}
 
+	/**
+	 * Mira a ver si un vuelo esta en seguimento
+	 * @return
+	 */
 	public boolean getSeguimiento(){
 		AlarmasSql alarms =  new AlarmasSql(this); 
 		SQLiteDatabase db = alarms.getReadableDatabase();
@@ -531,6 +569,10 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 		return false;
 	}
 
+	/**
+	 * Mira a ver si el vuelo esta ya en alarmas
+	 * @return
+	 */
 	public boolean getAlarma(){
 		AlarmasSqlAux alarmsAux =  new AlarmasSqlAux(this); 
 		SQLiteDatabase db2 = alarmsAux.getReadableDatabase();
@@ -561,6 +603,10 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 		return false;
 	}
 
+	/**
+	 * Mira si estaba en recientes el vuelo
+	 * @param pDatos
+	 */
 	public void controlReciente(DatosVuelo pDatos){
 		if(!pDatos.getAeropuertoDestino().equals("--") && !pDatos.getAeropuertoOrigen().equals("--")){
 			BusquedaRecienteSql alarms =  new BusquedaRecienteSql(this); 
@@ -586,13 +632,21 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 
 	}
 
+	/**
+	 * Quita el vuelo de recientes
+	 * @param pCodigo
+	 */
 	public void borrarReciente(String pCodigo){
 		BusquedaRecienteSql alarms =  new BusquedaRecienteSql(this); 
 		SQLiteDatabase db = alarms.getWritableDatabase();
 		db.execSQL("DELETE FROM busqueda_reciente WHERE "+BusquedaRecienteSql.CODIGOVUELO+ "='" + pCodigo+"'");
 		db.close();
 	}
-
+	
+	/**
+	 * Guarda el vuelo en la lista de recientes
+	 * @param pDatos
+	 */
 	public void guardarReciente(DatosVuelo pDatos){
 		Log.d(TAG, "VueloResultadoActivity - guardarReciente - inicio" + pDatos.getLinkInfoVuelo());
 
@@ -622,6 +676,11 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 		}
 	}
 
+	/**
+	 * Pone la alarma (Se le llama desde el onClikAlarma
+	 * @param pDatos
+	 * @param pTipo
+	 */
 	public void ponerAlarma(DatosVuelo pDatos, int pTipo){
 		AlarmasSqlAux alarms =  new AlarmasSqlAux(this); 
 		SQLiteDatabase db = alarms.getWritableDatabase();
@@ -671,6 +730,10 @@ public class VueloResultadoActivity extends ResultadosAbstractActivity {
 		getAlarma();
 	}
 
+	/**
+	 * Pone el vuelo en antiguas alarmas
+	 * @param pDatos
+	 */
 	public void ponerSeguimiento(DatosVuelo pDatos){
 		AlarmasSql alarms =  new AlarmasSql(this); 
 		SQLiteDatabase db = alarms.getWritableDatabase();

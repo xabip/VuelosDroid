@@ -45,13 +45,12 @@ See the License for the specific language governing permissions and
 
     <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-         >
+        android:layout_height="fill_parent" >
 
         <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" 
-            android:orientation="vertical">
+            android:layout_height="fill_parent"
+            android:orientation="vertical" >
 
             <RelativeLayout
                 android:id="@+id/relative_layout_preferencias_alarma_sonido"
@@ -104,9 +103,8 @@ See the License for the specific language governing permissions and
             />
                 -->
             </RelativeLayout>
-            
-            
-             <RelativeLayout
+
+            <RelativeLayout
                 android:id="@+id/relative_layout_preferencias_alarma_alarma"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -115,13 +113,12 @@ See the License for the specific language governing permissions and
                 android:gravity="center_vertical"
                 android:orientation="horizontal" >
 
-              
-                 <TextView
+                <TextView
                     style="@style/TextViewt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:text="Modo Alarma"/>
+                    android:text="Modo Alarma" />
 
                 <CheckBox
                     android:id="@+id/checkbox_preferencias_alarmas_alarma"
@@ -159,10 +156,10 @@ See the License for the specific language governing permissions and
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/text_preferencias_alarma_minutos"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="5dp"
-                    android:paddingRight="5dp"
                     android:max="240"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="5dp"
+                    android:paddingTop="5dp"
                     android:progress="0" />
             </RelativeLayout>
 
@@ -258,14 +255,62 @@ See the License for the specific language governing permissions and
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true" />
             </RelativeLayout>
-            
-        <!--     <Button android:layout_width="wrap_content"
+
+            <LinearLayout
+                android:id="@+id/linear_layout_preferencias_alarma_buttons"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:gravity="center"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:id="@+id/relative_layout_preferencias_alarma_buttons_dentro"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                     >
+
+                    <Button
+                        android:layout_marginRight="20dp"
+                        android:id="@+id/button_preferencias_alarma_cancelar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Cancelar" 
+                        android:onClick="onClickCancelar"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                   >
+
+                    <Button
+                        android:layout_marginLeft="20dp"
+                        android:id="@+id/button_preferencias_alarma_guardar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Guardar" 
+                        android:onClick="onClickGuardar"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!--
+                 <Button android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Volver"
                     android:onClick="onClickGuardar"
                     android:gravity="center_horizontal"
-                    android:layout_gravity="center_horizontal"/> -->
-            
+                    android:layout_gravity="center_horizontal"/>
+            -->
+
         </LinearLayout>
     </ScrollView>
 

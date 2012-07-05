@@ -73,6 +73,17 @@ public class PreferenciasActivity extends AbstractActivity  {
 	private int id;
 
 	/**
+	 * Variables de estado iniciales
+	 */
+	private int sonidoIni;
+	private int cambiosIni;
+	private int aterrizarIni;
+	private int despegarIni;
+	private int minutosIni;
+	private int alarmaIni;
+
+
+	/**
 	 * Variables de estado
 	 */
 	private int sonido;
@@ -91,10 +102,54 @@ public class PreferenciasActivity extends AbstractActivity  {
 		bundle = this.getIntent().getExtras();
 		id = bundle.getInt("id");
 		Log.d(TAG, "PreferenciasActivity - OnCreate + id: " + id);
+		getAlarmasIdIni();
 		getAlarmasId();
 		setLayout();
 		setOnClicks();
 
+	}
+
+	public void getAlarmasIdIni(){
+		AlarmasSqlAux alarms = new AlarmasSqlAux(this);
+		SQLiteDatabase db = alarms.getReadableDatabase();
+		Log.d(TAG, "AlarmaService - getAlarmasId - Funciona la llamada");
+		String[] args = new String[] { AlarmasSqlAux.ID,
+				AlarmasSqlAux.ATERRIZAR, AlarmasSqlAux.CAMBIOS,
+				AlarmasSqlAux.DESPEGAR, AlarmasSqlAux.MINUTOS,
+				AlarmasSqlAux.SONIDO, AlarmasSqlAux.ALARMAVERDAD };
+		String[] args2 = { id + "" };
+		Cursor c = db.query("alarmas_aux", args, "id=?", args2, null, null,
+				null);
+		// Nos aseguramos de que existe al menos un registro
+		if (c.moveToFirst()) {
+
+			Log.d(TAG,
+					"PreferenciasActivity - getAlarmasId - id:" + c.getInt(0));
+			Log.d(TAG,
+					"PreferenciasActivity - getAlarmasIdIni - ATERRIZAR:"
+							+ c.getInt(1));
+			Log.d(TAG,
+					"PreferenciasActivity - getAlarmasIdIni - CAMBIOS:"
+							+ c.getInt(2));
+			Log.d(TAG,
+					"PreferenciasActivity - getAlarmasIdIni - DESPEGAR:"
+							+ c.getInt(3));
+			Log.d(TAG,
+					"PreferenciasActivity - getAlarmasIdIni - MINUTOS:"
+							+ c.getInt(4));
+			Log.d(TAG,
+					"PreferenciasActivity - getAlarmasIdIni - SONIDO:"
+							+ c.getInt(5));
+
+
+			aterrizarIni = c.getInt(1);
+			cambiosIni = c.getInt(2);
+			despegarIni = c.getInt(3);
+			minutosIni = c.getInt(4);
+			sonidoIni = c.getInt(5);
+			alarmaIni = c.getInt(6);
+		}
+		db.close();
 	}
 
 	public void getAlarmasId() {
@@ -135,6 +190,7 @@ public class PreferenciasActivity extends AbstractActivity  {
 			minutos = c.getInt(4);
 			sonido = c.getInt(5);
 			alarma = c.getInt(6);
+
 		}
 		db.close();
 	}
@@ -189,9 +245,7 @@ public class PreferenciasActivity extends AbstractActivity  {
 		if (aterrizar == SI) {
 			checkBoxAterrizar.setChecked(true);
 		}
-		if (sonido == SI){
-			checkBoxAterrizar.setChecked(true);
-		}
+		
 		if (alarma == SI){
 			checkBoxAlarma.setChecked(true);
 		}
@@ -337,15 +391,42 @@ public class PreferenciasActivity extends AbstractActivity  {
 		startActivity(new Intent(getApplicationContext(),
 				BusquedaActivity.class));
 	}
-	
+
 	protected void onResume(){
 		onCreate(bun);
 	}
-	
+
 	public void onClickGuardar(View v){
+		guardarCambios();
 		finish();
 	}
-	
-	
+
+	public void onClickCancelar(View v){
+		guardarInicial();
+		finish();
+	}
+
+	public void guardarInicial(){
+		AlarmasSqlAux alarms = new AlarmasSqlAux(this);
+		SQLiteDatabase db = alarms.getReadableDatabase();
+		Log.d(TAG, "PreferenciasActivity - guardarCambios - Funciona la llamada");
+		ContentValues editor = new ContentValues();
+		editor.put(AlarmasSqlAux.ATERRIZAR, aterrizarIni);
+		editor.put(AlarmasSqlAux.CAMBIOS, cambiosIni);
+		editor.put(AlarmasSqlAux.DESPEGAR, despegarIni);
+		editor.put(AlarmasSqlAux.MINUTOS, minutosIni);
+		editor.put(AlarmasSqlAux.SONIDO, sonidoIni);
+		editor.put(AlarmasSqlAux.ALARMAVERDAD, alarmaIni);
+		//editor.put(AlarmasSqlAux.ALARMAVERDAD, alarma);
+		String[] args2 = { id + "" };
+		db.update("alarmas_aux", editor, "id=?", args2);
+		db.close();
+		Intent intent = new Intent(this, AlarmaService.class);
+		intent.putExtra("id", id);
+		startService(intent);
+		getAlarmasId();
+		setLayout();
+	}
+
 }
 
