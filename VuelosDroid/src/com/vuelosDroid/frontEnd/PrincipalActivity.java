@@ -106,7 +106,8 @@ public class PrincipalActivity extends AbstractActivity{
 			fin.close();
 		} catch (Exception ex) {
 			Log.e(TAG, "PrincipalActivity - controlEstado - Error al leer fichero desde memoria interna");
-			crearFicheros();
+			crearFicherosAeropuerto();
+			//crearFicheros();
 		}
 		/*if(sdAccesoEscritura && sdDisponible){
 			try {
@@ -123,7 +124,22 @@ public class PrincipalActivity extends AbstractActivity{
 		}*/
 	}
 
-	private void crearFicheros(){
+	private void crearFicherosAeropuerto(){
+		try {
+			InputStream fraw = getResources().openRawResource(R.raw.aeropuertos);
+			BufferedReader brin = new BufferedReader(new InputStreamReader(fraw));
+			String linea = brin.readLine();
+			OutputStreamWriter fout= new OutputStreamWriter(openFileOutput("aeropuertos.txt", Context.MODE_PRIVATE));
+			fout.write(linea);
+			fout.close();
+			brin.close();
+			Log.i(TAG, "PrincipalActivity - crearFicheros - Origen - Fichero origenDestinos creado");
+		} catch (Exception ex) {
+			Log.e(TAG, "PrincipalActivity - crearFicheros - Origen - Error al escribir fichero a memoria interna");
+		}
+	}
+	
+/*	private void crearFicheros(){
 		try {
 			InputStream fraw = getResources().openRawResource(R.raw.origendestinos);
 			BufferedReader brin = new BufferedReader(new InputStreamReader(fraw));
@@ -149,7 +165,7 @@ public class PrincipalActivity extends AbstractActivity{
 			Log.e(TAG, "PrincipalActivity - crearFicheros - Destino - Error al escribir fichero a memoria interna");
 		}
 
-		/*try {
+		try {
 			InputStream fraw = getResources().openRawResource(R.raw.origendestinos);
 			BufferedReader brin = new BufferedReader(new InputStreamReader(fraw));
 			String linea = brin.readLine();
@@ -178,8 +194,8 @@ public class PrincipalActivity extends AbstractActivity{
 			fraw.close();
 		} catch (Exception ex) {
 			Log.e("Ficheros", "Error al escribir fichero a tarjeta SD");
-		}*/
-	}
+		}
+	}*/
 
 	/**
 	 * Onclick para el boton de actualizar los aeropuertos.
@@ -187,7 +203,7 @@ public class PrincipalActivity extends AbstractActivity{
 	 */
 	public void onClickActualizarAeropuertos(View v){
 		AlertDialog.Builder alertbox = new AlertDialog.Builder(this);
-		alertbox.setMessage("Esta operación puede tardar varios minutos (Podrás seguir utilizando la aplicación)");
+		alertbox.setMessage("Esta operación puede tardar varios minutos y se aconseja tener Wifi (Podrás seguir utilizando la aplicación)");
 		alertbox.setTitle("Actualizar Aeropuertos");
 		alertbox.setPositiveButton("Si", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface arg0, int arg1) {
@@ -225,15 +241,17 @@ public class PrincipalActivity extends AbstractActivity{
 			public void run() {
 
 				AirportUpdater ae = new AirportUpdater();
-				String datos = ae.obtenerAeropuertos(pTipo);
+				String datos = ae.obtenerAeropuertos();
 				Log.i(TAG, "PrincipalActivity - actualizarAeropuertos -  Dentro del new Thread");
 				Message msg = actualizarHandler.obtainMessage();
 				msg.obj = datos;
-				if (pTipo == ORIGENES){
+				msg.arg1 = 1;
+
+				/*if (pTipo == ORIGENES){
 					msg.arg1 = 1;
 				} else {
 					msg.arg1 = 0;
-				}
+				}*/
 
 				//msg.obj = getInfoUnVuelo("", pUrl);
 				Log.i(TAG, "PrincipalActivity - actualizarAeropuertos - Antes de mandar el mensaje");
@@ -247,19 +265,19 @@ public class PrincipalActivity extends AbstractActivity{
 			Log.i(TAG, "PrincipalActivity - actualizarHandler - Principio del Handler");
 			if (msg.obj != null){
 				if (msg.arg1 == 1){ 
-					Toast toast = Toast.makeText(context, "Fase 1 de 2 terminada.", Toast.LENGTH_SHORT);
+					Toast toast = Toast.makeText(context, "Actualización terminada", Toast.LENGTH_SHORT);
 					toast.show();
 					String datos = (String) msg.obj;
 					Log.d(TAG, "PrincipalActivity - actualizarHandler - Origenes - obj: " + datos);
 
 					try {
-						OutputStreamWriter fout = new OutputStreamWriter(openFileOutput("origendestinos.txt", Context.MODE_PRIVATE));
+						OutputStreamWriter fout = new OutputStreamWriter(openFileOutput("aeropuertos.txt", Context.MODE_PRIVATE));
 						fout.write(datos);
 						fout.close();
 					} catch (Exception ex) {
-						Log.e("Ficheros", "PrincipalActivity - actualizarHandler - Origenes  - Error al escribir fichero a tarjeta SD");
+						Log.e("Ficheros", "PrincipalActivity - actualizarHandler - aeropuertos - Error al escribir fichero a tarjeta SD");
 					}
-					actualizarAeropuertos(DESTINOS);
+//					actualizarAeropuertos(DESTINOS);
 
 				} else{
 					Toast toast = Toast.makeText(context, "Actualización terminada", Toast.LENGTH_LONG);

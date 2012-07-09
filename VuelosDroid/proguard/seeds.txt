@@ -41,49 +41,6 @@ com.viewpagerindicator.TitlePageIndicator$IndicatorStyle: com.viewpagerindicator
 com.viewpagerindicator.TitlePageIndicator$IndicatorStyle: com.viewpagerindicator.TitlePageIndicator$IndicatorStyle valueOf(java.lang.String)
 com.viewpagerindicator.TitlePageIndicator$SavedState
 com.viewpagerindicator.TitlePageIndicator$SavedState: android.os.Parcelable$Creator CREATOR
-com.vuelosDroid.backEnd.behind.AlarmaService
-com.vuelosDroid.backEnd.behind.AntelacionActivity
-com.vuelosDroid.backEnd.behind.CargaVuelosService
-com.vuelosDroid.backEnd.behind.InternetReceiver
-com.vuelosDroid.backEnd.behind.MiReceiver
-com.vuelosDroid.backEnd.behind.MiReceiverAntelacion
-com.vuelosDroid.backEnd.behind.StartUpReceiver
-com.vuelosDroid.frontEnd.AbstractActivity
-com.vuelosDroid.frontEnd.AbstractActivity: void onClickPreferencias(android.view.View)
-com.vuelosDroid.frontEnd.AbstractActivity: void onClickBusqueda(android.view.View)
-com.vuelosDroid.frontEnd.AbstractActivity: void onClickHome(android.view.View)
-com.vuelosDroid.frontEnd.AbstractActivity: void onClickFeature(android.view.View)
-com.vuelosDroid.frontEnd.AlarmasActivity
-com.vuelosDroid.frontEnd.AlarmasActivity: void onClickPopupResumen(android.view.View)
-com.vuelosDroid.frontEnd.AlarmasActivity: void onClickPopupPreferencias(android.view.View)
-com.vuelosDroid.frontEnd.AlarmasActivity: void onClickPopupBorrar(android.view.View)
-com.vuelosDroid.frontEnd.AlarmasActivity: void onClickActualizar(android.view.View)
-com.vuelosDroid.frontEnd.AlarmasActivity: void onClickSearch(android.view.View)
-com.vuelosDroid.frontEnd.AlarmasActivity: void onClickBusqueda(android.view.View)
-com.vuelosDroid.frontEnd.AlarmasActivity: void onClickHome(android.view.View)
-com.vuelosDroid.frontEnd.AlarmasActivity: void onClickActualizarA(android.view.View)
-com.vuelosDroid.frontEnd.BusquedaActivity
-com.vuelosDroid.frontEnd.BusquedaActivity: void onClickBorrar(android.view.View)
-com.vuelosDroid.frontEnd.BusquedaActivity: void onClickActualizar(android.view.View)
-com.vuelosDroid.frontEnd.BusquedaActivity: void onClickPreferencias(android.view.View)
-com.vuelosDroid.frontEnd.PreferenciasActivity
-com.vuelosDroid.frontEnd.PreferenciasActivity: void onClickActualizar(android.view.View)
-com.vuelosDroid.frontEnd.PreferenciasActivity: void onClickSearch(android.view.View)
-com.vuelosDroid.frontEnd.PreferenciasActivity: void onClickGuardar(android.view.View)
-com.vuelosDroid.frontEnd.PrincipalActivity
-com.vuelosDroid.frontEnd.PrincipalActivity: void onClickActualizarAeropuertos(android.view.View)
-com.vuelosDroid.frontEnd.ResultadoActivity
-com.vuelosDroid.frontEnd.ResultadoActivity: void onClickActualizar(android.view.View)
-com.vuelosDroid.frontEnd.ResultadosAbstractActivity
-com.vuelosDroid.frontEnd.VueloResultadoActivity
-com.vuelosDroid.frontEnd.VueloResultadoActivity: void onClickBtnManana(android.view.View)
-com.vuelosDroid.frontEnd.VueloResultadoActivity: void onClickSeguimientoVuelo(android.view.View)
-com.vuelosDroid.frontEnd.VueloResultadoActivity: void onClickMarcador(android.view.View)
-com.vuelosDroid.frontEnd.VueloResultadoActivity: void onClickPopupPreferencias(android.view.View)
-com.vuelosDroid.frontEnd.VueloResultadoActivity: void onClickPopupBorrar(android.view.View)
-com.vuelosDroid.frontEnd.VueloResultadoActivity: void onClickAlarma(android.view.View)
-com.vuelosDroid.frontEnd.VueloResultadoActivity: void onClickActualizar(android.view.View)
-com.vuelosDroid.frontEnd.VueloResultadoActivity: void onClickSearch(android.view.View)
 kankan.wheel.widget.WheelView
 kankan.wheel.widget.WheelView: WheelView(android.content.Context,android.util.AttributeSet,int)
 kankan.wheel.widget.WheelView: WheelView(android.content.Context,android.util.AttributeSet)

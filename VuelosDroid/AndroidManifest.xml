@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.vuelosDroid"
-    android:versionCode="2"
-    android:versionName="1.01" >
+    android:versionCode="3"
+    android:versionName="1.02" >
 
     <uses-sdk android:minSdkVersion="7" />
-
+    
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
@@ -18,7 +18,6 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
-        android:debuggable="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.D1" >
@@ -38,10 +37,11 @@
             <intent-filter>
                 <action android:name=".behind.AlarmaService" />
             </intent-filter>
-        </service>
+        </service>
+        
         <service
             android:name=".backEnd.behind.AntelacionService"
-            android:process=":procc"  >
+            android:process=":procc" >
             <intent-filter>
                 <action android:name=".behind.AntelacionService" />
             </intent-filter>
@@ -51,11 +51,11 @@
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" >
                 </action>
+
                 <category android:name="android.intent.category.LAUNCHER" >
                 </category>
             </intent-filter>
         </receiver>
-        
         <receiver
             android:name=".backEnd.behind.MiReceiver"
             android:process=":remote" >
@@ -63,15 +63,13 @@
                 <action android:name=".backEnd.behind.AlarmaService" />
             </intent-filter>
         </receiver>
-        
         <receiver
             android:name=".backEnd.behind.MiReceiverAntelacion"
-            android:process=":remote"  >
+            android:process=":remote" >
             <intent-filter>
                 <action android:name=".backEnd.behind.AntelacionService" />
             </intent-filter>
         </receiver>
-        
         <receiver
             android:name=".backEnd.behind.InternetReceiver"
             android:process=":remote" >
@@ -91,11 +89,10 @@
                 <category android:name="kankan.wheel.WHEEL_SAMPLE" />
             </intent-filter>
         </activity>
-         <activity
+        <activity
             android:name=".backEnd.behind.AntelacionActivity"
-            android:label="@string/titulo_about" 
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" 
-            />
+            android:label="@string/titulo_about"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name=".frontEnd.AyudaActivity"
             android:label="@string/titulo_about" />

@@ -65,7 +65,8 @@ See the License for the specific language governing permissions and
         <item>Salidas</item>
         <item>Llegadas</item>
     </string-array>
-    <string-array name="aeropuertos_array">
+ <!--   <string-array name="aeropuertos_array">
+ 		<item>ALBACETE (ABC)</item>
         <item>A CORUÑA (LCG)</item>
         <item>ALGECIRAS / HELIPUERTO (AEI)</item>
         <item>ALICANTE (ALC)</item>
@@ -102,7 +103,9 @@ See the License for the specific language governing permissions and
         <item>TENERIFE SUR (TFS)</item>
         <item>VALENCIA (VLC)</item>
         <item>VALLADOLID (VLL)</item>
-    </string-array>
+        <item>VIGO (VGO)</item>
+        <item>ZARAGOZA (ZAZ)</item>
+    </string-array> -->
     <string-array name="horario_array">
         <item>Cualquiera</item>
         <item>6:00 – 8:00</item>

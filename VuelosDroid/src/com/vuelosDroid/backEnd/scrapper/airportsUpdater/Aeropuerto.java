@@ -23,13 +23,37 @@ public class Aeropuerto {
 	
 	private String nombre;
 	private String cod;
+	private String companias;
+	private String pais;
+	private String ciudad;
 	
-	private List<Aeropuerto> destinos;
+	public String getCiudad() {
+		return ciudad;
+	}
+	public void setCiudad(String ciudad) {
+		this.ciudad = ciudad;
+	}
+	public String getCompanias() {
+		return companias;
+	}
+	public void setCompanias(String companias) {
+		this.companias = companias;
+	}
+	public String getPais() {
+		return pais;
+	}
+	public void setPais(String pais) {
+		this.pais = pais;
+	}
+	private List<Aeropuerto> conexiones;
 	
 	public Aeropuerto(String nombre, String cod) {
 		super();
 		this.nombre = nombre;
 		this.cod = cod;
+	}
+	public Aeropuerto() {
+		// TODO Auto-generated constructor stub
 	}
 	public String getNombre() {
 		return nombre;
@@ -43,10 +67,10 @@ public class Aeropuerto {
 	public void setCod(String cod) {
 		this.cod = cod;
 	}
-	public List<Aeropuerto> getDestinos() {
-		return destinos;
+	public List<Aeropuerto> getConexiones() {
+		return conexiones;
 	}
-	public void setDestinos(List<Aeropuerto> destinos) {
-		this.destinos = destinos;
+	public void setConexiones(List<Aeropuerto> pConexiones) {
+		this.conexiones = pConexiones;
 	}
 }

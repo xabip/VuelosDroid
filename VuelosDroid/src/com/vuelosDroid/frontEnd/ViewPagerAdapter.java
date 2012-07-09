@@ -19,7 +19,9 @@ package com.vuelosDroid.frontEnd;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -39,6 +41,7 @@ import com.viewpagerindicator.TitleProvider;
 import com.vuelosDroid.R;
 import com.vuelosDroid.backEnd.behind.BusquedaRecienteSql;
 import com.vuelosDroid.backEnd.scrapper.DatosVuelo;
+import com.vuelosDroid.backEnd.scrapper.airportsUpdater.AirportUpdater;
 
 import android.R.style;
 import android.content.Context;
@@ -52,6 +55,8 @@ import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -147,7 +152,7 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 				Log.d(TAG, "ViewPagerAdapter - url " + c.getString(5));
 
 				dat.setFechaOrigen(c.getString(6));
-			//	Log.e(TAG, dat.getFechaOrigen());
+				//	Log.e(TAG, dat.getFechaOrigen());
 				dias.add(c.getString(4));
 
 				datos.add(dat);
@@ -235,7 +240,7 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 				}	
 			}
 		});
-		
+
 		// En deshuso
 		SharedPreferences prefer = context.getSharedPreferences("MisPreferencias", Context.MODE_PRIVATE);
 		int prefers = prefer.getInt("primera", 0);
@@ -250,7 +255,7 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 			editor.putInt("primera", 2);
 			editor.commit();
 		}
-		
+
 
 		//datosVuelos = (List<DatosVuelo>) listaVuelos.getValues();
 	}
@@ -337,7 +342,7 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 					Intent intent = new Intent(context, VueloResultadoActivity.class);
 					Bundle extras = new Bundle();
 					extras.putString("url", " ");
-			//		Log.e(TAG, text);
+					//		Log.e(TAG, text);
 					extras.putString("codigo", text);
 					//RadioButton rad = (RadioButton)(radioDia.findViewById(radioDia.getCheckedRadioButtonId()));
 					extras.putString("dia", "hoy");
@@ -372,8 +377,9 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		//Seleccion de llegadas.
 		//Inicializar los Autocomplete   <--Autocomplete Aeropuerto Origen-->
 		final AutoCompleteTextView autoDestinos= (AutoCompleteTextView) v.findViewById(R.id.autocomplete_destino_llegadas);
-		String[] aeropuertos = v.getResources().getStringArray(R.array.aeropuertos_array);
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.list_item, aeropuertos);	
+		ArrayList<String> array = getArrayAeropuertos();
+		//String[] aeropuertos = v.getResources().getStringArray(R.array.aeropuertos_array);
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.list_item, array);	
 		autoDestinos.setAdapter(adapter);
 		//autoOrigen.setHint("Introduce el origen");
 		autoDestinos.setPressed(false);
@@ -448,7 +454,6 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 				InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.hideSoftInputFromWindow(autoOrigen.getWindowToken(), 0);
 
-
 			}
 		});
 
@@ -470,7 +475,6 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 				Log.d("TAG","onItemClick "+ arg0.getItemAtPosition(arg2));
 				InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.hideSoftInputFromWindow(autoOrigen.getWindowToken(), 0);
-
 			}
 		});
 
@@ -513,7 +517,7 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		//Menus Contextuales.
 		autoDestinos.setOnLongClickListener(null);
 	}
-	
+
 	/**
 	 * Crea el layout de las salidas con todos los listeners
 	 * @param v
@@ -523,8 +527,10 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		//Seleccion de llegadas.
 		//Inicializar los Autocomplete   <--Autocomplete Aeropuerto Origen-->
 		final AutoCompleteTextView autoOrigen = (AutoCompleteTextView) v.findViewById(R.id.autocomplete_origen);
-		String[] aeropuertos = v.getResources().getStringArray(R.array.aeropuertos_array);
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.list_item, aeropuertos);	
+		ArrayList<String> array = getArrayAeropuertos();
+
+		//String[] aeropuertos = v.getResources().getStringArray(R.array.aeropuertos_array);
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.list_item, array);	
 		autoOrigen.setAdapter(adapter);
 		autoOrigen.setHint("Introduce el origen");
 		autoOrigen.setThreshold(1);
@@ -668,6 +674,98 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		autoOrigen.setOnLongClickListener(null);
 	}
 
+/*	private void getAeropuertos(){
+		Log.i(TAG, "ViewPagerAdapter - actualizarAeropuertos - Dentro de get principio");
+		
+		new Thread(new Runnable(){
+			public void run() {
+
+				AirportUpdater ae = new AirportUpdater();
+				String datos = ae.obtenerAeropuertos();
+				Log.i(TAG, "PrincipalActivity - actualizarAeropuertos -  Dentro del new Thread");
+				Message msg = actualizarHandler.obtainMessage();
+				msg.obj = getArrayAeropuertos();
+				msg.arg1 = 1;
+				
+				if (pTipo == ORIGENES){
+					msg.arg1 = 1;
+				} else {
+					msg.arg1 = 0;
+				}
+
+				//msg.obj = getInfoUnVuelo("", pUrl);
+				Log.i(TAG, "PrincipalActivity - actualizarAeropuertos - Antes de mandar el mensaje");
+				//progressDialog = ProgressDialog.show(cont, "", "Por favor espere mientras se cargan los datos...", true);
+				actualizarHandler.sendMessage(msg);
+			}}).start();
+	}
+
+	private final Handler actualizarHandler = new Handler() {
+		public void handleMessage(Message msg) {
+			Log.i(TAG, "PrincipalActivity - actualizarHandler - Principio del Handler");
+			if (msg.obj != null){
+				ArrayList<String> array;
+				array = (ArrayList<String>) msg.obj;
+				
+			} else{
+				Log.w(TAG, "Dentro del Handler NUll " + msg.obj);
+			}
+		}
+	};
+*/
+	
+	/**
+	 * 
+	 */
+	public ArrayList<String> getArrayAeropuertos(){
+
+
+		ArrayList<String> array = new ArrayList<String>();
+		String s=""; 
+		//InputStream inp = context.getResources().openRawResource(R.raw.aeropuertos); 
+		String jsonContentType = "";
+
+		try { 
+			InputStreamReader inp = new InputStreamReader(context.openFileInput("aeropuertos.txt"));
+			BufferedReader entrada = null; 
+			//entrada = new BufferedReader(new InputStreamReader(inp));
+
+			entrada = new BufferedReader(inp);
+			Log.v(TAG, "setAdapter " +entrada.toString());
+			s = entrada.readLine();
+			Log.v(TAG, "setAdapter " +s);
+			Log.v(TAG, "setAdapter " +s.length());
+
+		} catch (FileNotFoundException e) { 
+			Log.e(TAG, "Fallo al leer el fichero: " +e.getMessage());
+		} catch (IOException e) { 
+		} 
+
+		try {
+			JSONArray jsonContent = new JSONArray(s);
+			boolean salir1 = false;
+			int indic = 0;
+			while(!salir1){
+
+				JSONObject item = jsonContent.getJSONObject(indic);
+				if(item.equals(null)){
+					salir1 = true;
+				}else {
+					jsonContentType = item.getString("nombre");
+					array.add(jsonContentType);
+					Log.v(TAG, "getArrayAeropuertos: " +jsonContentType);
+					indic++;
+				}
+
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return array;
+	}
+
+
 	/**
 	 * Pone los origenes en el textview para el autocomplete
 	 * @param autoDestino
@@ -679,13 +777,12 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		}
 		String cod = in.substring((in.indexOf("(")+1), in.indexOf(")"));
 		Log.v(TAG, "setAdapter " +cod);
-
 		String s=""; 
 		/*InputStream inp = context.getResources().openRawResource(R.raw.destinoorigenes); */
 		String jsonContentType = "";
 		int indice = 0;
 		try { 
-			InputStreamReader inp = new InputStreamReader(context.openFileInput("destinoorigenes.txt"));
+			InputStreamReader inp = new InputStreamReader(context.openFileInput("aeropuertos.txt"));
 			BufferedReader entrada = null; 
 
 			/*entrada = new BufferedReader(new InputStreamReader(inp));*/ 
@@ -710,7 +807,7 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 			indice--;
 			JSONObject item = jsonContent.getJSONObject(indice);
 			Log.d(TAG,item.toString());
-			jsonContentType = item.getString("destinos");
+			jsonContentType = item.getString("conexiones");
 			Log.d(TAG, jsonContentType);
 			boolean salir = false;
 			int ind = 0;
@@ -752,7 +849,7 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		 */		String jsonContentType = "";
 		 int indice = 0;
 		 try { 
-			 InputStreamReader inp = new InputStreamReader(context.openFileInput("origendestinos.txt"));
+			 InputStreamReader inp = new InputStreamReader(context.openFileInput("aeropuertos.txt"));
 			 BufferedReader entrada = null; 
 
 			 /*entrada = new BufferedReader(new InputStreamReader(inp));*/ 
@@ -774,11 +871,12 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 				 jsonContentType = item.getString("cod");
 				 Log.v(TAG, "getAeropuertosDeDestino: " +jsonContentType);
 				 indice++;
+				 Log.d(TAG, "getAeropuertosDeDestino - indice: " + indice);
 			 }
 			 indice--;
 			 JSONObject item = jsonContent.getJSONObject(indice);
 			 Log.d(TAG,item.toString());
-			 jsonContentType = item.getString("destinos");
+			 jsonContentType = item.getString("conexiones");
 			 Log.d(TAG, jsonContentType);
 			 boolean salir = false;
 			 int ind = 0;
@@ -853,7 +951,7 @@ public class ViewPagerAdapter extends PagerAdapter implements TitleProvider{
 		} else {
 			text.setTextSize(20);
 		}
-		
+
 		text.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		text.setGravity(Gravity.CENTER);
 		text.setTypeface(null, Typeface.BOLD);
